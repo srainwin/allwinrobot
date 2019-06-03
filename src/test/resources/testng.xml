@@ -3,6 +3,7 @@
 <suite name="suite">
 	<listeners>
 		<listener class-name="com.demo.utils.TestFailListener" />
+		<listener class-name="com.demo.utils.TestRetryListener" />
 	</listeners>
 	<test name="test">
 		<classes>

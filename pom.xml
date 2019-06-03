@@ -53,7 +53,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>maildemo2</finalName>
+		<finalName>autotestddt</finalName>
 		<plugins>
 			<plugin>
 				<!--maven执行测试的插件 -->

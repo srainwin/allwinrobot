@@ -1,16 +1,13 @@
 package com.demo.cases.login;
 
 import org.testng.Assert;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
 import com.demo.pageoperation.LoginOperation;
-import com.demo.utils.TestFailListener;
 
 import io.qameta.allure.Description;
 
-@Listeners({ TestFailListener.class })
 public class LoginPage_001_LoginSuccess extends  LoginBase {
 	
 	/**
@@ -30,7 +27,7 @@ public class LoginPage_001_LoginSuccess extends  LoginBase {
 		Thread.sleep(2000);
 		//用户信息断言
 		String actual = LoginOperation.getLoginCurrentUser(driver);
-		Assert.assertEquals(actual, username + "@126.com");
+		Assert.assertEquals(actual, username + "@1268.com");
 		//登出
 		LoginOperation.logout(driver);
 	}
