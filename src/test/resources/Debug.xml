@@ -6,7 +6,7 @@
 	</listeners>
 	<test name="debug">
 		<classes>
-			<class name="com.demo.cases.login.LoginPage_002_LoginFail" />
+			<class name="com.demo.cases.login.LoginPage_001_LoginSuccess" />
 		</classes>
 	</test>
 </suite>

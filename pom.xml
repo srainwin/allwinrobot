@@ -76,7 +76,7 @@
 
 					<!--代表的是要执行的测试套件名称 -->
 					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+						<suiteXmlFile>src/test/resources/debug.xml</suiteXmlFile>
 					</suiteXmlFiles>
 
 					<!--maven工作根目录，如果不加的话则是默认根目录为项目名 -->
