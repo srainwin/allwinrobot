@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="suite">
+	<listeners>
+		<listener class-name="com.demo.utils.TestFailListener" />
+	</listeners>
+	<test name="debug">
+		<classes>
+			<class name="com.demo.cases.login.LoginPage_002_LoginFail" />
+		</classes>
+	</test>
+</suite>

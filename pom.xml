@@ -1,0 +1,121 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.demo</groupId>
+	<artifactId>autotestddt</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>autotestddt</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<aspectj.version>1.8.10</aspectj.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-remote-driver</artifactId>
+			<version>3.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.9.10</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.16</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.qameta.allure</groupId>
+			<artifactId>allure-testng</artifactId>
+			<version>2.12.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>maildemo2</finalName>
+		<plugins>
+			<plugin>
+				<!--maven执行测试的插件 -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.20</version>
+				<configuration>
+					<!--设置参数命令行 -->
+					<argLine>
+						-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+					</argLine>
+					<!-- 解决用maven执行test时日志乱码的问题 -->
+					<argLine>
+						-Dfile.encoding=UTF-8
+					</argLine>
+					<!-- 解决maven out of memory问题 -->
+					<argLine>
+						-Xms1024m -Xmx1024m
+					</argLine>
+
+					<!--代表的是要执行的测试套件名称 -->
+					<suiteXmlFiles>
+						<suiteXmlFile>src/test/resources/debug.xml</suiteXmlFile>
+					</suiteXmlFiles>
+
+					<!--maven工作根目录，如果不加的话则是默认根目录为项目名 -->
+					<workingDirectory>target/</workingDirectory>
+
+					<!--定义maven运行测试生成的报表路径 -->
+					<reportsDirectory>target/result/maven-testng-report</reportsDirectory>
+
+					<!--测试失败后，是否忽略并继续测试 -->
+					<testFailureIgnore>true</testFailureIgnore>
+
+					<!--生成allure-result的目录 -->
+					<systemProperties>
+						<property>
+							<name>allure.results.directory</name>
+							<value>result/allure-results</value>
+						</property>
+					</systemProperties>
+				</configuration>
+
+				<dependencies>
+					<dependency>
+						<!--allure需要的aspectjweaver插件 -->
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjweaver</artifactId>
+						<version>${aspectj.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<plugin>
+				<!--控制maven项目源码jdk版本插件，maven的默认编译使用的jdk版本貌似很低 -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
