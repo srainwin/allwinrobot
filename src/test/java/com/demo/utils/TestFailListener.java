@@ -22,14 +22,6 @@ import io.qameta.allure.Attachment;
  * @author XWR
  * @Description 测试用例监听配置，失败用例截图功能
  */
-/**
- * @author XWR
- * @Description 
- */
-/**
- * @author XWR
- * @Description 
- */
 public class TestFailListener extends TestListenerAdapter {
 
 	/* (non-Javadoc)

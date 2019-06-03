@@ -18,12 +18,12 @@ public class HomePage_007_Overview_LoginProtect extends LoginBase {
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata" ,description = "总览快捷跳转登录保护")
-	@Description("操作步骤：\n"
-			+ "1、输入用户名和密码，点击登录；\n"
-			+ "2、默认进入首页Tab后点击总览登录保护；\n"
-			+ "预期结果：\n"
-			+ "1、成功登录，且当前用户名信息正确；\n"
-			+ "2、成功跳转到设置Tab页并显示邮件登录保护相关内容；\n")
+	@Description("操作步骤：\r\n"
+			+ "1、输入用户名和密码，点击登录；\r\n"
+			+ "2、默认进入首页Tab后点击总览登录保护；\r\n"
+			+ "预期结果：\r\n"
+			+ "1、成功登录，且当前用户名信息正确；\r\n"
+			+ "2、成功跳转到设置Tab页并显示邮件登录保护相关内容；\r\n")
 	public void overviewLoginProtect(String username,String password,String expect) throws Exception {
 		//登陆
 		LoginOperation.login(driver, username, password,baseurl);

@@ -18,10 +18,10 @@ public class LoginPage_002_LoginFail extends  LoginBase {
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata" ,description = "登陆反向测试用例")
-	@Description("操作步骤：\n"
-			+ "1、输入用户名和密码，点击登录；\n"
-			+ "预期结果：\n"
-			+ "1、失败登录，且显示相应登陆失败提示信息")
+	@Description("操作步骤：\r\n"
+			+ "1、输入用户名和密码，点击登录；\r\n"
+			+ "预期结果：\r\n"
+			+ "1、失败登录，且显示相应登陆失败提示信息\r\n")
 	public void loginFail(String username,String password,String expecttext) throws Exception {
 		//登陆
 		LoginOperation.login(driver, username, password,baseurl);

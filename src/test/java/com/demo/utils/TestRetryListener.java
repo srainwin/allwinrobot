@@ -7,6 +7,10 @@ import org.testng.IAnnotationTransformer;
 import org.testng.IRetryAnalyzer;
 import org.testng.annotations.ITestAnnotation;
 
+/**
+ * @author XWR
+ * @Description 测试用例重跑监听类
+ */
 public class TestRetryListener implements IAnnotationTransformer {
 
 	@Override

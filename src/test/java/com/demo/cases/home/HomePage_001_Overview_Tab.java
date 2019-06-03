@@ -18,12 +18,12 @@ public class HomePage_001_Overview_Tab extends LoginBase {
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata" ,description = "切换为首页Tab")
-	@Description("操作步骤：\n"
-			+ "1、输入用户名和密码，点击登录；\n"
-			+ "2、点击首页Tab；\n"
-			+ "预期结果：\n"
-			+ "1、成功登录，且当前用户名信息正确；\n"
-			+ "2、当前切换的Tab为首页；\n")
+	@Description("操作步骤：\r\n"
+			+ "1、输入用户名和密码，点击登录；\r\n"
+			+ "2、点击首页Tab；\r\n"
+			+ "预期结果：\r\n"
+			+ "1、成功登录，且当前用户名信息正确；\r\n"
+			+ "2、当前切换的Tab为首页；\r\n")
 	public void overviewTabSwitch(String username,String password) throws Exception {
 		//登陆
 		LoginOperation.login(driver, username, password,baseurl);

@@ -4,6 +4,10 @@ import org.apache.log4j.Logger;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
 
+/**
+ * @author XWR
+ * @Description 测试用例失败重跑类重跑方法重写
+ */
 public class TestNGRetry implements IRetryAnalyzer {
 	private static Logger logger = Logger.getLogger(TestNGRetry.class.getName());
 	private static int retryCount = 1; // 定义重跑次数
