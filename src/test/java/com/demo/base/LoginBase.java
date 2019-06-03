@@ -72,7 +72,7 @@ public class LoginBase {
 		try {
 			// 数据文件路径，一个测试类对应一个excel数据文件
 			String dataname = this.getClass().getSimpleName();
-			String datapath = "./testdata/" + dataname + ".xlsx";
+			String datapath = "../src/test/resources/testdata/" + dataname + ".xlsx";
 			// 获取工作簿
 			InputStream is = new FileInputStream(datapath);
 			XSSFWorkbook workbook = new XSSFWorkbook(is);
