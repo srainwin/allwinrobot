@@ -17,31 +17,34 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 
+import com.demo.utils.SelectBrowser;
 import com.demo.utils.LogConfiguration;
 
 public class LoginBase {
 	public static WebDriver driver;
 	protected String baseurl;
+	protected String browserName;
 	static Logger logger = Logger.getLogger(LoginBase.class.getName());
 
 	@BeforeClass
-	public void setup() {
+	public void setup(ITestContext itestcontext) {
 		try {
 			LogConfiguration.initLog(this.getClass().getSimpleName());
 			logger.info("正启动浏览器");
-			System.setProperty("webdriver.chrome.driver",
-					"D:\\Selenium-Java-2.48.2\\chromedriver_win32\\chromedriver.exe");
-			driver = new ChromeDriver();
+			SelectBrowser selectbrowser = new SelectBrowser();
+			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
+			driver = selectbrowser.selectByName(browserName, itestcontext);
 			driver.manage().window().maximize();
 			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 			// driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
 			logger.info("浏览器启动成功");
-			baseurl = "https://mail.126.com";
+			baseurl = itestcontext.getCurrentXmlTest().getParameter("testurl");
+			//baseurl = "https://mail.126.com";
 		} catch (Exception e) {
 			logger.error("浏览器不能正常工作，请检查是不是被手动关闭或者其他原因", e);
 		}

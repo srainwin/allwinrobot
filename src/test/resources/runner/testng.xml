@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="suite">
+	<!-- 填写启动浏览器名字：chrome、firefox、ie、ghost -->
+	<parameter name="browserName" value="chrome" />
+	<!-- driver存放路径的属性配置文件 -->
+	<parameter name="driverConfigFilePath" value="../src/test/resources/config/driver.properties" />
+	<!-- 定义测试的站点 -->
+	<parameter name="testurl" value="https://mail.126.com" />
 	<listeners>
+		<!-- 测试用例运行失败截图处理监听 -->
 		<listener class-name="com.demo.utils.TestFailListener" />
+		<!-- 测试用例运行失败重跑处理监听 -->
 		<listener class-name="com.demo.utils.TestRetryListener" />
 	</listeners>
-	<test name="test" preserve-order="true" >
+	<test name="test" preserve-order="true">
 		<classes>
 			<class name="com.demo.cases.login.LoginPage_001_LoginSuccess" />
 			<class name="com.demo.cases.login.LoginPage_002_LoginFail" />
