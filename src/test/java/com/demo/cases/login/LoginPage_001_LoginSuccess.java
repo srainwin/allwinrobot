@@ -30,7 +30,7 @@ public class LoginPage_001_LoginSuccess extends  LoginBase {
 		Thread.sleep(2000);
 		//用户信息断言
 		String actual = LoginOperation.getLoginCurrentUser(driver);
-		Assert.assertEquals(actual, username + "@1268.com");
+		Assert.assertEquals(actual, username + "@126.com");
 		//登出
 		LoginOperation.logout(driver);
 	}
