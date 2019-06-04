@@ -1,14 +1,18 @@
 package com.demo.cases.home;
 
 import org.testng.Assert;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
 import com.demo.pageoperation.HomeOperation;
 import com.demo.pageoperation.LoginOperation;
+import com.demo.utils.TestFailListener;
+import com.demo.utils.TestRetryListener;
 
 import io.qameta.allure.Description;
 
+@Listeners({ TestFailListener.class ,TestRetryListener.class})
 public class HomePage_001_Overview_Tab extends LoginBase {
 
 	/**

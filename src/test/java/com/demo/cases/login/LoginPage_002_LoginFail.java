@@ -1,13 +1,17 @@
 package com.demo.cases.login;
 
 import org.testng.Assert;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
 import com.demo.pageoperation.LoginOperation;
+import com.demo.utils.TestFailListener;
+import com.demo.utils.TestRetryListener;
 
 import io.qameta.allure.Description;
 
+@Listeners({ TestFailListener.class ,TestRetryListener.class})
 public class LoginPage_002_LoginFail extends  LoginBase {
 	
 	/**
