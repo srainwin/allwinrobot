@@ -30,7 +30,7 @@ public class TestFailListener extends TestListenerAdapter {
 	@Override
 	public void onTestFailure(ITestResult result) {
 		//尝试takePhoto()方法无效，使用takePhoto2()方法
-		takePhoto2();
+		takePhoto();
 	}
 
 	/**
