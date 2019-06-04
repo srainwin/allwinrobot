@@ -30,18 +30,18 @@ public class TestFailListener extends TestListenerAdapter {
 	@Override
 	public void onTestFailure(ITestResult result) {
 		//尝试takePhoto()方法无效，使用takePhoto2()方法
-		takePhoto();
+		takePhoto3();
 	}
 
 	/**
 	 * @Description 截图方案1 无效
 	 * @return
 	 */
-	@Attachment(value = "失败截图如下：", type = "image/png")
+/*	@Attachment(value = "失败截图如下：", type = "image/png")
 	public byte[] takePhoto() {
 		byte[] screenshotAs = ((TakesScreenshot) LoginBase.driver).getScreenshotAs(OutputType.BYTES);
 		return screenshotAs;
-	}
+	}*/
 	
 	/**
 	 * @Description 截图方案2 有效
@@ -64,6 +64,28 @@ public class TestFailListener extends TestListenerAdapter {
 			Allure.addAttachment("失败用例截图", is);
 		}catch(Exception e){
 			e.printStackTrace();
+		}
+	}
+	
+	@Attachment(value = "失败截图如下：", type = "image/png")
+	public byte[] takePhoto3(){
+		try{
+			String screenName = String.valueOf(new Date().getTime()) + ".png";
+			File dir = new File("./result/screenshot");
+			if(!dir.exists()){
+				dir.mkdirs();
+			}
+			String screenPath = dir.getAbsolutePath() + "/"+screenName;
+			
+			File srcFile = ((TakesScreenshot) LoginBase.driver).getScreenshotAs(OutputType.FILE);
+			File destFile = new File(screenPath);
+			FileUtils.copyFile(srcFile, destFile);
+			
+			byte[] screenshotAs= Files.readAllBytes(Paths.get(screenPath));
+			return screenshotAs;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
 		}
 	}
 
