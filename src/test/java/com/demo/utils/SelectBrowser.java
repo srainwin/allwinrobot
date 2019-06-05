@@ -46,9 +46,13 @@ public class SelectBrowser {
 				return new ChromeDriver();
 			} else if (browsername.equalsIgnoreCase("firefox")) {
 				System.setProperty("webdriver.gecko.driver", firefoxdriverPath);
+				//System.setProperty("webdriver.firefox.bin", firefoxdriverPath);
+				//System.setProperty("webdriver.firefox.marionette", firefoxdriverPath);
+				DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+
+				capabilities.setCapability("marionette", false); 
 				// 返回火狐浏览器对象
-				DesiredCapabilities firefoxcapabilities = DesiredCapabilities.firefox();
-				return new FirefoxDriver();
+				return new FirefoxDriver(capabilities);
 			} else if (browsername.equalsIgnoreCase("ghost")) {
 				// ghost的常规设置
 				DesiredCapabilities ghostCapabilities = new DesiredCapabilities();

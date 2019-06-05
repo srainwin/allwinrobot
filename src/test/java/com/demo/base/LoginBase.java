@@ -1,5 +1,5 @@
 /***
- * @author srainwin
+ * @author xwr
  * @Description 启动浏览器和关闭浏览器，以及提供登录126邮箱参数
 */
 package com.demo.base;
@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.CellType;
@@ -22,13 +21,16 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 
-import com.demo.utils.SelectBrowser;
 import com.demo.utils.LogConfiguration;
+import com.demo.utils.SeleniumUtil;
 
 public class LoginBase {
-	public static WebDriver driver;
-	protected String baseurl;
+	protected static SeleniumUtil seleniumUtil = null;
+	public static WebDriver driver = seleniumUtil.driver;
 	protected String browserName;
+	protected String testurl;
+	protected String pageLoadTimeout;
+	
 	static Logger logger = Logger.getLogger(LoginBase.class.getName());
 
 	@BeforeClass
@@ -36,15 +38,13 @@ public class LoginBase {
 		try {
 			LogConfiguration.initLog(this.getClass().getSimpleName());
 			logger.info("正启动浏览器");
-			SelectBrowser selectbrowser = new SelectBrowser();
 			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
-			driver = selectbrowser.selectByName(browserName, itestcontext);
-			driver.manage().window().maximize();
-			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-			// driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+			testurl = itestcontext.getCurrentXmlTest().getParameter("testurl");
+			pageLoadTimeout = itestcontext.getCurrentXmlTest().getParameter("pageLoadTimeout");
+			int plTimeout = Integer.parseInt(pageLoadTimeout);
+//			seleniumUtil = new SeleniumUtil();
+			seleniumUtil.launchBrowser(browserName,itestcontext,testurl,plTimeout);
 			logger.info("浏览器启动成功");
-			baseurl = itestcontext.getCurrentXmlTest().getParameter("testurl");
-			//baseurl = "https://mail.126.com";
 		} catch (Exception e) {
 			logger.error("浏览器不能正常工作，请检查是不是被手动关闭或者其他原因", e);
 		}
@@ -53,22 +53,11 @@ public class LoginBase {
 	@AfterClass
 	public void teardown() {
 		try {
-			driver.quit();
+			seleniumUtil.quit();
 		} catch (Exception e) {
 			logger.error("浏览器异常，无法关闭", e);
 		}
 	}
-
-	/*
-	 * @DataProvider(name = "usersFail") public Object[][] usersFail(){ return
-	 * new Object[][]{ {"","","请输入帐号"}, {"","123456","请输入帐号"},
-	 * {"helloxwr","","请输入密码"}, {"xwr","123456","帐号或密码错误"} };
-	 * 
-	 * }
-	 * 
-	 * @DataProvider(name = "usersSucess") public Object[][] usersSucess(){
-	 * return new Object[][]{ {"helloxwr","Gmcc_1234"} }; }
-	 */
 
 	@DataProvider(name = "testdata")
 	public Object[][] testData() {
@@ -83,7 +72,7 @@ public class LoginBase {
 			XSSFSheet sheet = workbook.getSheetAt(0);
 			if (sheet == null) {
 				workbook.close();
-				return new Object[][] {};
+				return null;
 			}
 			// 获取工作表总行数，注意：首行行号是0
 			int rowcount = (sheet.getLastRowNum() - sheet.getFirstRowNum()) + 1;

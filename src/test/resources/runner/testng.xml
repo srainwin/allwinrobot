@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="suite">
-	<!-- 填写启动浏览器名字：chrome、firefox、ie、ghost -->
+	<!-- 填写启动浏览器名字：chrome、firefox、ie、ghost，推荐chrome -->
 	<parameter name="browserName" value="chrome" />
-	<!-- driver存放路径的属性配置文件 -->
+	<!-- 填写浏览器驱动存放路径的属性配置文件位置 -->
 	<parameter name="driverConfigFilePath" value="../src/test/resources/config/driver.properties" />
-	<!-- 定义测试的站点 -->
+	<!-- 填写测试的网站url -->
 	<parameter name="testurl" value="https://mail.126.com" />
+	<!-- 填写页面加载等待超时时间 -->
+	<parameter name="pageLoadTimeout" value="20" />
 	<listeners>
 		<!-- 测试用例运行失败截图处理监听 -->
 		<listener class-name="com.demo.utils.TestFailListener" />

@@ -16,7 +16,6 @@ import org.testng.TestListenerAdapter;
 import com.demo.base.LoginBase;
 
 import io.qameta.allure.Allure;
-import io.qameta.allure.Attachment;
 
 /**
  * @author XWR
@@ -29,24 +28,13 @@ public class TestFailListener extends TestListenerAdapter {
 	 */
 	@Override
 	public void onTestFailure(ITestResult result) {
-		//尝试takePhoto()方法无效，使用takePhoto2()方法
-		takePhoto2();
-	}
-
-	/**
-	 * @Description 截图方案1 无效，getScreenshotAs方法没重写
-	 * @return
-	 */
-	@Attachment(value = "失败截图如下：", type = "image/png")
-	public byte[] takePhoto() {
-		byte[] screenshotAs = ((TakesScreenshot) LoginBase.driver).getScreenshotAs(OutputType.BYTES);
-		return screenshotAs;
+		takePhoto();
 	}
 	
 	/**
-	 * @Description 截图方案2 有效
+	 * @Description 截图方法
 	 */
-	public void takePhoto2(){
+	public void takePhoto(){
 		try{
 			String screenName = String.valueOf(new Date().getTime()) + ".png";
 			File dir = new File("./result/screenshot");
