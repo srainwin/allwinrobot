@@ -30,7 +30,7 @@ public class HomePage_004_Overview_ContactMail extends LoginBase {
 			+ "2、成功跳转到联系人邮件Tab页；\r\n")
 	public void overviewContactMail(String username,String password,String except) throws Exception {
 		//登陆
-		LoginOperation.login(driver, username, password,baseurl);
+		LoginOperation.login(driver, username, password,testurl);
 		Thread.sleep(2000);
 		//点击总览联系人邮件
 		HomeOperation.overviewContactMailClick(driver);

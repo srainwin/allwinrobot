@@ -5,6 +5,8 @@
 	<parameter name="browserName" value="chrome" />
 	<!-- 填写浏览器驱动存放路径的属性配置文件位置 -->
 	<parameter name="driverConfigFilePath" value="../src/test/resources/config/driver.properties" />
+	<!-- 填写浏览器驱动存放路径的属性配置文件位置 -->
+	<parameter name="cookiesConfigFilePath" value="../src/test/resources/config/cookies.properties" />
 	<!-- 填写测试的网站url -->
 	<parameter name="testurl" value="https://mail.126.com" />
 	<!-- 填写页面加载等待超时时间 -->

@@ -7,7 +7,7 @@ import org.apache.log4j.PropertyConfigurator;
  * @Description log4j初始化配置
  */
 public class LogConfiguration {
-	
+
 		/**
 		 * @Description log4j初始化配置
 		 * @param fileName

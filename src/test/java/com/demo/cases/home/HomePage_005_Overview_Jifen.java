@@ -30,7 +30,7 @@ public class HomePage_005_Overview_Jifen extends LoginBase {
 			+ "2、成功打开新窗口进入网易邮箱用户俱乐部页面；\r\n")
 	public void overviewJifen(String username,String password,String expect) throws Exception {
 		//登陆
-		LoginOperation.login(driver, username, password,baseurl);
+		LoginOperation.login(driver, username, password,testurl);
 		Thread.sleep(2000);
 		//点击总览积分
 		String currentHandle = HomeOperation.overviewJifen(driver);

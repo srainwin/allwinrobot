@@ -30,7 +30,7 @@ public class HomePage_001_Overview_Tab extends LoginBase {
 			+ "2、当前切换的Tab为首页；\r\n")
 	public void overviewTabSwitch(String username,String password) throws Exception {
 		//登陆
-		LoginOperation.login(driver, username, password,baseurl);
+		LoginOperation.login(driver, username, password,testurl);
 		Thread.sleep(2000);
 		//点击首页tab
 		HomeOperation.homepageTabClick(driver);

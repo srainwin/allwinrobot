@@ -25,7 +25,7 @@ public class SelectBrowser {
 			logger.info("启动测试浏览器：[" + browsername + "]");
 			// 从testNG的配置文件读取参数driverConfigFilePath的值
 			String driverConfigFilePath = itestcontext.getCurrentXmlTest().getParameter("driverConfigFilePath");
-			// 获取驱动的路径值
+			// 调用getPropertiesData方法获取各类型浏览器驱动的路径
 			String chromedriverPath = getPropertiesData(driverConfigFilePath, "chromedriver");
 			String firefoxdriverPath = getPropertiesData(driverConfigFilePath, "firefoxdriver");
 			String iedriverPath = getPropertiesData(driverConfigFilePath, "iedriver");
@@ -35,8 +35,7 @@ public class SelectBrowser {
 				System.setProperty("webdriver.ie.driver", iedriverPath);
 				// IE的常规设置，需要忽略浏览器安全保护模式的设置和忽略浏览器缩放级别设置，便于执行自动化测试。
 				DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
-				ieCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,
-						true);
+				ieCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);
 				ieCapabilities.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
 				// 返回ie浏览器对象
 				return new InternetExplorerDriver(ieCapabilities);
@@ -49,7 +48,6 @@ public class SelectBrowser {
 				//System.setProperty("webdriver.firefox.bin", firefoxdriverPath);
 				//System.setProperty("webdriver.firefox.marionette", firefoxdriverPath);
 				DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-
 				capabilities.setCapability("marionette", false); 
 				// 返回火狐浏览器对象
 				return new FirefoxDriver(capabilities);
@@ -57,8 +55,7 @@ public class SelectBrowser {
 				// ghost的常规设置
 				DesiredCapabilities ghostCapabilities = new DesiredCapabilities();
 				ghostCapabilities.setJavascriptEnabled(true);
-				ghostCapabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
-						ghostdriverPath);
+				ghostCapabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,ghostdriverPath);
 				// 返回ghost对象
 				return new PhantomJSDriver(ghostCapabilities);
 			} else {
@@ -83,7 +80,7 @@ public class SelectBrowser {
 		String value = null;
 		try {
 			Properties properties = new Properties();
-			// 读取properties文件
+			// 读取driver.properties文件
 			FileReader filereader = new FileReader(propertiesFilePath);
 			properties.load(filereader);
 			// 获取key对应的value值

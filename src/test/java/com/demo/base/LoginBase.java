@@ -30,19 +30,20 @@ public class LoginBase {
 	protected String browserName;
 	protected String testurl;
 	protected String pageLoadTimeout;
+	protected ITestContext itestcontext;
 	
 	static Logger logger = Logger.getLogger(LoginBase.class.getName());
 
 	@BeforeClass
-	public void setup(ITestContext itestcontext) {
+	public void setup() {
 		try {
+			System.out.println("123");
 			LogConfiguration.initLog(this.getClass().getSimpleName());
 			logger.info("正启动浏览器");
 			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
 			testurl = itestcontext.getCurrentXmlTest().getParameter("testurl");
 			pageLoadTimeout = itestcontext.getCurrentXmlTest().getParameter("pageLoadTimeout");
 			int plTimeout = Integer.parseInt(pageLoadTimeout);
-//			seleniumUtil = new SeleniumUtil();
 			seleniumUtil.launchBrowser(browserName,itestcontext,testurl,plTimeout);
 			logger.info("浏览器启动成功");
 		} catch (Exception e) {

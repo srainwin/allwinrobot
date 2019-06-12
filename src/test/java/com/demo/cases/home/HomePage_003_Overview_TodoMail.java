@@ -30,7 +30,7 @@ public class HomePage_003_Overview_TodoMail extends LoginBase {
 			+ "2、成功跳转到待办邮件Tab页；\r\n")
 	public void overviewTodoMail(String username,String password,String except) throws Exception {
 		//登陆
-		LoginOperation.login(driver, username, password,baseurl);
+		LoginOperation.login(driver, username, password,testurl);
 		Thread.sleep(2000);
 		//点击总览待办邮件
 		HomeOperation.overviewTodoMailClick(driver);

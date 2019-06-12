@@ -26,11 +26,13 @@ public class LoginPage_001_LoginSuccess extends  LoginBase {
 			+ "1、成功登录，且当前用户名信息正确；\r\n")
 	public void loginSucess(String username,String password) throws Exception {
 		//登陆
-		LoginOperation.login(driver, username, password,baseurl);
+		LoginOperation.login(driver, username, password,testurl);
 		Thread.sleep(2000);
 		//用户信息断言
 		String actual = LoginOperation.getLoginCurrentUser(driver);
 		Assert.assertEquals(actual, username + "@126.com");
+		//添加cookies，下次免登录
+		seleniumUtil.cookiesSaveInFile(itestcontext);
 		//登出
 		LoginOperation.logout(driver);
 	}

@@ -30,7 +30,7 @@ public class HomePage_006_Overview_SafetyDegree extends LoginBase {
 			+ "2、成功跳转到设置Tab页并显示邮件安全相关内容；\r\n")
 	public void overviewSafetyDegree(String username,String password,String expect) throws Exception {
 		//登陆
-		LoginOperation.login(driver, username, password,baseurl);
+		LoginOperation.login(driver, username, password,testurl);
 		Thread.sleep(2000);
 		//点击总览安全度
 		HomeOperation.overviewSafetyDegreeClick(driver);

@@ -30,7 +30,7 @@ public class HomePage_008_Overview_DailyLife extends LoginBase {
 			+ "2、成功跳转到严选每日推荐Tab页；\r\n")
 	public void overviewDailyLife(String username,String password,String expect) throws Exception {
 		//登陆
-		LoginOperation.login(driver, username, password,baseurl);
+		LoginOperation.login(driver, username, password,testurl);
 		Thread.sleep(2000);
 		//点击总览安全度
 		HomeOperation.overviewDailyLifeClick(driver);

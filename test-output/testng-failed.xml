@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [suite]">
+  <parameter name="pageLoadTimeout" value="20"/>
+  <parameter name="browserName" value="chrome"/>
+  <parameter name="testurl" value="https://mail.126.com"/>
+  <parameter name="cookiesConfigFilePath" value="../src/test/resources/config/cookies.properties"/>
+  <parameter name="driverConfigFilePath" value="../src/test/resources/config/driver.properties"/>
+  <listeners>
+    <listener class-name="com.demo.utils.TestFailListener"/>
+    <listener class-name="com.demo.utils.TestRetryListener"/>
+  </listeners>
+  <test name="test">
+  </test> <!-- test -->
+</suite> <!-- Failed suite [suite] -->

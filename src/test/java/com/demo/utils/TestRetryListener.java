@@ -17,6 +17,7 @@ public class TestRetryListener implements IAnnotationTransformer {
 	public void transform(ITestAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
 		IRetryAnalyzer retry = annotation.getRetryAnalyzer();
 		if (retry == null) {
+			// 添加自定义的重跑类TestNGRetry.class
 			annotation.setRetryAnalyzer(TestNGRetry.class);
 		}
 	}

@@ -30,7 +30,7 @@ public class HomePage_007_Overview_LoginProtect extends LoginBase {
 			+ "2、成功跳转到设置Tab页并显示邮件登录保护相关内容；\r\n")
 	public void overviewLoginProtect(String username,String password,String expect) throws Exception {
 		//登陆
-		LoginOperation.login(driver, username, password,baseurl);
+		LoginOperation.login(driver, username, password,testurl);
 		Thread.sleep(2000);
 		//点击总览安全度
 		HomeOperation.overviewLoginProtectClick(driver);

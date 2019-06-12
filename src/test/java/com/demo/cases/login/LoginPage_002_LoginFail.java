@@ -28,7 +28,7 @@ public class LoginPage_002_LoginFail extends  LoginBase {
 			+ "1、失败登录，且显示相应登陆失败提示信息\r\n")
 	public void loginFail(String username,String password,String expecttext) throws Exception {
 		//登陆
-		LoginOperation.login(driver, username, password,baseurl);
+		LoginOperation.login(driver, username, password,testurl);
 		Thread.sleep(2000);
 		//用户信息断言
 		String actual = LoginOperation.getLoginErrorInfo(driver);

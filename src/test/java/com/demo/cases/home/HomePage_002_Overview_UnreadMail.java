@@ -30,7 +30,7 @@ public class HomePage_002_Overview_UnreadMail extends LoginBase {
 			+ "2、成功跳转到未读邮件Tab页；\r\n")
 	public void overviewUnreadMail(String username,String password,String expect) throws Exception {
 		//登陆
-		LoginOperation.login(driver, username, password,baseurl);
+		LoginOperation.login(driver, username, password,testurl);
 		Thread.sleep(2000);
 		//点击总览未读邮件
 		HomeOperation.overviewUnreadMailClick(driver);
