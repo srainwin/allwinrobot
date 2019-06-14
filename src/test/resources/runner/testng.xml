@@ -6,7 +6,9 @@
 	<!-- 填写浏览器驱动存放路径的属性配置文件位置 -->
 	<parameter name="driverConfigFilePath" value="../src/test/resources/config/driver.properties" />
 	<!-- 填写浏览器驱动存放路径的属性配置文件位置 -->
-	<parameter name="cookiesConfigFilePath" value="../src/test/resources/config/cookies.properties" />
+	<parameter name="cookiesConfigFilePath" value="../src/test/resources/config/cookies.txt" />
+	<!-- 填写AutoIT的exe执行文件位置 -->
+	<parameter name="autoitFolderPath" value="../src/test/resources/autoit/" />
 	<!-- 填写测试的网站url -->
 	<parameter name="testurl" value="https://mail.126.com" />
 	<!-- 填写页面加载等待超时时间 -->
@@ -29,6 +31,7 @@
 			<class name="com.demo.cases.home.HomePage_006_Overview_SafetyDegree" />
 			<class name="com.demo.cases.home.HomePage_007_Overview_LoginProtect" />
 			<class name="com.demo.cases.home.HomePage_008_Overview_DailyLife" />
+			<class name="com.demo.cases.login.LoginPage_003_Logout" />
 		</classes>
 	</test>
 </suite>

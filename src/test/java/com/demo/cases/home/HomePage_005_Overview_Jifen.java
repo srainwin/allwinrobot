@@ -1,12 +1,13 @@
 package com.demo.cases.home;
 
 import org.testng.Assert;
+import org.testng.ITestContext;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
-import com.demo.pageoperation.HomeOperation;
-import com.demo.pageoperation.LoginOperation;
+import com.demo.pagesoperation.HomeOperation;
+import com.demo.pagesoperation.LoginOperation;
 import com.demo.utils.TestFailListener;
 import com.demo.utils.TestRetryListener;
 
@@ -22,20 +23,20 @@ public class HomePage_005_Overview_Jifen extends LoginBase {
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata" ,description = "总览快捷跳转积分")
-	@Description("操作步骤：\r\n"
-			+ "1、输入用户名和密码，点击登录；\r\n"
-			+ "2、默认进入首页Tab后点击总览积分；\r\n"
-			+ "预期结果：\r\n"
-			+ "1、成功登录，且当前用户名信息正确；\r\n"
-			+ "2、成功打开新窗口进入网易邮箱用户俱乐部页面；\r\n")
-	public void overviewJifen(String username,String password,String expect) throws Exception {
-		//登陆
-		LoginOperation.login(driver, username, password,testurl);
+	@Description("操作步骤："
+			+ "1、打开已登录页面；"
+			+ "2、默认进入首页Tab后点击总览积分；"
+			+ "预期结果："
+			+ "1、成功登录，且当前用户名信息正确；"
+			+ "2、成功打开新窗口进入网易邮箱用户俱乐部页面；")
+	public void overviewJifen(String expect,ITestContext itestcontext) throws Exception {
+		//打开已登录页面
+		LoginOperation.loginFree(seleniumUtil,testurl,itestcontext);
 		Thread.sleep(2000);
 		//点击总览积分
-		String currentHandle = HomeOperation.overviewJifen(driver);
+		String currentHandle = HomeOperation.overviewJifen(seleniumUtil);
 		//进入积分断言
-		String actual = HomeOperation.getOverviewJifenWindowTitle(driver, currentHandle);
+		String actual = HomeOperation.getOverviewJifenWindowTitle(seleniumUtil,currentHandle);
 		Assert.assertEquals(actual, expect);
 	}
 }

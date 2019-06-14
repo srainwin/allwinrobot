@@ -13,8 +13,6 @@ import org.openqa.selenium.TakesScreenshot;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
-import com.demo.base.LoginBase;
-
 import io.qameta.allure.Allure;
 
 /**
@@ -43,7 +41,7 @@ public class TestFailListener extends TestListenerAdapter {
 			}
 			String screenPath = dir.getAbsolutePath() + "/"+screenName;
 			
-			File srcFile = ((TakesScreenshot) LoginBase.driver).getScreenshotAs(OutputType.FILE);
+			File srcFile = ((TakesScreenshot) SeleniumUtil.driver).getScreenshotAs(OutputType.FILE);
 			File destFile = new File(screenPath);
 			FileUtils.copyFile(srcFile, destFile);
 			

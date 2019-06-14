@@ -45,12 +45,13 @@ public class SelectBrowser {
 				return new ChromeDriver();
 			} else if (browsername.equalsIgnoreCase("firefox")) {
 				System.setProperty("webdriver.gecko.driver", firefoxdriverPath);
+				// 返回火狐浏览器对象
+				return new FirefoxDriver();
 				//System.setProperty("webdriver.firefox.bin", firefoxdriverPath);
 				//System.setProperty("webdriver.firefox.marionette", firefoxdriverPath);
-				DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-				capabilities.setCapability("marionette", false); 
-				// 返回火狐浏览器对象
-				return new FirefoxDriver(capabilities);
+				//DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+				//capabilities.setCapability("marionette", false); 
+				//return new FirefoxDriver(capabilities);
 			} else if (browsername.equalsIgnoreCase("ghost")) {
 				// ghost的常规设置
 				DesiredCapabilities ghostCapabilities = new DesiredCapabilities();
@@ -65,7 +66,7 @@ public class SelectBrowser {
 				return new ChromeDriver();
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("选择浏览器类型发生异常",e);
 			return null;
 		}
 	}

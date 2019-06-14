@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="0" failed="0" total="0" passed="0">
+<testng-results skipped="1" failed="0" total="1" passed="0">
   <reporter-output>
   </reporter-output>
-  <suite name="suite" duration-ms="311" started-at="2019-06-12T10:04:20Z" finished-at="2019-06-12T10:04:21Z">
+  <suite name="Default suite" duration-ms="266" started-at="2019-06-14T16:52:57Z" finished-at="2019-06-14T16:52:58Z">
     <groups>
     </groups>
-    <test name="test" duration-ms="311" started-at="2019-06-12T10:04:20Z" finished-at="2019-06-12T10:04:21Z">
-    </test> <!-- test -->
-  </suite> <!-- suite -->
+    <test name="Default test" duration-ms="266" started-at="2019-06-14T16:52:57Z" finished-at="2019-06-14T16:52:58Z">
+      <class name="com.demo.cases.home.HomePage_001_Overview_Tab">
+        <test-method status="PASS" signature="setup(org.testng.ITestContext)[pri:0, instance:com.demo.cases.home.HomePage_001_Overview_Tab@126253fd]" name="setup" is-config="true" duration-ms="77" started-at="2019-06-15T00:52:57Z" finished-at="2019-06-15T00:52:57Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[org.testng.TestRunner@176b3f44]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method status="SKIP" signature="overviewTabSwitch(java.lang.String, org.testng.ITestContext)[pri:0, instance:com.demo.cases.home.HomePage_001_Overview_Tab@126253fd]" name="overviewTabSwitch" duration-ms="0" started-at="2019-06-15T00:52:57Z" description="切换为首页Tab" data-provider="testdata" finished-at="2019-06-15T00:52:57Z">
+          <exception class="java.lang.NullPointerException">
+            <full-stacktrace>
+              <![CDATA[java.lang.NullPointerException
+	at org.testng.internal.MethodInvocationHelper.invokeDataProvider(MethodInvocationHelper.java:151)
+	at org.testng.internal.Parameters.handleParameters(Parameters.java:430)
+	at org.testng.internal.Invoker.handleParameters(Invoker.java:1274)
+	at org.testng.internal.Invoker.createParameters(Invoker.java:989)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1079)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:129)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:112)
+	at org.testng.TestRunner.privateRun(TestRunner.java:782)
+	at org.testng.TestRunner.run(TestRunner.java:632)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:366)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:361)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:319)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:268)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1244)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1169)
+	at org.testng.TestNG.run(TestNG.java:1064)
+	at org.testng.remote.RemoteTestNG.run(RemoteTestNG.java:113)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:206)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:177)
+]]>
+            </full-stacktrace>
+          </exception> <!-- java.lang.NullPointerException -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- overviewTabSwitch -->
+        <test-method status="PASS" signature="teardown()[pri:0, instance:com.demo.cases.home.HomePage_001_Overview_Tab@126253fd]" name="teardown" is-config="true" duration-ms="4" started-at="2019-06-15T00:52:58Z" finished-at="2019-06-15T00:52:58Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+      </class> <!-- com.demo.cases.home.HomePage_001_Overview_Tab -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
 </testng-results>
