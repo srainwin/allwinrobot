@@ -296,15 +296,18 @@ public class SeleniumUtil {
 	/**
 	 * WebDriverWait，显示等待。在给定的时间内去定位查找元素，如果没找到则超时，抛出异常
 	 */
-	public WebElement WebDriverWaitForFindElementBy(long timeOutInSeconds, final By byElement) {
+	public WebElement findElementByWait(int timeOutInSeconds, final By byElement) {
 		WebElement element = null;
 		try {
 			//元素最多等待timeOut秒
 			WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
 			//等待元素可见且可被单击
+			//WebDriverWait的until()功能是在限定时间内一直等待元素某个条件为真，并返回元素本身
+			//ExpectedConditions是selenium的工具类，可对元素做各种期望判断，如是否可点击、是否包含某文本等等)
 			wait.until(ExpectedConditions.elementToBeClickable(byElement));
 			//获取元素
 			element = wait.until(new ExpectedCondition<WebElement>() {
+				@Override
 				public WebElement apply(WebDriver driver) {
 					return driver.findElement(byElement);
 				}
@@ -391,7 +394,7 @@ public class SeleniumUtil {
 	public String getText(By byElement) {
 		String text = null;
 		try {
-			text = driver.findElement(byElement).getText().trim();
+			text = findElementByWait(5, byElement).getText().trim();
 			logger.info("成功获取元素的文本");
 		} catch (Exception e) {
 			logger.error("获取元素的文本异常", e);
@@ -418,7 +421,7 @@ public class SeleniumUtil {
 	 */
 	public void clear(By byElement) {
 		try {
-			findElementBy(byElement).clear();
+			findElementByWait(5,byElement).clear();
 			logger.info("成功清除元素 [" + byElement + "]上的内容");
 		} catch (Exception e) {
 			logger.error("清除元素 [" + byElement + "] 上的内容异常", e);
@@ -430,7 +433,7 @@ public class SeleniumUtil {
 	 */
 	public void click(By byElement) {
 		try {
-			findElementBy(byElement).click();
+			findElementByWait(5,byElement).click();
 			logger.info("成功点击元素 [" + byElement + "]");
 		} catch (StaleElementReferenceException e) {
 			logger.error("你点击的元素:[" + byElement + "]不再存在!", e);
@@ -461,7 +464,7 @@ public class SeleniumUtil {
 	 */
 	public void type(By byElement, CharSequence sendkeys) {
 		try {
-			findElementBy(byElement).sendKeys(sendkeys);
+			findElementByWait(5,byElement).sendKeys(sendkeys);
 			logger.info("成功输入[" + sendkeys + "] 到 [" + byElement + "]");
 		} catch (Exception e) {
 			logger.error("输入 [" + sendkeys + "] 到 元素[" + byElement + "]异常", e);
@@ -473,7 +476,7 @@ public class SeleniumUtil {
 	 */
 	public void submit(By byElement) {
 		try {
-			findElementBy(byElement).submit();
+			findElementByWait(5,byElement).submit();
 			logger.info("成功表单提交");
 		} catch (Exception e) {
 			logger.error("表单提交发生异常", e);
@@ -486,7 +489,7 @@ public class SeleniumUtil {
 	 */
 	public void pressKeys(By byElement, Keys key, String keyword) {
 		try {
-			findElementBy(byElement).sendKeys(Keys.chord(key, keyword));
+			findElementByWait(5,byElement).sendKeys(Keys.chord(key, keyword));
 			logger.info("成功键盘操作" + key.name() + "+" + keyword);
 		} catch (Exception e) {
 			logger.error("键盘操作" + key.name() + "+" + keyword + "异常", e);
@@ -552,7 +555,7 @@ public class SeleniumUtil {
 	public void inFrame(By ByframeElement) {
 		try {
 			logger.info("正在切换frame");
-			driver.switchTo().frame(findElementBy(ByframeElement));
+			driver.switchTo().frame(findElementByWait(5,ByframeElement));
 			logger.info("成功切换frame");
 		} catch (Exception e) {
 			logger.error("切换frame发生异常",e);
@@ -654,7 +657,7 @@ public class SeleniumUtil {
 	public void mouseLeftClick(By byElement) {
 		try{
 			Actions builder = new Actions(driver);
-			builder.click(findElementBy(byElement)).perform();
+			builder.click(findElementByWait(5,byElement)).perform();
 			logger.info("成功鼠标左击");
 		}catch(Exception e){
 			logger.error("鼠标左击发生异常",e);
@@ -667,7 +670,7 @@ public class SeleniumUtil {
 	public void mouseRightClick(By byElement) {
 		try{
 			Actions builder = new Actions(driver);
-			builder.contextClick(findElementBy(byElement)).perform();
+			builder.contextClick(findElementByWait(5,byElement)).perform();
 			logger.info("成功鼠标右击");
 		}catch(Exception e){
 			logger.error("鼠标右击发生异常",e);
@@ -680,7 +683,7 @@ public class SeleniumUtil {
 	public void mouseDoubleClick(By byElement) {
 		try{
 			Actions builder = new Actions(driver);
-			builder.doubleClick(findElementBy(byElement)).perform();
+			builder.doubleClick(findElementByWait(5,byElement)).perform();
 			logger.info("成功鼠标双击");
 		}catch(Exception e){
 			logger.error("鼠标双击发生异常",e);
@@ -693,7 +696,7 @@ public class SeleniumUtil {
 	public void mouseMoveToElement(By byElement) {
 		try{
 			Actions builder = new Actions(driver);
-			builder.moveToElement(findElementBy(byElement)).perform();
+			builder.moveToElement(findElementByWait(5,byElement)).perform();
 			logger.info("成功移动鼠标到指定元素");
 		}catch(Exception e){
 			logger.error("移动鼠标到指定元素发生异常",e);
@@ -706,7 +709,7 @@ public class SeleniumUtil {
 	public void mouseMoveToElement(By byElement,int xOffset,int yOffset) {
 		try{
 			Actions builder = new Actions(driver);
-			builder.moveToElement(findElementBy(byElement), xOffset, yOffset).perform();
+			builder.moveToElement(findElementByWait(5,byElement), xOffset, yOffset).perform();
 			logger.info("成功移动鼠标到指定元素的(x,y)位置");
 		}catch(Exception e){
 			logger.error("移动鼠标到指定元素的(x,y)位置发生异常",e);
@@ -719,7 +722,7 @@ public class SeleniumUtil {
 	public void mouseDragAndDrop(By BySourceElement,By ByTargetElement) {
 		try{
 			Actions builder = new Actions(driver);
-			builder.dragAndDrop(findElementBy(BySourceElement), findElementBy(ByTargetElement)).perform();
+			builder.dragAndDrop(findElementByWait(5,BySourceElement), findElementByWait(5,ByTargetElement)).perform();
 			logger.info("成功鼠标拖拽source元素到target元素位置");
 		}catch(Exception e){
 			logger.error("鼠标拖拽source元素到target元素位置发生异常",e);
@@ -732,7 +735,7 @@ public class SeleniumUtil {
 	public void mouseDragAndDrop(By BySourceElement,int xOffset,int yOffset) {
 		try{
 			Actions builder = new Actions(driver);
-			builder.dragAndDropBy(findElementBy(BySourceElement), xOffset, yOffset).perform();
+			builder.dragAndDropBy(findElementByWait(5,BySourceElement), xOffset, yOffset).perform();
 			logger.info("成功鼠标拖拽source元素到(xOffset, yOffset)位置");
 		}catch(Exception e){
 			logger.error("鼠标拖拽source元素到(xOffset, yOffset)位置发生异常",e);
@@ -745,7 +748,7 @@ public class SeleniumUtil {
 	public void mouseClickAndHold(By byElement) {
 		try{
 			Actions builder = new Actions(driver);
-			builder.clickAndHold(findElementBy(byElement)).perform();
+			builder.clickAndHold(findElementByWait(5,byElement)).perform();
 			logger.info("成功鼠标悬停");
 		}catch(Exception e){
 			logger.error("鼠标悬停发生异常",e);
@@ -769,7 +772,7 @@ public class SeleniumUtil {
 	public String getCSSValue(By byElement, String key) {
 		String css = null;
 		try{
-			css = findElementBy(byElement).getCssValue(key);
+			css = findElementByWait(5,byElement).getCssValue(key);
 			logger.info("成功获得CSS value");
 		}catch(Exception e){
 			logger.error("获得CSS value发生异常",e);
@@ -783,7 +786,7 @@ public class SeleniumUtil {
 	public boolean isInputEdit(By byElement) {
 		boolean isEdit = false;
 		try {
-			isEdit = findElementBy(byElement).isEnabled();
+			isEdit = findElementByWait(5,byElement).isEnabled();
 			if (isEdit){
 				logger.info("成功检查元素可编辑");
 			}else{
@@ -799,7 +802,7 @@ public class SeleniumUtil {
 	public boolean isDisplayed(By byElement) {
 		boolean isDisplay = false;
 		try{
-			isDisplay = findElementBy(byElement).isDisplayed();
+			isDisplay = findElementByWait(5,byElement).isDisplayed();
 			if (isDisplay){
 				logger.info("成功检查元素可显示");
 			}else{
@@ -814,7 +817,7 @@ public class SeleniumUtil {
 	/** 检查元素是不是存在 */
 	public boolean doesElementsExist(By byElement) {
 		try {
-			findElementBy(byElement);
+			findElementByWait(5,byElement);
 			logger.info("成功检查元素存在");
 			return true;
 		} catch (NoSuchElementException e) {
@@ -831,7 +834,7 @@ public class SeleniumUtil {
 	public boolean isSelected(By byElement) {
 		boolean flag = false;
 		try{
-			flag = findElementBy(byElement).isSelected();
+			flag = findElementByWait(5,byElement).isSelected();
 			if (flag) {
 				logger.info("成功检查CheckBox被勾选");
 			} else{
@@ -848,7 +851,7 @@ public class SeleniumUtil {
 	 */
 	public void selectByValue(By byElement, String value) {
 		try{
-			Select s = new Select(findElementBy(byElement));
+			Select s = new Select(findElementByWait(5,byElement));
 			s.selectByValue(value);
 			logger.info("成功根据value选择下拉选项");
 		}catch(Exception e){
@@ -861,7 +864,7 @@ public class SeleniumUtil {
 	 */
 	public void selectByIndex(By byElement, int index) {
 		try{
-			Select s = new Select(findElementBy(byElement));
+			Select s = new Select(findElementByWait(5,byElement));
 			s.selectByIndex(index);
 			logger.info("成功根据index角标选择下拉选项");
 		}catch(Exception e){
@@ -875,7 +878,7 @@ public class SeleniumUtil {
 	 */
 	public void selectByText(By byElement, String text) {
 		try{
-			Select s = new Select(findElementBy(byElement));
+			Select s = new Select(findElementByWait(5,byElement));
 			s.selectByVisibleText(text);
 			logger.info("成功根据文本内容选择下拉选项");
 		}catch(Exception e){
@@ -889,7 +892,7 @@ public class SeleniumUtil {
 	public List<WebElement> getSelectOptions(By byElement) {
 		List<WebElement> optionsList = null;
 		try{
-			Select s = new Select(findElementBy(byElement));
+			Select s = new Select(findElementByWait(5,byElement));
 			optionsList = s.getAllSelectedOptions();
 			logger.info("成功获得当前下拉的所有选项的元素定位");
 		}catch(Exception e){
@@ -992,7 +995,7 @@ public class SeleniumUtil {
 	/** 文本断言，判断元素getText()获取的文本是否包含指定内容，使用testng的assetTrue方法 */
 	public void assertTrue(By byElement, String textcontent) {
 		try{
-			String str = findElementBy(byElement).getText();
+			String str = findElementByWait(5,byElement).getText();
 			Assert.assertTrue(str.contains(textcontent), "assert为flase，获取元素的text中应含有：" + textcontent+"才对，发现不含有。当assert为ture时则看不到这句话。");
 			logger.info("成功断言获取元素的text是否含有指定内容");
 		}catch(Exception e){
@@ -1023,7 +1026,7 @@ public class SeleniumUtil {
 		String filePath = file.getAbsolutePath();
 		try {
 			//定位上传按钮，添加本地文件
-			findElementBy(byElement).sendKeys(filePath);
+			findElementByWait(5,byElement).sendKeys(filePath);
 			logger.info("成功通过定位上传按钮后sendKeys()上传文件");
 		} catch (Exception e) {
 			logger.error("通过定位上传按钮后sendKeys()上传文件发生异常",e);
