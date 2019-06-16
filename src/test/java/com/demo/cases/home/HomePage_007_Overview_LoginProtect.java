@@ -18,8 +18,8 @@ public class HomePage_007_Overview_LoginProtect extends LoginBase {
 
 	/**
 	 * @Description 首页测试用例007：总览快捷跳转登录保护
-	 * @param username
-	 * @param password
+	 * @param expect
+	 * @param itestcontext
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata" ,description = "总览快捷跳转登录保护")

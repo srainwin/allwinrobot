@@ -35,7 +35,8 @@ public class LoginBase {
 	@BeforeClass
 	public void setup(ITestContext itestcontext) {
 		try {
-			LogConfiguration.initLog(this.getClass().getSimpleName());
+			//initLog的参数filename与继承本类的测试类名相同，this指向调用这个setup()方法的测试类
+			LogConfiguration.initLog(this.getClass().getSimpleName(), itestcontext);
 			logger.info("正启动浏览器");
 			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
 			testurl = itestcontext.getCurrentXmlTest().getParameter("testurl");
@@ -57,6 +58,10 @@ public class LoginBase {
 		}
 	}
 
+	/**
+	 * @Description 使用apache poi读取excel来提供测试数据
+	 * @return
+	 */
 	@DataProvider(name = "testdata")
 	public Object[][] testData() {
 		try {

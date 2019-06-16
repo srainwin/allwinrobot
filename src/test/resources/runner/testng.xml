@@ -13,6 +13,8 @@
 	<parameter name="testurl" value="https://mail.126.com" />
 	<!-- 填写页面加载等待超时时间 -->
 	<parameter name="pageLoadTimeout" value="20" />
+	<!-- 填写保留测试日志天数 -->
+	<parameter name="keepLogDay" value="10" />
 	<listeners>
 		<!-- 测试用例运行失败截图处理监听 -->
 		<listener class-name="com.demo.utils.TestFailListener" />

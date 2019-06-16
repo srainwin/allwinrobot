@@ -13,6 +13,8 @@
 	<parameter name="testurl" value="https://mail.126.com" />
 	<!-- 填写页面加载等待超时时间 -->
 	<parameter name="pageLoadTimeout" value="20" />
+	<!-- 填写保留测试日志天数 -->
+	<parameter name="keepLogDay" value="10" />
 	<listeners>
 		<!-- 测试用例运行失败截图处理监听 -->
 		<listener class-name="com.demo.utils.TestFailListener" />
@@ -21,7 +23,17 @@
 	</listeners>
 	<test name="test" preserve-order="true">
 		<classes>
+			<class name="com.demo.cases.login.LoginPage_001_LoginSuccess" />
+			<class name="com.demo.cases.login.LoginPage_002_LoginFail" />
 			<class name="com.demo.cases.home.HomePage_001_Overview_Tab" />
+			<class name="com.demo.cases.home.HomePage_002_Overview_UnreadMail" />
+			<class name="com.demo.cases.home.HomePage_003_Overview_TodoMail" />
+			<class name="com.demo.cases.home.HomePage_004_Overview_ContactMail" />
+			<!-- <class name="com.demo.cases.home.HomePage_005_Overview_Jifen" /> -->
+			<class name="com.demo.cases.home.HomePage_006_Overview_SafetyDegree" />
+			<class name="com.demo.cases.home.HomePage_007_Overview_LoginProtect" />
+			<class name="com.demo.cases.home.HomePage_008_Overview_DailyLife" />
+			<class name="com.demo.cases.login.LoginPage_003_Logout" />
 		</classes>
 	</test>
 </suite>

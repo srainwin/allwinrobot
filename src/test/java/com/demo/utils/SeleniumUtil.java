@@ -408,7 +408,7 @@ public class SeleniumUtil {
 	public String getAttributeText(By byElement, String attribute) {
 		String attributeText = "";
 		try {
-			attributeText = driver.findElement(byElement).getAttribute(attribute).trim();
+			attributeText = findElementByWait(5, byElement).getAttribute(attribute).trim();
 			logger.info("成功获取元素的属性值");
 		} catch (Exception e) {
 			logger.error("获取元素的属性值发生异常", e);

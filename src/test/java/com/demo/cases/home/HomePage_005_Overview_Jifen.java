@@ -18,8 +18,8 @@ public class HomePage_005_Overview_Jifen extends LoginBase {
 
 	/**
 	 * @Description 首页测试用例005：总览快捷跳转积分（已下架）
-	 * @param username
-	 * @param password
+	 * @param expect
+	 * @param itestcontext
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata" ,description = "总览快捷跳转积分")

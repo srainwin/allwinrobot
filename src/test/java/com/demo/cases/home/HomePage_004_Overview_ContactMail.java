@@ -18,8 +18,8 @@ public class HomePage_004_Overview_ContactMail extends LoginBase {
 
 	/**
 	 * @Description 首页测试用例004：总览快捷跳转联系人邮件
-	 * @param username
-	 * @param password
+	 * @param except
+	 * @param itestcontext
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata" ,description = "总览快捷跳转联系人邮件")

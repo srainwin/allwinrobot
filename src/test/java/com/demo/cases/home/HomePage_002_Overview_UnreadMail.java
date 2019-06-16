@@ -18,8 +18,8 @@ public class HomePage_002_Overview_UnreadMail extends LoginBase {
 
 	/**
 	 * @Description 首页测试用例002：总览快捷跳转未读邮件
-	 * @param username
-	 * @param password
+	 * @param expect
+	 * @param itestcontext
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata" ,description = "总览快捷跳转未读邮件")

@@ -19,7 +19,7 @@ public class HomePage_001_Overview_Tab extends LoginBase {
 	/**
 	 * @Description 首页测试用例001：切换为首页Tab
 	 * @param username
-	 * @param password
+	 * @param itestcontext
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata" ,description = "切换为首页Tab")

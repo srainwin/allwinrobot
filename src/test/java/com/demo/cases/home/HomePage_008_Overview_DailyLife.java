@@ -18,8 +18,8 @@ public class HomePage_008_Overview_DailyLife extends LoginBase {
 
 	/**
 	 * @Description 首页测试用例008：总览快捷跳转每日生活
-	 * @param username
-	 * @param password
+	 * @param expect
+	 * @param itestcontext
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata" ,description = "总览快捷跳转每日生活")

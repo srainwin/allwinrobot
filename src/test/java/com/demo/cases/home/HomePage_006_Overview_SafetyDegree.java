@@ -18,8 +18,8 @@ public class HomePage_006_Overview_SafetyDegree extends LoginBase {
 
 	/**
 	 * @Description 首页测试用例006：总览快捷跳转安全度
-	 * @param username
-	 * @param password
+	 * @param expect
+	 * @param itestcontext
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata" ,description = "总览快捷跳转安全度")

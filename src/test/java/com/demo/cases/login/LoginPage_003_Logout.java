@@ -15,9 +15,9 @@ import io.qameta.allure.Description;
 public class LoginPage_003_Logout extends  LoginBase {
 	
 	/**
-	 * @Description 登录测试用例001：成功登录126邮箱
-	 * @param username
-	 * @param password
+	 * @Description登录测试用例003：成功登出126邮箱。注意：登出邮箱后之前获取保存的cookies将失效，需重新登录后getcookies保存。
+	 * @param expecttext
+	 * @param itestcontext
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata" ,description = "登出邮箱测试用例")
