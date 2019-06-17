@@ -36,6 +36,6 @@ public class HomePage_001_Overview_Tab extends LoginBase {
 		HomeOperation.homepageTabClick(seleniumUtil);
 		//进入首页tab断言
 		String actual = HomeOperation.gethomepageSign(seleniumUtil);
-		seleniumUtil.assertEquals(actual, username+"1");
+		seleniumUtil.assertEquals(actual, "username");
 	}
 }

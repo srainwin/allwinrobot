@@ -27,7 +27,6 @@ public class LoginPage_001_LoginSuccess extends  LoginBase {
 	public void loginSucess(String username,String password,ITestContext itestcontext) throws Exception {
 		//登陆
 		LoginOperation.login(seleniumUtil,username, password, testurl);
-		Thread.sleep(2000);
 		//获取cookies保存，便于其他用例免登录
 		seleniumUtil.cookiesSaveInFile(itestcontext);
 		//用户信息断言

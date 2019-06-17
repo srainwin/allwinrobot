@@ -28,7 +28,6 @@ public class LoginPage_002_LoginFail extends  LoginBase {
 	public void loginFail(String username,String password,String expecttext) throws Exception {
 		//登陆
 		LoginOperation.login(seleniumUtil,username, password,testurl);
-		Thread.sleep(2000);
 		//用户信息断言
 		String actual = LoginOperation.getLoginErrorInfo(seleniumUtil);
 		seleniumUtil.assertEquals(actual, expecttext);

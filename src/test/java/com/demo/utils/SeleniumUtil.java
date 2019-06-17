@@ -194,27 +194,31 @@ public class SeleniumUtil {
                 file.delete();
                 logger.info("成功删除旧的cookies文件");
                 file.createNewFile();
-                logger.info("成功重建新的cookies文件");
+                logger.info("成功创建新的cookies空文件");
             } catch (Exception e) {
-            	logger.error("重建新的cookies文件发生异常",e);
+            	logger.error("重建cookies文件发生异常",e);
             }
         }
 		try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-            for(Cookie c:cookies) {
-            	// expiry特殊处理，先getTime()转long类型，再转字符串。为空时转成null字样的字符串
-            	String expiry =null;
-            	if(c.getExpiry()==null){
-            		expiry = "null";
-            	}else{
-            		expiry = String.valueOf(c.getExpiry().getTime());
-            	}
-            	bw.write(c.getName()+";"+c.getValue()+";"+c.getDomain()+";"+c.getPath()+";"+expiry+";"+c.isSecure());
-                bw.newLine();
+            if (cookies != null){
+	            for(Cookie c:cookies) {
+	            	// expiry特殊处理，先getTime()转long类型，再转字符串。为空时转成null字样的字符串
+	            	String expiry =null;
+	            	if(c.getExpiry()==null){
+	            		expiry = "null";
+	            	}else{
+	            		expiry = String.valueOf(c.getExpiry().getTime());
+	            	}
+	            	bw.write(c.getName()+";"+c.getValue()+";"+c.getDomain()+";"+c.getPath()+";"+expiry+";"+c.isSecure());
+	                bw.newLine();
+	            }
+	            bw.flush();
+	            bw.close();
+	            logger.info("成功获取网站cookies并写入到cookies文件中");
+            }else{
+            	logger.warn("获取的cookies为空，不需要写入cookies文件中");
             }
-            bw.flush();
-            bw.close();
-            logger.info("成功获取网站cookies并写入到cookies文件中");
         } catch (Exception e) {
         	logger.error("获取网站cookies并写入到cookies文件中发生异常",e);
         }

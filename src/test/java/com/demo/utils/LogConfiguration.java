@@ -99,16 +99,16 @@ public class LogConfiguration {
 			// 设置输出日志文件编码（可以控制乱码情况）
 			prop.setProperty("log4j.appender.file.encoding", "UTF-8");
 
-			// 设置toConsole附加器类型为控制台附加器，以及日志输出的目标位置和日志格式化类型
+			// 设置toConsole附加器类型为控制台附加器，以及日志输出的目标位置、日志输出类型和格式化类型
 			prop.setProperty("log4j.appender.toConsole", "org.apache.log4j.ConsoleAppender");
 			prop.setProperty("log4j.appender.toConsole.Target", "System.out");
 			prop.setProperty("log4j.appender.toConsole.layout", "org.apache.log4j.PatternLayout ");
 			prop.setProperty("log4j.appender.toConsole.layout.ConversionPattern","[%d{yyyy-MM-dd HH:mm:ss}] [%p] %m%n");// %d日期格式、%p日志级别、%m%n日志消息
 
-			// 设置toFile附加器类型为每日滚动文件附加器，以及日志输出的目标位置和日志格式化类型
+			// 设置toFile附加器类型为每日滚动文件附加器，以及日志输出的目标位置、是否追加日志、过滤日志级别、日志输出类型和格式化类型
 			prop.setProperty("log4j.appender.toFile", "org.apache.log4j.DailyRollingFileAppender");
 			prop.setProperty("log4j.appender.toFile.file", filePath);
-			prop.setProperty("log4j.appender.toFile.append", "false");
+			prop.setProperty("log4j.appender.toFile.append", "true");
 			prop.setProperty("log4j.appender.toFile.Threshold", "info");
 			prop.setProperty("log4j.appender.toFile.layout", "org.apache.log4j.PatternLayout");
 			prop.setProperty("log4j.appender.toFile.layout.ConversionPattern", "[%d{yyyy-MM-dd HH:mm:ss}] [%p] %m%n");// %d日期格式、%p日志级别、%m%n日志消息
