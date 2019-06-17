@@ -1,6 +1,5 @@
 package com.demo.cases.home;
 
-import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -32,11 +31,10 @@ public class HomePage_008_Overview_DailyLife extends LoginBase {
 	public void overviewDailyLife(String expect,ITestContext itestcontext) throws Exception {
 		//打开已登录页面
 		LoginOperation.loginFree(seleniumUtil,testurl,itestcontext);
-		Thread.sleep(2000);
 		//点击总览安全度
 		HomeOperation.overviewDailyLifeClick(seleniumUtil);
 		//进入安全度断言
 		String actual = HomeOperation.getOverviewDailyLifeTab(seleniumUtil);
-		Assert.assertEquals(actual, expect);
+		seleniumUtil.assertEquals(actual, expect);
 	}
 }

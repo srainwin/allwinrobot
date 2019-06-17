@@ -1,6 +1,5 @@
 package com.demo.cases.login;
 
-import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -33,6 +32,6 @@ public class LoginPage_001_LoginSuccess extends  LoginBase {
 		seleniumUtil.cookiesSaveInFile(itestcontext);
 		//用户信息断言
 		String actual = LoginOperation.getLoginCurrentUser(seleniumUtil);
-		Assert.assertEquals(actual, username + "@126.com");
+		seleniumUtil.assertEquals(actual, username + "@126.com");
 	}
 }

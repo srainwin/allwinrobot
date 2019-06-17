@@ -1,6 +1,5 @@
 package com.demo.cases.home;
 
-import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -37,6 +36,6 @@ public class HomePage_002_Overview_UnreadMail extends LoginBase {
 		HomeOperation.overviewUnreadMailClick(seleniumUtil);
 		//进入未读邮件断言
 		String actual = HomeOperation.getOverviewUnreadMailTab(seleniumUtil);
-		Assert.assertEquals(actual, expect);
+		seleniumUtil.assertEquals(actual, expect);
 	}
 }

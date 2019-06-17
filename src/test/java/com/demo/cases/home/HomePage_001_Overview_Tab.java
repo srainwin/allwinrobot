@@ -1,6 +1,5 @@
 package com.demo.cases.home;
 
-import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -37,6 +36,6 @@ public class HomePage_001_Overview_Tab extends LoginBase {
 		HomeOperation.homepageTabClick(seleniumUtil);
 		//进入首页tab断言
 		String actual = HomeOperation.gethomepageSign(seleniumUtil);
-		Assert.assertEquals(actual, username);
+		seleniumUtil.assertEquals(actual, username+"1");
 	}
 }

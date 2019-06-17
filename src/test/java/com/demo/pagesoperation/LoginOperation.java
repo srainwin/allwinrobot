@@ -50,6 +50,7 @@ public class LoginOperation {
 			seleniumUtil.delAllcookies();
 			seleniumUtil.addcookies(itestcontext);
 			seleniumUtil.refresh();
+			Thread.sleep(1000);
 		} catch(Exception e){
 			logger.error("使用cookies方式免登陆异常",e);
 		}

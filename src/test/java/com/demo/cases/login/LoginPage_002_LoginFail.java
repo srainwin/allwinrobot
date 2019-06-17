@@ -1,6 +1,5 @@
 package com.demo.cases.login;
 
-import org.testng.Assert;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -32,6 +31,6 @@ public class LoginPage_002_LoginFail extends  LoginBase {
 		Thread.sleep(2000);
 		//用户信息断言
 		String actual = LoginOperation.getLoginErrorInfo(seleniumUtil);
-		Assert.assertEquals(actual, expecttext);
+		seleniumUtil.assertEquals(actual, expecttext);
 	}
 }

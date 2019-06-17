@@ -1,6 +1,5 @@
 package com.demo.cases.home;
 
-import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -37,6 +36,6 @@ public class HomePage_003_Overview_TodoMail extends LoginBase {
 		HomeOperation.overviewTodoMailClick(seleniumUtil);
 		//进入待办邮件断言
 		String actual = HomeOperation.getOverviewTodoMailTab(seleniumUtil);
-		Assert.assertEquals(actual, except);
+		seleniumUtil.assertEquals(actual, except);
 	}
 }

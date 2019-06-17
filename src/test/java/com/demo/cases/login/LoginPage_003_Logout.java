@@ -1,6 +1,5 @@
 package com.demo.cases.login;
 
-import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -34,6 +33,6 @@ public class LoginPage_003_Logout extends  LoginBase {
 		LoginOperation.logout(seleniumUtil);
 		//登出信息断言
 		String actual = LoginOperation.getLogoutInfo(seleniumUtil);
-		Assert.assertEquals(actual, expecttext);
+		seleniumUtil.assertEquals(actual, expecttext);
 	}
 }

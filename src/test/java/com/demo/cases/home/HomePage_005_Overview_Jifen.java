@@ -1,6 +1,5 @@
 package com.demo.cases.home;
 
-import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -37,6 +36,6 @@ public class HomePage_005_Overview_Jifen extends LoginBase {
 		String currentHandle = HomeOperation.overviewJifen(seleniumUtil);
 		//进入积分断言
 		String actual = HomeOperation.getOverviewJifenWindowTitle(seleniumUtil,currentHandle);
-		Assert.assertEquals(actual, expect);
+		seleniumUtil.assertEquals(actual, expect);
 	}
 }
