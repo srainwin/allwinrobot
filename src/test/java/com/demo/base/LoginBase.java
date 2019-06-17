@@ -36,7 +36,8 @@ public class LoginBase {
 	public void setup(ITestContext itestcontext) {
 		try {
 			//initLog的参数filename与继承本类的测试类名相同，this指向调用这个setup()方法的测试类
-			LogConfiguration.initLog(this.getClass().getSimpleName(), itestcontext);
+//			LogConfiguration.initLog(this.getClass().getSimpleName(), itestcontext);
+			LogConfiguration.initLog(this.getClass().getSimpleName());
 			logger.info("正启动浏览器");
 			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
 			testurl = itestcontext.getCurrentXmlTest().getParameter("testurl");

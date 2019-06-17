@@ -49,7 +49,7 @@ public class TestFailListener extends TestListenerAdapter {
 			InputStream is = Files.newInputStream(content);
 			Allure.addAttachment("失败用例截图", is);
 		}catch(Exception e){
-			System.out.println("失败用例截图,发生异常");
+			System.out.println("失败用例截图发生异常");
 			e.printStackTrace();
 		}
 	}
