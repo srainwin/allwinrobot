@@ -20,7 +20,7 @@ public class TestNGRetry implements IRetryAnalyzer {
 	public boolean retry(ITestResult result) {
 		try{
 			if (retryCount <= maxRetryCount) {
-				logger.info("第" + retryCount + "次重跑");
+				logger.info("将进行第" + retryCount + "次重跑");
 				retryCount++;
 				return true;
 			}else{
