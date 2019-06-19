@@ -29,6 +29,7 @@ public class LoginBase {
 	protected String browserName;
 	protected String testurl;
 	protected String pageLoadTimeout;
+	protected String cookiesConfigFilePath;
 
 	static Logger logger = Logger.getLogger(LoginBase.class.getName());
 
@@ -38,9 +39,14 @@ public class LoginBase {
 			//initLog的参数filename与继承本类的测试类名相同，this指向调用这个setup()方法的测试类
 			LogConfiguration.initLog(this.getClass().getSimpleName(), itestcontext);
 			logger.info("正启动浏览器");
+
+			//给共享数据赋值，供任意继承本类的@Test用例使用（itestcontext是测试的上下文，包含很多信息，包括TestNG配置文件中的参数信息）
+			//原本打算在@Test的用例方法传入itestcontext参数的，但@Test的用例使用了@dataProvider后运行会检查出参数个数不一致异常，因为多了itestcontext参数，所以决定把itestcontext获取共享数据放到@BeforeClass中进行
+			cookiesConfigFilePath = itestcontext.getCurrentXmlTest().getParameter("cookiesConfigFilePath");
 			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
 			testurl = itestcontext.getCurrentXmlTest().getParameter("testurl");
 			pageLoadTimeout = itestcontext.getCurrentXmlTest().getParameter("pageLoadTimeout");
+			
 			int plTimeout = Integer.parseInt(pageLoadTimeout);
 			seleniumUtil.launchBrowser(browserName,itestcontext,plTimeout);
 			logger.info(browserName + "浏览器启动成功!");
@@ -93,10 +99,11 @@ public class LoginBase {
 				for (int cellnum = 0; cellnum < cellcount; cellnum++) {
 					XSSFCell xssfcell = row.getCell(cellnum);
 					if (xssfcell == null) {
+						cell[cellnum] = new String("");
 						continue;
 					}
 					// 调用getValue方法处理xssfcell获取的多种类型值转化为string类型，并放到一个object一维数组中
-					cell[cellnum] = getValue(xssfcell);
+					cell[cellnum] = getCellValue(xssfcell);
 				}
 				// 存储测试数据，第n行所有列数据存放到lsit列表中第n个Object[]对象
 				list.add(cell);
@@ -121,7 +128,7 @@ public class LoginBase {
 	 * @Description 用于testData()方法里处理cell的多种类型值转化为string类型
 	 * @return
 	 */
-	private static String getValue(XSSFCell xssfcell) {
+	private static String getCellValue(XSSFCell xssfcell) {
 		if (xssfcell.getCellType() == CellType.BOOLEAN) {
 			return String.valueOf(xssfcell.getBooleanCellValue());
 		} else if (xssfcell.getCellType() == CellType.NUMERIC) {

@@ -29,7 +29,7 @@ public class HomeOperation {
 	 * @Description 获取首页Tab-标志：问候名
 	 * @return
 	 */
-	public static String gethomepageSign (SeleniumUtil seleniumUtil){
+	public static String getHomepageSign (SeleniumUtil seleniumUtil){
 		String text = "";
 		try{
 			logger.info("获取首页Tab-标志：问候名");
@@ -38,6 +38,21 @@ public class HomeOperation {
 			logger.error("获取首页Tab-标志：问候名异常",e);
 		}
 		return text;
+	}
+	
+	/**
+	 * @Description 断言首页Tab-标志：问候名
+	 * @param seleniumUtil
+	 * @param expect
+	 */
+	public static void assertHomepageSign(SeleniumUtil seleniumUtil, String expect ){
+		try{
+			String actual = HomeOperation.getHomepageSign(seleniumUtil);
+			seleniumUtil.assertEquals(actual, expect);
+			logger.info("成功断言当前登陆用户名信息");
+		}catch(Exception e){
+			logger.error("断言当前登陆用户名信发生异常",e);
+		}
 	}
 	
 	/**
@@ -68,6 +83,21 @@ public class HomeOperation {
 	}
 	
 	/**
+	 * @Description 断言总览-未读邮件Tab-标题:未读邮件
+	 * @param seleniumUtil
+	 * @param expect
+	 */
+	public static void assertOverviewUnreadMailTab(SeleniumUtil seleniumUtil, String expect ){
+		try{
+			String actual = HomeOperation.getOverviewUnreadMailTab(seleniumUtil);
+			seleniumUtil.assertEquals(actual, expect);
+			logger.info("成功断言总览-未读邮件Tab-标题:未读邮件");
+		}catch(Exception e){
+			logger.error("断言总览-未读邮件Tab-标题:未读邮件发生异常",e);
+		}
+	}
+	
+	/**
 	 * @Description 跳转首页总览快捷功能的待办邮件
 	 */
 	public static void overviewTodoMailClick(SeleniumUtil seleniumUtil){
@@ -95,6 +125,21 @@ public class HomeOperation {
 	}
 	
 	/**
+	 * @Description 断言总览-待办邮件Tab-标题:待办邮件
+	 * @param seleniumUtil
+	 * @param expect
+	 */
+	public static void assertOverviewTodoMailTab(SeleniumUtil seleniumUtil, String expect ){
+		try{
+			String actual = HomeOperation.getOverviewTodoMailTab(seleniumUtil);
+			seleniumUtil.assertEquals(actual, expect);
+			logger.info("成功断言总览-待办邮件Tab-标题:待办邮件");
+		}catch(Exception e){
+			logger.error("断言总览-待办邮件Tab-标题:待办邮件发生异常",e);
+		}
+	}
+	
+	/**
 	 * @Description 跳转首页总览快捷功能的联系人邮件
 	 */
 	public static void overviewContactMailClick(SeleniumUtil seleniumUtil){
@@ -119,6 +164,21 @@ public class HomeOperation {
 			logger.error("获取总览-联系人Tab-标题:联系人邮件异常",e);
 		}
 		return text;
+	}
+	
+	/**
+	 * @Description 断言总览-联系人Tab-标题:联系人邮件
+	 * @param seleniumUtil
+	 * @param expect
+	 */
+	public static void assertOverviewContactMailTab(SeleniumUtil seleniumUtil, String expect ){
+		try{
+			String actual = HomeOperation.getOverviewContactMailTab(seleniumUtil);
+			seleniumUtil.assertEquals(actual, expect);
+			logger.info("成功断言总览-联系人Tab-标题:联系人邮件");
+		}catch(Exception e){
+			logger.error("断言总览-联系人Tab-标题:联系人邮件发生异常",e);
+		}
 	}
 	
 	/**
@@ -154,6 +214,22 @@ public class HomeOperation {
 	}
 	
 	/**
+	 * @Description 断言积分窗口标题
+	 * @param seleniumUtil
+	 * @param expect
+	 * @param currentHandle
+	 */
+	public static void assertOverviewJifenWindowTitle(SeleniumUtil seleniumUtil, String expect ,String currentHandle){
+		try{
+			String actual = HomeOperation.getOverviewJifenWindowTitle(seleniumUtil, currentHandle);
+			seleniumUtil.assertEquals(actual, expect);
+			logger.info("成功断言积分窗口标题");
+		}catch(Exception e){
+			logger.error("断言积分窗口标题发生异常",e);
+		}
+	}
+	
+	/**
 	 * @Description 跳转首页总览快捷功能的安全度
 	 */
 	public static void overviewSafetyDegreeClick(SeleniumUtil seleniumUtil){
@@ -178,6 +254,21 @@ public class HomeOperation {
 			logger.error("获取总览-安全度-标志:邮箱健康指数异常",e);
 		}
 		return text;
+	}
+	
+	/**
+	 * @Description 断言总览-安全度-标志:邮箱健康指数
+	 * @param seleniumUtil
+	 * @param expect
+	 */
+	public static void assertOverviewSafetyDegreeSign(SeleniumUtil seleniumUtil, String expect){
+		try{
+			String actual = HomeOperation.getOverviewSafetyDegreeSign(seleniumUtil);
+			seleniumUtil.assertEquals(actual, expect);
+			logger.info("成功断言总览-安全度-标志:邮箱健康指数");
+		}catch(Exception e){
+			logger.error("断言总览-安全度-标志:邮箱健康指数发生异常",e);
+		}
 	}
 	
 	/**
@@ -209,6 +300,21 @@ public class HomeOperation {
 	}
 	
 	/**
+	 * @Description 断言总览-登录保护-标志:邮箱登录二次验证
+	 * @param seleniumUtil
+	 * @param expect
+	 */
+	public static void assertOverviewLoginProtectSign(SeleniumUtil seleniumUtil, String expect){
+		try{
+			String actual = HomeOperation.getOverviewLoginProtectSign(seleniumUtil);
+			seleniumUtil.assertEquals(actual, expect);
+			logger.info("成功断言总览-登录保护-标志:邮箱登录二次验证");
+		}catch(Exception e){
+			logger.error("断言总览-登录保护-标志:邮箱登录二次验证发生异常",e);
+		}
+	}
+	
+	/**
 	 * @Description 跳转首页总览快捷功能的每日生活
 	 */
 	public static void overviewDailyLifeClick(SeleniumUtil seleniumUtil){
@@ -235,4 +341,18 @@ public class HomeOperation {
 		return text;
 	}
 	
+	/**
+	 * @Description 断言总览-每日生活Tab-标题:严选每日推荐
+	 * @param seleniumUtil
+	 * @param expect
+	 */
+	public static void assertOverviewDailyLifeTab(SeleniumUtil seleniumUtil, String expect){
+		try{
+			String actual = HomeOperation.getOverviewDailyLifeTab(seleniumUtil);
+			seleniumUtil.assertEquals(actual, expect);
+			logger.info("成功断言总览-每日生活Tab-标题:严选每日推荐");
+		}catch(Exception e){
+			logger.error("断言总览-每日生活Tab-标题:严选每日推荐发生异常",e);
+		}
+	}
 }

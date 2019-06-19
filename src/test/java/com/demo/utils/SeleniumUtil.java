@@ -184,10 +184,9 @@ public class SeleniumUtil {
 	/**
 	 * 获取cookies保存到本地文件中，用于需要添加cookies的时候从文件读取
 	 */
-	public void cookiesSaveInFile(ITestContext itestcontext) {
+	public void cookiesSaveInFile(String cookiesConfigFilePath) {
 		pause(5000);
 		Set<Cookie> cookies = driver.manage().getCookies();
-		String cookiesConfigFilePath = itestcontext.getCurrentXmlTest().getParameter("cookiesConfigFilePath");
 		File file = new File(cookiesConfigFilePath);
 		if(file.exists()) {
             try {
@@ -228,8 +227,7 @@ public class SeleniumUtil {
 	/**
 	 * 添加cookies,从文件读取cookies后添加，做自动登陆的必要方法
 	 */
-	public void addcookies(ITestContext itestcontext){
-		String cookiesConfigFilePath = itestcontext.getCurrentXmlTest().getParameter("cookiesConfigFilePath");
+	public void addcookies(String cookiesConfigFilePath){
 		try {
             File cookieFile = new File(cookiesConfigFilePath);
             FileReader fr = new FileReader(cookieFile);

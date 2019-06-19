@@ -1,16 +1,12 @@
 package com.demo.cases.login;
 
-import org.testng.ITestContext;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
 import com.demo.pagesoperation.LoginOperation;
-import com.demo.utils.TestFailListener;
-import com.demo.utils.TestRetryListener;
 
 import io.qameta.allure.Description;
-@Listeners({ TestFailListener.class ,TestRetryListener.class})
+//@Listeners({ TestFailListener.class ,TestRetryListener.class})
 public class LoginPage_001_LoginSuccess extends  LoginBase {
 	
 	/**
@@ -24,13 +20,12 @@ public class LoginPage_001_LoginSuccess extends  LoginBase {
 				+ "1、输入用户名和密码，点击登录；"
 				+ "预期结果："
 				+ "1、成功登录，且当前用户名信息正确；")
-	public void loginSucess(String username,String password,ITestContext itestcontext) throws Exception {
+	public void loginSucess(String username, String password, String expect) throws Exception {
 		//登陆
 		LoginOperation.login(seleniumUtil,username, password, testurl);
 		//获取cookies保存，便于其他用例免登录
-		seleniumUtil.cookiesSaveInFile(itestcontext);
+		seleniumUtil.cookiesSaveInFile(cookiesConfigFilePath);
 		//用户信息断言
-		String actual = LoginOperation.getLoginCurrentUser(seleniumUtil);
-		seleniumUtil.assertEquals(actual, username + "@126.com");
+		LoginOperation.assertLoginCurrentUser(seleniumUtil, expect);
 	}
 }

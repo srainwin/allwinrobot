@@ -1,7 +1,6 @@
 package com.demo.pagesoperation;
 
 import org.apache.log4j.Logger;
-import org.testng.ITestContext;
 
 import com.demo.pages.FramePage;
 import com.demo.pages.LoginPage;
@@ -42,13 +41,13 @@ public class LoginOperation {
 	 * @Description 免登陆方法（利用cookies）
 	 * @param itestcontext
 	 */
-	public static void loginFree(SeleniumUtil seleniumUtil, String testurl, ITestContext itestcontext){
+	public static void loginFree(SeleniumUtil seleniumUtil, String testurl, String cookiesConfigFilePath){
 		try {
 			logger.info("开始输入126邮箱网址");
 			seleniumUtil.get(testurl);
 			logger.info("使用cookies方式免登陆");
 			seleniumUtil.delAllcookies();
-			seleniumUtil.addcookies(itestcontext);
+			seleniumUtil.addcookies(cookiesConfigFilePath);
 			seleniumUtil.refresh();
 			Thread.sleep(1000);
 		} catch(Exception e){
@@ -69,7 +68,21 @@ public class LoginOperation {
 			logger.error("获取不到登陆错误提示信息！",e);
 		}
 		return text;
-		
+	}
+	
+	/**
+	 * @Description 断言登陆错误提示信息
+	 * @param seleniumUtil
+	 * @param expect
+	 */
+	public static void assertLoginErrorInfo(SeleniumUtil seleniumUtil, String expect ){
+		try{
+			String actual = LoginOperation.getLoginErrorInfo(seleniumUtil);
+			seleniumUtil.assertEquals(actual, expect);
+			logger.info("成功断言登陆错误提示信息");
+		}catch(Exception e){
+			logger.error("断言登陆错误提示信息发生异常",e);
+		}
 	}
 	
 	/**
@@ -85,6 +98,21 @@ public class LoginOperation {
 			logger.error("获取不到当前登陆用户名信息！",e);
 		}
 		return text;
+	}
+	
+	/**
+	 * @Description 断言当前登陆用户名信
+	 * @param seleniumUtil
+	 * @param expect
+	 */
+	public static void assertLoginCurrentUser(SeleniumUtil seleniumUtil, String expect ){
+		try{
+			String actual = LoginOperation.getLoginCurrentUser(seleniumUtil);
+			seleniumUtil.assertEquals(actual, expect);
+			logger.info("成功断言当前登陆用户名信息");
+		}catch(Exception e){
+			logger.error("断言当前登陆用户名信息发生异常",e);
+		}
 	}
 	
 	/**
@@ -111,5 +139,20 @@ public class LoginOperation {
 			logger.error("获取退出页面信息异常！",e);
 		}
 		return text;
+	}
+	
+	/**
+	 * @Description 断言退出页面信息
+	 * @param seleniumUtil
+	 * @param expect
+	 */
+	public static void assertLogoutInfo(SeleniumUtil seleniumUtil, String expect ){
+		try{
+			String actual = LoginOperation.getLogoutInfo(seleniumUtil);
+			seleniumUtil.assertEquals(actual, expect);
+			logger.info("成功断言退出页面信息");
+		}catch(Exception e){
+			logger.error("断言退出页面信息发生异常",e);
+		}
 	}
 }
