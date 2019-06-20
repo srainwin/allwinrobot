@@ -1,13 +1,15 @@
 package com.demo.cases.home;
 
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
 import com.demo.pagesoperation.HomeOperation;
 import com.demo.pagesoperation.LoginOperation;
+import com.demo.utils.TestNGListener;
 
 import io.qameta.allure.Description;
-
+@Listeners({ TestNGListener.class})
 public class HomePage_006_Overview_SafetyDegree extends LoginBase {
 
 	/**
