@@ -6,6 +6,8 @@ import com.demo.pages.FramePage;
 import com.demo.pages.LoginPage;
 import com.demo.utils.SeleniumUtil;
 
+import io.qameta.allure.Step;
+
 /**
  * @author XWR
  * @Description 登录126邮箱页面元素操作封装
@@ -19,6 +21,7 @@ public class LoginOperation {
 	 * @param password
 	 * @param testurl
 	 */
+	@Step("选择账号方式，并且输入用户名和密码，点击登录")
 	public static void login(SeleniumUtil seleniumUtil, String username,String password,String testurl){
 		try {
 			logger.info("开始输入126邮箱网址");
@@ -41,6 +44,7 @@ public class LoginOperation {
 	 * @Description 免登陆方法（利用cookies）
 	 * @param itestcontext
 	 */
+	@Step("使用cookies方式免登陆")
 	public static void loginFree(SeleniumUtil seleniumUtil, String testurl, String cookiesConfigFilePath){
 		try {
 			logger.info("开始输入126邮箱网址");
@@ -105,6 +109,7 @@ public class LoginOperation {
 	 * @param seleniumUtil
 	 * @param expect
 	 */
+	@Step("成功登录后判断当前用户名信息是否正确")
 	public static void assertLoginCurrentUser(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = LoginOperation.getLoginCurrentUser(seleniumUtil);

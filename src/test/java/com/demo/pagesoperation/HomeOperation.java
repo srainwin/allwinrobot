@@ -6,6 +6,8 @@ import com.demo.pages.FramePage;
 import com.demo.pages.HomePage;
 import com.demo.utils.SeleniumUtil;
 
+import io.qameta.allure.Step;
+
 /**
  * @author XWR
  * @Description 首页页面元素操作封装
@@ -16,6 +18,7 @@ public class HomeOperation {
 	/**
 	 * @Description 切换首页tab
 	 */
+	@Step("点击切换首页tab")
 	public static void homepageTabClick(SeleniumUtil seleniumUtil){
 		try{
 			logger.info("点击切换首页tab");
@@ -45,13 +48,14 @@ public class HomeOperation {
 	 * @param seleniumUtil
 	 * @param expect
 	 */
+	@Step("切换首页成功后判断首页Tab标志（问候名）是否正确")
 	public static void assertHomepageSign(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = HomeOperation.getHomepageSign(seleniumUtil);
 			seleniumUtil.assertEquals(actual, expect);
-			logger.info("成功断言当前登陆用户名信息");
+			logger.info("成功断言首页Tab-标志：问候名");
 		}catch(Exception e){
-			logger.error("断言当前登陆用户名信发生异常",e);
+			logger.error("断言首页Tab-标志：问候名发生异常",e);
 		}
 	}
 	
