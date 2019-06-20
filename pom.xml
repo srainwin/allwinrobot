@@ -55,6 +55,7 @@
 	<build>
 		<finalName>autotestddt</finalName>
 		<plugins>
+			<!--若需要本地显示allure测试报告还需要额外配置allure和jetty的maven插件，这里不需要本地显示allure测试报告，直接用jenkins下载allure插件配置即可查看测试报告 -->
 			<plugin>
 				<!--maven执行测试的插件 -->
 				<groupId>org.apache.maven.plugins</groupId>

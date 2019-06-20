@@ -8,7 +8,12 @@ import com.demo.pagesoperation.LoginOperation;
 import com.demo.utils.TestNGListener;
 
 import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 @Listeners({ TestNGListener.class})
+@Epic("126邮箱自动化测试实战")
+@Feature("邮箱登录")
 public class LoginPage_001_LoginSuccess extends  LoginBase {
 	
 	/**
@@ -17,7 +22,8 @@ public class LoginPage_001_LoginSuccess extends  LoginBase {
 	 * @param password
 	 * @throws Exception
 	 */
-	@Test(dataProvider = "testdata" ,description = "登陆正向测试用例")
+	@Test(dataProvider = "testdata" ,description = "正确的账号密码登录")
+	@Story("登陆正向测试用例")
 	@Description("操作步骤："
 				+ "1、输入用户名和密码，点击登录；"
 				+ "预期结果："
