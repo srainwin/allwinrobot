@@ -31,7 +31,12 @@ public class LogConfiguration {
 		logFilePath = logDateFolderPath + "/" + fileName + ".log";
 		//日志保留天数
 		int keepLogDay = Integer.valueOf(itestcontext.getCurrentXmlTest().getParameter("keepLogDay"));
+		//必要时创建logs目录
 		File rootfile = new File(logRootFolderPath);
+		if (!rootfile.exists()) {
+			rootfile.mkdirs();
+		}
+		//清理日志与初始化
 		File[] datefiles = rootfile.listFiles();
 		if ( datefiles != null) {
 			for(File logDateFolder : datefiles){
