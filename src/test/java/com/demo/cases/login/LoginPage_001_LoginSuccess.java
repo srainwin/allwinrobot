@@ -10,7 +10,8 @@ import com.demo.utils.TestNGListener;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import io.qameta.allure.Step;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
 
 @Listeners({ TestNGListener.class })
@@ -25,9 +26,9 @@ public class LoginPage_001_LoginSuccess extends LoginBase {
 	 * @throws Exception
 	 */
 	@Test(dataProvider = "testdata", description = "正确的账号密码登录") // allure用例名，description
+	@Severity(SeverityLevel.BLOCKER)
 	@Story("登陆正向测试用例") // allure用例组织，三级模块
 	@Description("操作步骤：" + "1、输入用户名和密码，点击登录；" + "预期结果：" + "1、成功登录，且当前用户名信息正确；") // allure用例描述
-	@Step("获取cookies保存，便于其他用例免登录")
 	public void loginSucess(String username, String password, String expect) throws Exception {
 		// 账号登陆
 		LoginOperation.login(seleniumUtil, username, password, testurl);

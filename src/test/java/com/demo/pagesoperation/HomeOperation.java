@@ -48,7 +48,7 @@ public class HomeOperation {
 	 * @param seleniumUtil
 	 * @param expect
 	 */
-	@Step("切换首页成功后判断首页Tab标志（问候名）是否正确")
+	@Step("切换首页成功后判断首页Tab标志（问候名）是否为:{1}")
 	public static void assertHomepageSign(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = HomeOperation.getHomepageSign(seleniumUtil);

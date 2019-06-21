@@ -21,7 +21,7 @@ public class LoginOperation {
 	 * @param password
 	 * @param testurl
 	 */
-	@Step("选择账号方式，并且输入用户名和密码，点击登录")
+	@Step("选择账号方式，并且输入用户名{1}和密码{2}，点击登录")
 	public static void login(SeleniumUtil seleniumUtil, String username,String password,String testurl){
 		try {
 			logger.info("开始输入126邮箱网址");
@@ -109,7 +109,7 @@ public class LoginOperation {
 	 * @param seleniumUtil
 	 * @param expect
 	 */
-	@Step("成功登录后判断当前用户名信息是否正确")
+	@Step("成功登录后判断当前用户名信息是否为:{1}")
 	public static void assertLoginCurrentUser(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = LoginOperation.getLoginCurrentUser(seleniumUtil);
