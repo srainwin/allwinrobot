@@ -19,7 +19,7 @@ public class HomeOperation {
 	 * @Description 切换首页tab
 	 */
 	@Step("点击切换首页tab")
-	public static void homepageTabClick(SeleniumUtil seleniumUtil){
+	public void homepageTabClick(SeleniumUtil seleniumUtil){
 		try{
 			logger.info("点击切换首页tab");
 			seleniumUtil.click(HomePage.homepageTab);
@@ -49,7 +49,7 @@ public class HomeOperation {
 	 * @param expect
 	 */
 	@Step("切换首页成功后判断首页Tab标志（问候名）是否为:{1}")
-	public static void assertHomepageSign(SeleniumUtil seleniumUtil, String expect ){
+	public void assertHomepageSign(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = HomeOperation.getHomepageSign(seleniumUtil);
 			seleniumUtil.assertEquals(actual, expect);
