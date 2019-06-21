@@ -13,7 +13,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<aspectj.version>1.8.10</aspectj.version>
+		<aspectj.version>1.9.1</aspectj.version>
 	</properties>
 
 	<dependencies>
@@ -100,13 +100,19 @@
 
 				<dependencies>
 					<dependency>
-						<!--allure需要的aspectjweaver插件 -->
+						<!--allure的@Step、@Parameter、@Attachment注解需要正确地启用aspectj加载时编造 -->
 						<groupId>org.aspectj</groupId>
 						<artifactId>aspectjweaver</artifactId>
 						<version>${aspectj.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
+
+			<plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.9</version>
+            </plugin>
 
 			<plugin>
 				<!--控制maven项目源码jdk版本插件，maven的默认编译使用的jdk版本貌似很低 -->

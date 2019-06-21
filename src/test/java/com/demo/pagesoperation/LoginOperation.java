@@ -22,7 +22,7 @@ public class LoginOperation {
 	 * @param testurl
 	 */
 	@Step("选择账号方式，并且输入用户名{1}和密码{2}，点击登录")
-	public void login(SeleniumUtil seleniumUtil, String username,String password,String testurl){
+	public static void login(SeleniumUtil seleniumUtil, String username,String password,String testurl){
 		try {
 			logger.info("开始输入126邮箱网址");
 			seleniumUtil.get(testurl);
@@ -45,7 +45,7 @@ public class LoginOperation {
 	 * @param itestcontext
 	 */
 	@Step("使用cookies方式免登陆")
-	public void loginFree(SeleniumUtil seleniumUtil, String testurl, String cookiesConfigFilePath){
+	public static void loginFree(SeleniumUtil seleniumUtil, String testurl, String cookiesConfigFilePath){
 		try {
 			logger.info("开始输入126邮箱网址");
 			seleniumUtil.get(testurl);
@@ -110,7 +110,7 @@ public class LoginOperation {
 	 * @param expect
 	 */
 	@Step("成功登录后判断当前用户名信息是否为:{1}")
-	public void assertLoginCurrentUser(SeleniumUtil seleniumUtil, String expect ){
+	public static void assertLoginCurrentUser(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = LoginOperation.getLoginCurrentUser(seleniumUtil);
 			seleniumUtil.assertEquals(actual, expect);
