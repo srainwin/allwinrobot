@@ -12,7 +12,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
-
 @Epic("126邮箱自动化测试实战")
 @Feature("用户首页")
 public class HomePage_001_Overview_Tab extends LoginBase {
