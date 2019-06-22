@@ -42,7 +42,7 @@
 		<dependency>
 			<groupId>io.qameta.allure</groupId>
 			<artifactId>allure-testng</artifactId>
-			<version>2.12.1</version>
+			<version>2.12.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -100,7 +100,7 @@
 
 				<dependencies>
 					<dependency>
-						<!--allure的@Step、@Parameter、@Attachment注解需要正确地启用aspectj加载时编造 -->
+						<!--allure的@Step、@Parameter、@Attachment注解需要正确地启用aspectj加载时编织 -->
 						<groupId>org.aspectj</groupId>
 						<artifactId>aspectjweaver</artifactId>
 						<version>${aspectj.version}</version>
