@@ -21,7 +21,6 @@ public class LoginOperation {
 	 * @param password
 	 * @param testurl
 	 */
-	@Step("选择账号方式，并且输入用户名{1}和密码{2}，点击登录")
 	public static void login(SeleniumUtil seleniumUtil, String username,String password,String testurl){
 		try {
 			logger.info("开始输入126邮箱网址");

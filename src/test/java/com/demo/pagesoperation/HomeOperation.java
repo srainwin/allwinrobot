@@ -6,8 +6,6 @@ import com.demo.pages.FramePage;
 import com.demo.pages.HomePage;
 import com.demo.utils.SeleniumUtil;
 
-import io.qameta.allure.Step;
-
 /**
  * @author XWR
  * @Description 首页页面元素操作封装

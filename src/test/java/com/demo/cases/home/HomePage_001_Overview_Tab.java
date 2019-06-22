@@ -1,5 +1,7 @@
 package com.demo.cases.home;
 
+import static io.qameta.allure.Allure.step;
+
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
@@ -12,7 +14,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
-import static io.qameta.allure.Allure.step;
 
 @Epic("126邮箱自动化测试实战")
 @Feature("用户首页")

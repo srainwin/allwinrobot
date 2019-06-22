@@ -3,13 +3,17 @@ package com.demo.cases.login;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
+import com.demo.pages.FramePage;
+import com.demo.pages.LoginPage;
 import com.demo.pagesoperation.LoginOperation;
+import com.demo.utils.SeleniumUtil;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Step;
 import io.qameta.allure.Story;
 import static io.qameta.allure.Allure.step;
 
@@ -28,13 +32,17 @@ public class LoginPage_001_LoginSuccess extends LoginBase {
 	@Story("登陆正向测试用例") // allure用例组织，三级模块
 	@Description("操作步骤：" + "1、输入用户名和密码，点击登录；" + "预期结果：" + "1、成功登录，且当前用户名信息正确；") // allure用例描述
 	public void loginSucess(String username, String password, String expect) throws Exception {
+		aaa1();
 		// 账号登陆
-		step("选择账号方式，并且输入用户名{1}和密码{2}，点击登录");
 		LoginOperation.login(seleniumUtil, username, password, testurl);
 		// 获取cookies保存，便于其他用例免登录
 		seleniumUtil.cookiesSaveInFile(cookiesConfigFilePath);
 		// 用户信息断言
-		step("成功登录后判断当前用户名信息是否为:{1}");
 		LoginOperation.assertLoginCurrentUser(seleniumUtil, expect);
+	}
+	
+	@Step("aaa1")
+	private static void aaa1(){
+		System.out.println("aaa1");
 	}
 }
