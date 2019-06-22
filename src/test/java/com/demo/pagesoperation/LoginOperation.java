@@ -44,7 +44,6 @@ public class LoginOperation {
 	 * @Description 免登陆方法（利用cookies）
 	 * @param itestcontext
 	 */
-	@Step("使用cookies方式免登陆")
 	public static void loginFree(SeleniumUtil seleniumUtil, String testurl, String cookiesConfigFilePath){
 		try {
 			logger.info("开始输入126邮箱网址");
@@ -109,7 +108,6 @@ public class LoginOperation {
 	 * @param seleniumUtil
 	 * @param expect
 	 */
-	@Step("成功登录后判断当前用户名信息是否为:{1}")
 	public static void assertLoginCurrentUser(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = LoginOperation.getLoginCurrentUser(seleniumUtil);
