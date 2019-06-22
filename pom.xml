@@ -62,6 +62,11 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>4.1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -71,15 +76,15 @@
 			<plugin>
 				<!--maven执行测试的插件 -->
 				<groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.1</version>
 				<configuration>
 					<!--设置maven使用独立的类加载器 -->
 					<useSystemClassLoader>false</useSystemClassLoader>
 					<!--设置参数命令行 -->
 					<argLine>
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-                    </argLine>
+						-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+					</argLine>
 					<!-- 解决用maven执行test时日志乱码的问题 -->
 					<argLine>
 						-Dfile.encoding=UTF-8
@@ -110,8 +115,8 @@
 					<dependency>
 						<!--allure的@Step、@Parameter、@Attachment注解需要正确地启用aspectj加载时编织 -->
 						<groupId>org.aspectj</groupId>
-                        <artifactId>aspectjweaver</artifactId>
-                        <version>${aspectj.version}</version>
+						<artifactId>aspectjweaver</artifactId>
+						<version>${aspectj.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -127,17 +132,17 @@
 			</plugin>
 		</plugins>
 	</build>
-	 <reporting>
-        <excludeDefaults>true</excludeDefaults>
-        <plugins>
-            <plugin>
-                <groupId>io.qameta.allure</groupId>
-                <artifactId>allure-maven</artifactId>
-                <version>2.10.0</version>
-                <configuration>
-                    <reportVersion>${allure.version}</reportVersion>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
+	<reporting>
+		<excludeDefaults>true</excludeDefaults>
+		<plugins>
+			<plugin>
+				<groupId>io.qameta.allure</groupId>
+				<artifactId>allure-maven</artifactId>
+				<version>2.10.0</version>
+				<configuration>
+					<reportVersion>${allure.version}</reportVersion>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
