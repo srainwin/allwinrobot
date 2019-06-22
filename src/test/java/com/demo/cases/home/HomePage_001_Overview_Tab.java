@@ -1,12 +1,10 @@
 package com.demo.cases.home;
 
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
 import com.demo.pagesoperation.HomeOperation;
 import com.demo.pagesoperation.LoginOperation;
-import com.demo.utils.TestNGListener;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -14,7 +12,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
-@Listeners({ TestNGListener.class})
+
 @Epic("126邮箱自动化测试实战")
 @Feature("用户首页")
 public class HomePage_001_Overview_Tab extends LoginBase {
