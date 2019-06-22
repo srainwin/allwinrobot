@@ -43,6 +43,7 @@
 			<groupId>io.qameta.allure</groupId>
 			<artifactId>allure-testng</artifactId>
 			<version>2.12.1</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -61,6 +62,8 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.20</version>
 				<configuration>
+					<!--设置maven使用独立的类加载器 -->
+					<useSystemClassLoader>false</useSystemClassLoader>
 					<!--设置参数命令行 -->
 					<argLine>
 						-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
