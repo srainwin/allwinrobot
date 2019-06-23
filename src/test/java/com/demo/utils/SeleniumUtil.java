@@ -185,7 +185,8 @@ public class SeleniumUtil {
 	 * 获取cookies保存到本地文件中，用于需要添加cookies的时候从文件读取
 	 */
 	public void cookiesSaveInFile(String cookiesConfigFilePath) {
-		pause(5000);
+		logger.info("暂缓两秒保存当前cookies");
+		pause(2000);
 		Set<Cookie> cookies = driver.manage().getCookies();
 		File file = new File(cookiesConfigFilePath);
 		if(file.exists()) {
@@ -1046,7 +1047,7 @@ public class SeleniumUtil {
 		try {
 			// 点击上传按钮弹出windows选择文件窗口
 			click(byElement);
-			pause(2000);
+			pause(1000);
 			Runtime rn = Runtime.getRuntime();
 			Process p = rn.exec(uploadExe);
 			//等待上传进程完成
