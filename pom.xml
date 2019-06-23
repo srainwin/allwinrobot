@@ -62,11 +62,6 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>4.1.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-			<version>${aspectj.version}</version>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -113,7 +108,7 @@
 				</configuration>
 				<dependencies>
 					<dependency>
-						<!--allure的@Step、@Parameter、@Attachment注解需要正确地启用aspectj加载时编织 -->
+						<!--allure的@Step、@Attachment注解需要正确地启用aspectj加载时编织 -->
 						<groupId>org.aspectj</groupId>
 						<artifactId>aspectjweaver</artifactId>
 						<version>${aspectj.version}</version>

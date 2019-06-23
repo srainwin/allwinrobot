@@ -17,6 +17,7 @@ import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
 import io.qameta.allure.Allure;
+import io.qameta.allure.Attachment;
 
 /**
  * @author XWR
@@ -106,5 +107,15 @@ public class TestNGListener extends TestListenerAdapter {
 			System.out.println("失败用例截图发生异常");
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * @Description @Attachment没效果，暂未找出原因
+	 * @return
+	 */
+	@Attachment(value = "失败截图如下：", type = "image/png")
+	public byte[] takePhoto2() {
+		byte[] screenshotAs = ((TakesScreenshot) SeleniumUtil.driver).getScreenshotAs(OutputType.BYTES);
+		return screenshotAs;
 	}
 }
