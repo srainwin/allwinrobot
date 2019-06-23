@@ -25,7 +25,6 @@
 	</listeners>
 	<test name="test" preserve-order="true">
 		<classes>
-			<class name="com.demo.cases.login.LoginPage_001_LoginSuccess" />
 			<class name="com.demo.cases.login.BaiduDemo" />
 		</classes>
 	</test>
