@@ -38,7 +38,7 @@ public class TestNGListener extends TestListenerAdapter {
 		super.onTestFailure(result);
 		System.out.println(result.getName() + " Failure");
 		//截图
-		takePhoto();
+		takePhoto2();
 	}
 
 	/* 每次跳过测试时调用*/
@@ -115,7 +115,13 @@ public class TestNGListener extends TestListenerAdapter {
 	 */
 	@Attachment(value = "失败截图如下：", type = "image/png")
 	public byte[] takePhoto2() {
-		byte[] screenshotAs = ((TakesScreenshot) SeleniumUtil.driver).getScreenshotAs(OutputType.BYTES);
+		byte[] screenshotAs = null;
+		try {
+			screenshotAs = ((TakesScreenshot) SeleniumUtil.driver).getScreenshotAs(OutputType.BYTES);
+		} catch (Exception e) {
+			System.out.println("失败用例截图发生异常");
+			e.printStackTrace();
+		}
 		return screenshotAs;
 	}
 }
