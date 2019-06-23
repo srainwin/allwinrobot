@@ -1,12 +1,12 @@
 package com.demo.cases.home;
 
-import static io.qameta.allure.Allure.step;
-
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
-import com.demo.pagesoperation.HomeOperation;
-import com.demo.pagesoperation.LoginOperation;
+import com.demo.pagesteps.HomeOperation;
+import com.demo.pagesteps.LoginOperation;
+import com.demo.utils.TestNGListener;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -14,30 +14,21 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
-
-@Epic("126邮箱自动化测试实战")
-@Feature("用户首页")
+@Listeners({ TestNGListener.class}) //用例监听，主要是失败用例截图功能
+@Epic("126邮箱自动化测试实战") // allure用例组织，一级模块
+@Feature("用户首页") // allure组织，二级模块
 public class HomePage_001_Overview_Tab extends LoginBase {
 
-	/**
-	 * @Description 首页测试用例001：切换为首页Tab
-	 * @param username
-	 * @param itestcontext
-	 * @throws Exception
-	 */
-	@Test(dataProvider = "testdata", description = "切换为首页Tab")
-	@Severity(SeverityLevel.NORMAL)
-	@Story("首页Tab")
-	@Description("操作步骤：" + "1、打开已登录页面；" + "2、点击首页Tab；" + "预期结果：" + "1、成功登录，且当前用户名信息正确；" + "2、当前切换的Tab为首页；")
+	@Story("首页Tab") // allure用例组织，三级模块
+	@Test(dataProvider = "testdata", description = "切换为首页Tab") // allure用例名是description
+	@Description("登录邮箱后，点击切换为首页Tab") // allure用例描述
+	@Severity(SeverityLevel.NORMAL) // allure用例重要等级
 	public void overviewTabSwitch(String username, String expect) throws Exception {
 		// 打开已登录页面
-		step("使用cookies方式免登陆");
 		LoginOperation.loginFree(seleniumUtil, testurl, cookiesConfigFilePath);
 		// 点击首页tab
-		step("点击切换首页tab");
 		HomeOperation.homepageTabClick(seleniumUtil);
 		// 进入首页tab断言
-		step("切换首页成功后判断首页Tab标志（问候名）是否为:{1}");
 		HomeOperation.assertHomepageSign(seleniumUtil, "expect");//模仿断言失败看截图与重跑效果
 	}
 }

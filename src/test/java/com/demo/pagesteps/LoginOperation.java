@@ -1,4 +1,4 @@
-package com.demo.pagesoperation;
+package com.demo.pagesteps;
 
 import org.apache.log4j.Logger;
 
@@ -15,12 +15,7 @@ import io.qameta.allure.Step;
 public class LoginOperation {
 	static Logger logger = Logger.getLogger(LoginOperation.class.getName());
 
-	/**
-	 * @Description 登陆方法
-	 * @param username
-	 * @param password
-	 * @param testurl
-	 */
+	@Step("选择账号方式，并且输入用户名{1}和密码{2}，点击登录") //allure的步骤显示
 	public static void login(SeleniumUtil seleniumUtil, String username,String password,String testurl){
 		try {
 			logger.info("开始输入126邮箱网址");
@@ -39,10 +34,7 @@ public class LoginOperation {
 		}
 	}
 	
-	/**
-	 * @Description 免登陆方法（利用cookies）
-	 * @param itestcontext
-	 */
+	@Step("打开126邮箱网址后添加cookies刷新免登录") //allure的步骤显示
 	public static void loginFree(SeleniumUtil seleniumUtil, String testurl, String cookiesConfigFilePath){
 		try {
 			logger.info("开始输入126邮箱网址");
@@ -57,10 +49,7 @@ public class LoginOperation {
 		}
 	}
 
-	/**
-	 * @Description 获取登陆错误提示信息
-	 * @return
-	 */
+	@Step("获取登陆错误提示信息") //allure的步骤显示
 	public static String getLoginErrorInfo(SeleniumUtil seleniumUtil){
 		String text = "";
 		try {
@@ -72,11 +61,7 @@ public class LoginOperation {
 		return text;
 	}
 	
-	/**
-	 * @Description 断言登陆错误提示信息
-	 * @param seleniumUtil
-	 * @param expect
-	 */
+	@Step("断言登陆错误提示信息是否为“{1}”") //allure的步骤显示
 	public static void assertLoginErrorInfo(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = LoginOperation.getLoginErrorInfo(seleniumUtil);
@@ -87,10 +72,7 @@ public class LoginOperation {
 		}
 	}
 	
-	/**
-	 * @Description 获取当前登陆用户名信息
-	 * @return
-	 */
+	@Step("获取当前登陆用户名信息") //allure的步骤显示
 	public static String getLoginCurrentUser(SeleniumUtil seleniumUtil){
 		String text = "";
 		try {
@@ -102,11 +84,7 @@ public class LoginOperation {
 		return text;
 	}
 	
-	/**
-	 * @Description 断言当前登陆用户名信
-	 * @param seleniumUtil
-	 * @param expect
-	 */
+	@Step("断言当前登陆用户名信息是否为“{1}”")
 	public static void assertLoginCurrentUser(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = LoginOperation.getLoginCurrentUser(seleniumUtil);
@@ -117,9 +95,7 @@ public class LoginOperation {
 		}
 	}
 	
-	/**
-	 * @Description 退出方法
-	 */
+	@Step("退出登录")
 	public static void logout(SeleniumUtil seleniumUtil){
 		try {
 			logger.info("开始退出登录");
@@ -129,9 +105,7 @@ public class LoginOperation {
 		}
 	}
 	
-	/**
-	 * @Description 获取退出页面信息
-	 */
+	@Step("获取退出页面信息")
 	public static String getLogoutInfo(SeleniumUtil seleniumUtil){
 		String text = "";
 		try {
@@ -143,11 +117,7 @@ public class LoginOperation {
 		return text;
 	}
 	
-	/**
-	 * @Description 断言退出页面信息
-	 * @param seleniumUtil
-	 * @param expect
-	 */
+	@Step("断言退出页面信息是否为“{1}”")
 	public static void assertLogoutInfo(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = LoginOperation.getLogoutInfo(seleniumUtil);

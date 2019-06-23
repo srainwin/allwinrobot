@@ -1,10 +1,12 @@
-package com.demo.pagesoperation;
+package com.demo.pagesteps;
 
 import org.apache.log4j.Logger;
 
 import com.demo.pages.FramePage;
 import com.demo.pages.HomePage;
 import com.demo.utils.SeleniumUtil;
+
+import io.qameta.allure.Step;
 
 /**
  * @author XWR
@@ -13,9 +15,7 @@ import com.demo.utils.SeleniumUtil;
 public class HomeOperation {
 	static Logger logger = Logger.getLogger(HomeOperation.class.getName());
 	
-	/**
-	 * @Description 切换首页tab
-	 */
+	@Step("点击切换首页tab") //allure的步骤显示
 	public static void homepageTabClick(SeleniumUtil seleniumUtil){
 		try{
 			logger.info("点击切换首页tab");
@@ -25,10 +25,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 获取首页Tab-标志：问候名
-	 * @return
-	 */
+	@Step("获取首页Tab的问候名") //allure的步骤显示
 	public static String getHomepageSign (SeleniumUtil seleniumUtil){
 		String text = "";
 		try{
@@ -40,11 +37,7 @@ public class HomeOperation {
 		return text;
 	}
 	
-	/**
-	 * @Description 断言首页Tab-标志：问候名
-	 * @param seleniumUtil
-	 * @param expect
-	 */
+	@Step("断言获取首页Tab的问候名是否为“{1}”") //allure的步骤显示
 	public static void assertHomepageSign(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = HomeOperation.getHomepageSign(seleniumUtil);
@@ -55,9 +48,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 跳转首页总览快捷功能的未读邮件
-	 */
+	@Step("点击首页总览快捷功能的未读邮件") //allure的步骤显示
 	public static void overviewUnreadMailClick(SeleniumUtil seleniumUtil){
 		try{
 			logger.info("点击首页总览快捷功能的未读邮件");
@@ -67,10 +58,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 获取总览-未读邮件Tab-标题:未读邮件
-	 * @return
-	 */
+	@Step("获取总览未读邮件Tab的标题") //allure的步骤显示
 	public static String getOverviewUnreadMailTab (SeleniumUtil seleniumUtil){
 		String text = "";
 		try{
@@ -82,11 +70,7 @@ public class HomeOperation {
 		return text;
 	}
 	
-	/**
-	 * @Description 断言总览-未读邮件Tab-标题:未读邮件
-	 * @param seleniumUtil
-	 * @param expect
-	 */
+	@Step("断言总览未读邮件Tab的标题是否为未读邮件") //allure的步骤显示
 	public static void assertOverviewUnreadMailTab(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = HomeOperation.getOverviewUnreadMailTab(seleniumUtil);
@@ -97,9 +81,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 跳转首页总览快捷功能的待办邮件
-	 */
+	@Step("点击首页总览快捷功能的待办邮件") //allure的步骤显示
 	public static void overviewTodoMailClick(SeleniumUtil seleniumUtil){
 		try{
 			logger.info("点击首页总览快捷功能的待办邮件");
@@ -109,10 +91,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 获取总览-待办邮件Tab-标题:待办邮件
-	 * @return
-	 */
+	@Step("获取总览待办邮件Tab的标题") //allure的步骤显示
 	public static String getOverviewTodoMailTab (SeleniumUtil seleniumUtil){
 		String text = "";
 		try{
@@ -124,11 +103,7 @@ public class HomeOperation {
 		return text;
 	}
 	
-	/**
-	 * @Description 断言总览-待办邮件Tab-标题:待办邮件
-	 * @param seleniumUtil
-	 * @param expect
-	 */
+	@Step("断言总览待办邮件Tab的标题是否为待办邮件") //allure的步骤显示
 	public static void assertOverviewTodoMailTab(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = HomeOperation.getOverviewTodoMailTab(seleniumUtil);
@@ -139,9 +114,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 跳转首页总览快捷功能的联系人邮件
-	 */
+	@Step("点击首页总览快捷功能的联系人邮件") //allure的步骤显示
 	public static void overviewContactMailClick(SeleniumUtil seleniumUtil){
 		try{
 			logger.info("点击首页总览快捷功能的联系人邮件");
@@ -151,10 +124,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 获取总览-联系人Tab-标题:联系人邮件
-	 * @return
-	 */
+	@Step("获取总览联系人Tab的标题") //allure的步骤显示
 	public static String getOverviewContactMailTab (SeleniumUtil seleniumUtil){
 		String text = "";
 		try{
@@ -166,11 +136,7 @@ public class HomeOperation {
 		return text;
 	}
 	
-	/**
-	 * @Description 断言总览-联系人Tab-标题:联系人邮件
-	 * @param seleniumUtil
-	 * @param expect
-	 */
+	@Step("断言总览联系人Tab的标题是否为联系人邮件") //allure的步骤显示
 	public static void assertOverviewContactMailTab(SeleniumUtil seleniumUtil, String expect ){
 		try{
 			String actual = HomeOperation.getOverviewContactMailTab(seleniumUtil);
@@ -181,10 +147,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 跳转首页总览快捷功能的积分
-	 * @return
-	 */
+	@Step("点击首页总览快捷功能的积分") //allure的步骤显示
 	public static String overviewJifen(SeleniumUtil seleniumUtil){
 		String currentHandle = "";
 		try{
@@ -197,28 +160,20 @@ public class HomeOperation {
 		return currentHandle;
 	}
 	
-	/**
-	 * @Description 获取积分窗口标题
-	 * @param currentHandle
-	 * @return
-	 */
+	@Step("获取积分窗口标题") //allure的步骤显示
 	public static String getOverviewJifenWindowTitle(SeleniumUtil seleniumUtil,String currentHandle){
 		String title = "";
 		try{
 			seleniumUtil.switchToAnotherHandle();
 			title = seleniumUtil.getHandleTitle();
+			logger.info("获取积分窗口标题");
 		}catch(Exception e){
 			logger.error("获取积分窗口标题异常",e);
 		}
 		return title;
 	}
 	
-	/**
-	 * @Description 断言积分窗口标题
-	 * @param seleniumUtil
-	 * @param expect
-	 * @param currentHandle
-	 */
+	@Step("断言积分窗口标题") //allure的步骤显示
 	public static void assertOverviewJifenWindowTitle(SeleniumUtil seleniumUtil, String expect ,String currentHandle){
 		try{
 			String actual = HomeOperation.getOverviewJifenWindowTitle(seleniumUtil, currentHandle);
@@ -229,9 +184,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 跳转首页总览快捷功能的安全度
-	 */
+	@Step("点击首页总览快捷功能的安全度") //allure的步骤显示
 	public static void overviewSafetyDegreeClick(SeleniumUtil seleniumUtil){
 		try{
 			logger.info("点击首页总览快捷功能的安全度");
@@ -241,10 +194,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 获取总览-安全度-标志:邮箱健康指数
-	 * @return
-	 */
+	@Step("获取总览安全度的标志") //allure的步骤显示
 	public static String getOverviewSafetyDegreeSign (SeleniumUtil seleniumUtil){
 		String text = "";
 		try{
@@ -256,11 +206,7 @@ public class HomeOperation {
 		return text;
 	}
 	
-	/**
-	 * @Description 断言总览-安全度-标志:邮箱健康指数
-	 * @param seleniumUtil
-	 * @param expect
-	 */
+	@Step("断言总览安全度的标志是否为邮箱健康指数") //allure的步骤显示
 	public static void assertOverviewSafetyDegreeSign(SeleniumUtil seleniumUtil, String expect){
 		try{
 			String actual = HomeOperation.getOverviewSafetyDegreeSign(seleniumUtil);
@@ -271,9 +217,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 跳转首页总览快捷功能的登录保护
-	 */
+	@Step("点击首页总览快捷功能的登录保护") //allure的步骤显示
 	public static void overviewLoginProtectClick(SeleniumUtil seleniumUtil){
 		try{
 			logger.info("点击首页总览快捷功能的登录保护");
@@ -283,10 +227,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 获取总览-登录保护-标志:邮箱登录二次验证
-	 * @return
-	 */
+	@Step("获取总览登录保护的标志") //allure的步骤显示
 	public static String getOverviewLoginProtectSign (SeleniumUtil seleniumUtil){
 		String text = "";
 		try{
@@ -299,11 +240,7 @@ public class HomeOperation {
 		return text;
 	}
 	
-	/**
-	 * @Description 断言总览-登录保护-标志:邮箱登录二次验证
-	 * @param seleniumUtil
-	 * @param expect
-	 */
+	@Step("断言总览登录保护的标志是否为邮箱登录二次验证") //allure的步骤显示
 	public static void assertOverviewLoginProtectSign(SeleniumUtil seleniumUtil, String expect){
 		try{
 			String actual = HomeOperation.getOverviewLoginProtectSign(seleniumUtil);
@@ -314,9 +251,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 跳转首页总览快捷功能的每日生活
-	 */
+	@Step("点击首页总览快捷功能的每日生活") //allure的步骤显示
 	public static void overviewDailyLifeClick(SeleniumUtil seleniumUtil){
 		try{
 			logger.info("点击首页总览快捷功能的每日生活");
@@ -326,10 +261,7 @@ public class HomeOperation {
 		}
 	}
 	
-	/**
-	 * @Description 获取总览-每日生活Tab-标题:严选每日推荐
-	 * @return
-	 */
+	@Step("获取总览每日生活Tab的标题") //allure的步骤显示
 	public static String getOverviewDailyLifeTab (SeleniumUtil seleniumUtil){
 		String text = "";
 		try{
@@ -341,11 +273,7 @@ public class HomeOperation {
 		return text;
 	}
 	
-	/**
-	 * @Description 断言总览-每日生活Tab-标题:严选每日推荐
-	 * @param seleniumUtil
-	 * @param expect
-	 */
+	@Step("断言总览每日生活Tab的标题是否为严选每日推荐") //allure的步骤显示
 	public static void assertOverviewDailyLifeTab(SeleniumUtil seleniumUtil, String expect){
 		try{
 			String actual = HomeOperation.getOverviewDailyLifeTab(seleniumUtil);

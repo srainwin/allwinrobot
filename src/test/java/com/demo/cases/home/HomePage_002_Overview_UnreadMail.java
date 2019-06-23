@@ -4,22 +4,25 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
-import com.demo.pagesoperation.HomeOperation;
-import com.demo.pagesoperation.LoginOperation;
+import com.demo.pagesteps.HomeOperation;
+import com.demo.pagesteps.LoginOperation;
 import com.demo.utils.TestNGListener;
 
 import io.qameta.allure.Description;
-@Listeners({ TestNGListener.class})
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
+@Listeners({ TestNGListener.class}) //用例监听，主要是失败用例截图功能
+@Epic("126邮箱自动化测试实战") // allure用例组织，一级模块
+@Feature("用户首页") // allure组织，二级模块
 public class HomePage_002_Overview_UnreadMail extends LoginBase {
 
-	/**
-	 * @Description 首页测试用例002：总览快捷跳转未读邮件
-	 * @param expect
-	 * @param itestcontext
-	 * @throws Exception
-	 */
-	@Test(dataProvider = "testdata", description = "总览快捷跳转未读邮件")
-	@Description("操作步骤：" + "1、打开已登录页面；" + "2、默认进入首页Tab后点击总览未读邮件；" + "预期结果：" + "1、成功登录，且当前用户名信息正确；" + "2、成功跳转到未读邮件Tab页；")
+	@Story("首页Tab") // allure用例组织，三级模块
+	@Test(dataProvider = "testdata", description = "总览快捷跳转未读邮件") // allure用例名是description
+	@Description("登录邮箱后，在首页Tab右方用户总览点击未读邮件") // allure用例描述
+	@Severity(SeverityLevel.NORMAL) // allure用例重要等级
 	public void overviewUnreadMail(String expect) throws Exception {
 		// 打开已登录页面
 		LoginOperation.loginFree(seleniumUtil, testurl, cookiesConfigFilePath);
