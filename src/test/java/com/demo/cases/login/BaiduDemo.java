@@ -10,7 +10,7 @@ import io.qameta.allure.Step;
 public class BaiduDemo {
 	@Test(description = "百度搜索")
 	public void baidu() {
-		System.setProperty("webdriver.chrome.driver", "D:\\Selenium-Java-2.48.2\\chromedriver_win32\\chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver", "../src/test/resources/driver/chrome/chromedriver.exe");
 		WebDriver driver = new ChromeDriver();
 		geturl(driver);
 		sendKeys(driver);
