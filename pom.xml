@@ -73,15 +73,31 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.20</version>
 				<configuration>
+					<!--设置maven使用独立的类加载器 -->
 					<useSystemClassLoader>false</useSystemClassLoader>
-					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/runner/testng.xml</suiteXmlFile>
-					</suiteXmlFiles>
+					<!--设置参数命令行 -->
 					<argLine>
 						-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
 					</argLine>
+					<!-- 解决用maven执行test时日志乱码的问题 -->
+					<argLine>
+						-Dfile.encoding=UTF-8
+					</argLine>
+					<!-- 解决maven out of memory问题 -->
+					<argLine>
+						-Xms1024m -Xmx1024m
+					</argLine>
+					<!--代表的是要执行的测试套件名称 -->
+					<suiteXmlFiles>
+						<suiteXmlFile>src/test/resources/runner/testng.xml</suiteXmlFile>
+					</suiteXmlFiles>
+					<!--maven工作根目录，如果不加的话则是默认根目录为项目名 -->
 					<workingDirectory>target/</workingDirectory>
+					<!--定义maven运行测试生成的报表路径 -->
 					<reportsDirectory>target/result/maven-testng-report</reportsDirectory>
+					<!--测试失败后，是否忽略并继续测试 -->
+					<testFailureIgnore>true</testFailureIgnore>
+					<!--生成allure-result的目录 -->
 					<systemProperties>
 						<property>
 							<name>allure.results.directory</name>
