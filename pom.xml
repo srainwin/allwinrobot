@@ -5,7 +5,7 @@
 
 	<groupId>com.demo</groupId>
 	<artifactId>autotestddt</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>autotestddt</name>
@@ -15,7 +15,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<allure.version>2.10.0</allure.version>
-		<aspectj.version>1.9.2</aspectj.version>
+		<aspectj.version>1.8.10</aspectj.version>
 	</properties>
 
 	<dependencies>
@@ -68,55 +68,6 @@
 	<build>
 		<finalName>autotestddt</finalName>
 		<plugins>
-			<!--若需要本地显示allure测试报告还需要额外配置allure和jetty的maven插件，这里不需要本地显示allure测试报告，直接用jenkins下载allure插件配置即可查看测试报告 -->
-			<plugin>
-				<!--maven执行测试的插件 -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.1</version>
-				<configuration>
-					<!--设置maven使用独立的类加载器 -->
-					<useSystemClassLoader>false</useSystemClassLoader>
-					<!--设置参数命令行 -->
-					<argLine>
-						-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-					</argLine>
-					<!-- 解决用maven执行test时日志乱码的问题 -->
-					<argLine>
-						-Dfile.encoding=UTF-8
-					</argLine>
-					<!-- 解决maven out of memory问题 -->
-					<argLine>
-						-Xms1024m -Xmx1024m
-					</argLine>
-					<!--代表的是要执行的测试套件名称 -->
-					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/runner/testng.xml</suiteXmlFile>
-					</suiteXmlFiles>
-					<!--maven工作根目录，如果不加的话则是默认根目录为项目名 -->
-					<workingDirectory>target/</workingDirectory>
-					<!--定义maven运行测试生成的报表路径 -->
-					<reportsDirectory>target/result/maven-testng-report</reportsDirectory>
-					<!--测试失败后，是否忽略并继续测试 -->
-					<testFailureIgnore>true</testFailureIgnore>
-					<!--生成allure-result的目录 -->
-					<systemProperties>
-						<property>
-							<name>allure.results.directory</name>
-							<value>result/allure-results</value>
-						</property>
-					</systemProperties>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<!--allure的@Step、@Attachment注解需要正确地启用aspectj加载时编织 -->
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjweaver</artifactId>
-						<version>${aspectj.version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-
 			<plugin>
 				<!--控制maven项目源码jdk版本插件，maven的默认编译使用的jdk版本貌似很低 -->
 				<groupId>org.apache.maven.plugins</groupId>
@@ -126,19 +77,35 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-		</plugins>
-	</build>
-	<reporting>
-		<excludeDefaults>true</excludeDefaults>
-		<plugins>
 			<plugin>
-				<groupId>io.qameta.allure</groupId>
-				<artifactId>allure-maven</artifactId>
-				<version>2.10.0</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.20</version>
 				<configuration>
-					<reportVersion>${allure.version}</reportVersion>
+					<useSystemClassLoader>false</useSystemClassLoader>
+					<suiteXmlFiles>
+						<suiteXmlFile>src/test/resources/runner/testng.xml</suiteXmlFile>
+					</suiteXmlFiles>
+					<argLine>
+						-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+					</argLine>
+					<workingDirectory>target/</workingDirectory>
+					<reportsDirectory>target/result/maven-testng-report</reportsDirectory>
+					<systemProperties>
+						<property>
+							<name>allure.results.directory</name>
+							<value>result/allure-results</value>
+						</property>
+					</systemProperties>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjweaver</artifactId>
+						<version>${aspectj.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
-	</reporting>
+	</build>
 </project>
