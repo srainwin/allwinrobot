@@ -79,14 +79,6 @@
 					<argLine>
 						-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
 					</argLine>
-					<!-- 解决用maven执行test时日志乱码的问题 -->
-					<argLine>
-						-Dfile.encoding=UTF-8
-					</argLine>
-					<!-- 解决maven out of memory问题 -->
-					<argLine>
-						-Xms1024m -Xmx1024m
-					</argLine>
 					<!--代表的是要执行的测试套件名称 -->
 					<suiteXmlFiles>
 						<suiteXmlFile>src/test/resources/runner/testng.xml</suiteXmlFile>
