@@ -30,6 +30,7 @@ public class LoginBase {
 	protected String testurl;
 	protected String pageLoadTimeout;
 	protected String cookiesConfigFilePath;
+	protected String testDataFilePath;
 
 	static Logger logger = Logger.getLogger(LoginBase.class.getName());
 
@@ -43,6 +44,7 @@ public class LoginBase {
 			//给共享数据赋值，供任意继承本类的@Test用例使用（itestcontext是测试的上下文，包含很多信息，包括TestNG配置文件中的参数信息）
 			//原本打算在@Test的用例方法传入itestcontext参数的，但@Test的用例使用了@dataProvider后运行会检查出参数个数不一致异常，因为多了itestcontext参数，所以决定把itestcontext获取共享数据放到@BeforeClass中进行
 			cookiesConfigFilePath = itestcontext.getCurrentXmlTest().getParameter("cookiesConfigFilePath");
+			testDataFilePath = itestcontext.getCurrentXmlTest().getParameter("testDataFilePath");
 			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
 			testurl = itestcontext.getCurrentXmlTest().getParameter("testurl");
 			pageLoadTimeout = itestcontext.getCurrentXmlTest().getParameter("pageLoadTimeout");
@@ -73,7 +75,7 @@ public class LoginBase {
 		try {
 			// 数据文件路径，一个测试类对应一个excel数据文件，数据文件名与测试类名相同
 			String dataname = this.getClass().getSimpleName();
-			String datapath = "../src/test/resources/testdata/" + dataname + ".xlsx";
+			String datapath = testDataFilePath + "/" + dataname + ".xlsx";
 			// 获取工作簿
 			InputStream is = new FileInputStream(datapath);
 			XSSFWorkbook workbook = new XSSFWorkbook(is);

@@ -4,11 +4,13 @@
 	<!-- 填写启动浏览器名字：chrome、firefox、ie、ghost，推荐chrome -->
 	<parameter name="browserName" value="chrome" />
 	<!-- 填写浏览器驱动存放路径的属性配置文件位置 -->
-	<parameter name="driverConfigFilePath" value="../src/test/resources/config/driver.properties" />
-	<!-- 填写浏览器驱动存放路径的属性配置文件位置 -->
-	<parameter name="cookiesConfigFilePath" value="../src/test/resources/config/cookies.txt" />
+	<parameter name="driverConfigFilePath" value="../src/main/resources/config/driver.properties" />
+	<!-- 填写cookies文件保存位置 -->
+	<parameter name="cookiesConfigFilePath" value="../src/main/resources/config/cookies.txt" />
+	<!-- 填写测试数据文件存放位置 -->
+	<parameter name="testDataFilePath" value="../src/test/resources/testdata" />
 	<!-- 填写AutoIT的exe执行文件位置 -->
-	<parameter name="autoitFolderPath" value="../src/test/resources/autoit/" />
+	<parameter name="autoitFolderPath" value="../src/test/resources/exescript/autoit" />
 	<!-- 填写测试的网站url -->
 	<parameter name="testurl" value="https://mail.126.com" />
 	<!-- 填写页面加载等待超时时间 -->

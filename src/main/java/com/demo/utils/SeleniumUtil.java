@@ -1043,7 +1043,7 @@ public class SeleniumUtil {
 	 * @param itestcontext 通过获取testng.xml文件参数来获得autoit文件存放路径
 	 */
 	public void uploadFile(By byElement, String exeName, ITestContext itestcontext) {
-		String uploadExe = itestcontext.getCurrentXmlTest().getParameter("autoitFolderPath") + exeName;
+		String uploadExe = itestcontext.getCurrentXmlTest().getParameter("autoitFolderPath") + "/" + exeName;
 		try {
 			// 点击上传按钮弹出windows选择文件窗口
 			click(byElement);
