@@ -38,7 +38,7 @@ public class TestNGListener extends TestListenerAdapter {
 		super.onTestFailure(result);
 		System.out.println(result.getName() + " Failure");
 		//截图
-		takePhoto2();
+		takePhoto();
 	}
 
 	/* 每次跳过测试时调用*/
@@ -83,12 +83,12 @@ public class TestNGListener extends TestListenerAdapter {
 	}
 
 	/**
-	 * @Description 截图方法,并添加到Allure测试报告中
+	 * @Description 失败用例截图方案1,并添加到Allure测试报告中
 	 */
 	public void takePhoto() {
 		try {
 			String screenName = String.valueOf(new Date().getTime()) + ".png";
-			File dir = new File("./result/screenshot");
+			File dir = new File("result/screenshot");
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
@@ -110,7 +110,7 @@ public class TestNGListener extends TestListenerAdapter {
 	}
 	
 	/**
-	 * @Description @Attachment没效果，暂未找出原因
+	 * @Description 失败用例截图方案2，allure官网推荐，默认保存路径在allure-report\data\attachments
 	 * @return
 	 */
 	@Attachment(value = "失败截图如下：", type = "image/png")
@@ -118,6 +118,7 @@ public class TestNGListener extends TestListenerAdapter {
 		byte[] screenshotAs = null;
 		try {
 			screenshotAs = ((TakesScreenshot) SeleniumUtil.driver).getScreenshotAs(OutputType.BYTES);
+			System.out.println("成功进行失败用例截图");
 		} catch (Exception e) {
 			System.out.println("失败用例截图发生异常");
 			e.printStackTrace();
