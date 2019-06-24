@@ -48,7 +48,7 @@ public class LoginBase {
 			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
 			testurl = itestcontext.getCurrentXmlTest().getParameter("testurl");
 			pageLoadTimeout = itestcontext.getCurrentXmlTest().getParameter("pageLoadTimeout");
-			
+
 			int plTimeout = Integer.parseInt(pageLoadTimeout);
 			seleniumUtil.launchBrowser(browserName,itestcontext,plTimeout);
 			logger.info(browserName + "浏览器启动成功!");

@@ -11,6 +11,8 @@
 	<parameter name="testDataFilePath" value="../src/test/resources/testdata" />
 	<!-- 填写AutoIT的exe执行文件位置 -->
 	<parameter name="autoitFolderPath" value="../src/test/resources/exescript/autoit" />
+	<!-- 填写Sikuli的exe执行文件位置 -->
+	<parameter name="sikuliFolderPath" value="../src/test/resources/exescript/sikuli" />
 	<!-- 填写测试的网站url -->
 	<parameter name="testurl" value="https://mail.126.com" />
 	<!-- 填写页面加载等待超时时间 -->

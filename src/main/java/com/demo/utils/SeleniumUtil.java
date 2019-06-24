@@ -1043,22 +1043,59 @@ public class SeleniumUtil {
 	 * @param itestcontext 通过获取testng.xml文件参数来获得autoit文件存放路径
 	 */
 	public void uploadFile(By byElement, String exeName, ITestContext itestcontext) {
-		String uploadExe = itestcontext.getCurrentXmlTest().getParameter("autoitFolderPath") + "/" + exeName;
 		try {
 			// 点击上传按钮弹出windows选择文件窗口
 			click(byElement);
 			pause(1000);
-			Runtime rn = Runtime.getRuntime();
-			Process p = rn.exec(uploadExe);
-			//等待上传进程完成
-			int staus = p.waitFor();
-			if( staus == 0){
-				logger.info("已上传完毕并终止exe脚本进程");
-			}else{
-				logger.warn("上传失败，异常终止exe脚本进程");
-			}
+			//调用执行autoit脚本方法
+			autoitExe(exeName,itestcontext);
+			logger.info("成功上传文件");
 		} catch (Exception e) {
-			logger.error("通过执行autoit的exe脚本上传文件发生异常",e);
+			logger.error("上传文件发生异常",e);
+		}
+	}
+	
+	/**
+	 * @Description 调用执行外部exe脚本：autoit（windows ui操作）
+	 * @param exeName
+	 * @param itestcontext
+	 */
+	public void autoitExe(String exeName, ITestContext itestcontext){
+		String scriptPath = itestcontext.getCurrentXmlTest().getParameter("autoitFolderPath") + "/" + exeName;
+		try{
+			Runtime rn = Runtime.getRuntime();
+			Process p = rn.exec(scriptPath);
+			int staus = p.waitFor();
+			//等待执行完成
+			if( staus == 0){
+				logger.info("成功执行autoit脚本，正常终止脚本进程");
+			}else{
+				logger.warn("执行autoit脚本发生异常，异常终止脚本进程");
+			}
+		}catch(Exception e){
+			logger.error("执行autoit的exe脚本发生异常",e);
+		}
+	}
+	
+	/**
+	 * @Description 调用执行外部exe脚本：sikuli（图像识别操作）
+	 * @param exeName
+	 * @param itestcontext
+	 */
+	public void sikuliExe(String exeName, ITestContext itestcontext){
+		String scriptPath = itestcontext.getCurrentXmlTest().getParameter("sikuliFolderPath") + "/" + exeName;
+		try{
+			Runtime rn = Runtime.getRuntime();
+			Process p = rn.exec(scriptPath);
+			int staus = p.waitFor();
+			//等待执行完成
+			if( staus == 0){
+				logger.info("成功执行sikuli脚本，正常终止脚本进程");
+			}else{
+				logger.warn("执行sikuli脚本发生异常，异常终止脚本进程");
+			}
+		}catch(Exception e){
+			logger.error("执行sikuli的exe脚本发生异常",e);
 		}
 	}
 	
