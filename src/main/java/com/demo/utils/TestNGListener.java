@@ -24,7 +24,10 @@ import io.qameta.allure.Attachment;
  * @Description 测试用例监听配置，主要是失败用例截图功能
  */
 public class TestNGListener extends TestListenerAdapter {
-
+	
+	/* 在重写的onstart方法中获取testng.xml参数赋值，然后用于截图方法中*/
+	String screenImageFolderPath = null;
+	
 	/* 每次测试成功时调用*/
 	@Override
 	public void onTestSuccess(ITestResult result) {
@@ -61,6 +64,7 @@ public class TestNGListener extends TestListenerAdapter {
 	@Override
 	public void onStart(ITestContext testContext) {
 		super.onStart(testContext);
+		screenImageFolderPath = testContext.getCurrentXmlTest().getParameter("screenImageFolderPath");
 	}
 
 	/* 在所有测试运行之后调用，并且所有的配置方法都被调用*/
@@ -88,7 +92,7 @@ public class TestNGListener extends TestListenerAdapter {
 	public void takePhoto() {
 		try {
 			String screenName = String.valueOf(new Date().getTime()) + ".png";
-			File dir = new File("result/screenshot");
+			File dir = new File(screenImageFolderPath);
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}

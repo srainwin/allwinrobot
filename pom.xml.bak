@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<!--备注：使用nexus私服时用这个pom -->
+	<!--备注：不使用nexus私服时用这个pom -->
 
 	<!--项目的全球唯一标识符，通常使用全限定的包名区分该项目和其他项目。并且构建时生成的路径也是由此生成， 如com.mycompany.app生成的相对路径为：/com/mycompany/app -->
 	<groupId>com.demo</groupId>
@@ -18,7 +18,6 @@
 	<!--项目主页的URL, Maven产生的文档用 -->
 	<url>http://maven.apache.org</url>
 
-	<!--自定义变量 -->
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -26,26 +25,39 @@
 		<aspectj.version>1.9.2</aspectj.version>
 	</properties>
 
-	<!--发布本地构建项目到Nexus的发布地址配置，地址是nexus的releases和snapshots仓库 -->
-	<distributionManagement>
-		<repository>
-			<id>releases</id>
-			<name>Releases</name>
-			<url>http://localhost:8081/nexus/content/repositories/releases/</url>
+	<repositories>
+		<repository>  <!-- 官网说明书显示使用第三方仓库下载sikulix的jar包 -->
+			<id>com-sikulix</id>
+			<name>com-sikulix</name>
+			<url>https://oss.sonatype.org/content/groups/public</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
 		</repository>
-		<snapshotRepository>
-			<id>snapshots</id>
-			<name>Snapshots</name>
-			<url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
-
-	<!--添加项目依赖包 -->
+	</repositories>
 	<dependencies>
 		<dependency>
-			<groupId>com.sikuli</groupId>
-			<artifactId>sikuliapi</artifactId>
-			<version>1.1.2</version> 
+			<groupId>com.sikulix</groupId>
+			<artifactId>sikulixapi</artifactId>
+			<version>1.1.1-SNAPSHOT</version> <!-- 1.1.2及以上的版本运行用例会报错libs to export not found on above classpath: /sikulixlibs/windows/libs64 -->
+			<exclusions>
+				<exclusion>
+					<!--去除adb依赖，adb是用于安卓程序调试用的，而且不去除的话pom保存报错Missing artifact com.github.vidstige:jadb:jar:v1.0 -->
+					<groupId>com.github.vidstige</groupId>
+					<artifactId>jadb</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.nativelibs4java</groupId>
+			<artifactId>bridj</artifactId>
+			<version>0.7.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>

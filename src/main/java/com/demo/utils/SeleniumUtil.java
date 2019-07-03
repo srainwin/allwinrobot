@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -35,7 +36,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.ITestContext;
-import org.testng.ITestResult;
 
 /**
  * @author xwr
@@ -43,11 +43,10 @@ import org.testng.ITestResult;
  */
 public class SeleniumUtil {
 	public static Logger logger = Logger.getLogger(SeleniumUtil.class.getName());
-	public ITestResult it = null;
 	public static WebDriver driver = null;//使用static是用于监听类的用例失败截图功能调用到driver
 
 	/***
-	 * 启动浏览器
+	 * 启动浏览器，testng的beforeclass使用
 	 */
 	public void launchBrowser(String browserName, ITestContext itestcontext, int timeOut) {
 		SelectBrowser selectbrowser = new SelectBrowser();
@@ -275,6 +274,8 @@ public class SeleniumUtil {
 		WebElement element = null;
 		try {
 			element = driver.findElement(byElement);
+			//高亮显示
+			highLight(element);
 			logger.info("成功定位元素");
 		} catch (Exception e) {
 			logger.error("定位元素异常", e);
@@ -286,14 +287,19 @@ public class SeleniumUtil {
 	 * 定位查找元素的方法 elements
 	 */
 	public List<WebElement> findElementsBy(By byElement) {
-		List<WebElement> element = null;
+		List<WebElement> elements = null;
 		try {
-			element = driver.findElements(byElement);
+			elements = driver.findElements(byElement);
+			Iterator<WebElement> itelements = elements.iterator();
+			while(itelements.hasNext()){
+				//高亮显示
+				highLight(itelements.next());
+			}
 			logger.info("成功定位元素");
 		} catch (Exception e) {
 			logger.error("定位元素异常", e);
 		}
-		return element;
+		return elements;
 	}
 
 	/**
@@ -315,6 +321,8 @@ public class SeleniumUtil {
 					return driver.findElement(byElement);
 				}
 			});
+			//高亮显示
+			highLight(element);
 			logger.info("成功找到了元素");
 		} catch (TimeoutException e) {
 			logger.error("超时!! " + timeOutInSeconds + " 秒之后还没找到元素 [" + byElement + "]", e);
@@ -826,7 +834,7 @@ public class SeleniumUtil {
 		} catch (NoSuchElementException e) {
 			logger.info("成功检查元素不存在");
 			return false;
-		}catch (Exception e) {
+		} catch (Exception e) {
 			logger.info("检查元素是否存在时发生异常");
 			return false;
 		}
@@ -969,6 +977,20 @@ public class SeleniumUtil {
 	}
 
 	/**
+	 * 元素高亮显示，红色边框，黄色背景
+	 */
+	public Object highLight(WebElement webElement) {
+		Object obj = null;
+		try{
+			executeJS("arguments[0].setAttribute('style', 'border: 2px solid red;');",webElement);
+			logger.info("成功高亮元素");
+		}catch(Exception e){
+			logger.error("高亮元素发生异常",e);
+		}
+		return obj;
+	}
+	
+	/**
 	 * @Description 判断实际文本时候包含期望文本
 	 * @param actual 实际文本
 	 * @param expect 期望文本
@@ -1074,28 +1096,6 @@ public class SeleniumUtil {
 			}
 		}catch(Exception e){
 			logger.error("执行autoit的exe脚本发生异常",e);
-		}
-	}
-	
-	/**
-	 * @Description 调用执行外部exe脚本：sikuli（图像识别操作）
-	 * @param exeName
-	 * @param itestcontext
-	 */
-	public void sikuliExe(String exeName, ITestContext itestcontext){
-		String scriptPath = itestcontext.getCurrentXmlTest().getParameter("sikuliFolderPath") + "/" + exeName;
-		try{
-			Runtime rn = Runtime.getRuntime();
-			Process p = rn.exec(scriptPath);
-			int staus = p.waitFor();
-			//等待执行完成
-			if( staus == 0){
-				logger.info("成功执行sikuli脚本，正常终止脚本进程");
-			}else{
-				logger.warn("执行sikuli脚本发生异常，异常终止脚本进程");
-			}
-		}catch(Exception e){
-			logger.error("执行sikuli的exe脚本发生异常",e);
 		}
 	}
 	

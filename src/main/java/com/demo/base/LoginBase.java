@@ -22,15 +22,20 @@ import org.testng.annotations.DataProvider;
 
 import com.demo.utils.LogConfiguration;
 import com.demo.utils.SeleniumUtil;
+import com.demo.utils.SikuliUtil;
 
 public class LoginBase {
-	//seleniumUtil对象的driver成员变量最终会通过launchBrowser成员方法获取对应浏览器驱动，所有用例继承LoginBase都使用这个seleniumUtil对象中的driver成员变量
+	//seleniumUtil对象的driver成员变量最终会通过BeforeClass中运行launchBrowser成员方法获取对应浏览器驱动，所有用例继承LoginBase都使用这个seleniumUtil对象中的driver成员变量
 	protected static SeleniumUtil seleniumUtil = new SeleniumUtil();
+	//sikuliUtil对象的Screen成员变量最终会通过BeforeClass中运行launchScreen成员方法获取屏幕，所有用例继承LoginBase都使用这个sikuliUtil对象中的Screen成员变量
+	protected static SikuliUtil sikuliUtil = new SikuliUtil();
+	
 	protected String browserName;
 	protected String testurl;
 	protected String pageLoadTimeout;
 	protected String cookiesConfigFilePath;
 	protected String testDataFilePath;
+	protected String sikuliImageFolderPath;
 
 	static Logger logger = Logger.getLogger(LoginBase.class.getName());
 
@@ -48,9 +53,14 @@ public class LoginBase {
 			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
 			testurl = itestcontext.getCurrentXmlTest().getParameter("testurl");
 			pageLoadTimeout = itestcontext.getCurrentXmlTest().getParameter("pageLoadTimeout");
+			sikuliImageFolderPath = itestcontext.getCurrentXmlTest().getParameter("sikuliImageFolderPath");
 
 			int plTimeout = Integer.parseInt(pageLoadTimeout);
+			//启动某款浏览器
 			seleniumUtil.launchBrowser(browserName,itestcontext,plTimeout);
+			//启动sikuli屏幕操作器
+			sikuliUtil.launchScreen("sikuliImageFolderPath");
+			
 			logger.info(browserName + "浏览器启动成功!");
 		} catch (Exception e) {
 			logger.error(browserName + "浏览器不能正常工作，请检查是不是被手动关闭或者其他原因", e);

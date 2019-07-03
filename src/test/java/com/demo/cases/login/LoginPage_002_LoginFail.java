@@ -22,7 +22,7 @@ public class LoginPage_002_LoginFail extends  LoginBase {
 	@Test(dataProvider = "testdata" ,description = "输入错误用户名或密码登录") // allure用例名是description
 	@Description("输入错误用户名或密码并登录失败显示提示信息") // allure用例描述
 	@Severity(SeverityLevel.BLOCKER) // allure用例重要等级
-	public void loginFail(String username,String password,String expect) throws Exception {
+	public void loginFail(String username,String password,String expect) {
 		//登陆
 		LoginOperation.login(seleniumUtil,username, password,testurl);
 		//用户信息断言

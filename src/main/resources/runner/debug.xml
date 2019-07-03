@@ -10,7 +10,11 @@
 	<!-- 填写测试数据文件存放位置 -->
 	<parameter name="testDataFilePath" value="../src/test/resources/testdata" />
 	<!-- 填写AutoIT的exe执行文件位置 -->
-	<parameter name="autoitFolderPath" value="../src/test/resources/exescript/autoit" />
+	<parameter name="autoitFolderPath" value="../src/test/resources/others/autoit" />
+	<!-- 填写Sikuli的图像存放位置 -->
+	<parameter name="sikuliImageFolderPath" value="../src/test/resources/others/sikuli" />
+	<!-- 填写屏幕截图存放位置 -->
+	<parameter name="screenImageFolderPath" value="result/screenshot" />
 	<!-- 填写测试的网站url -->
 	<parameter name="testurl" value="https://mail.126.com" />
 	<!-- 填写页面加载等待超时时间 -->

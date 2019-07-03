@@ -22,7 +22,7 @@ public class LoginPage_001_LoginSuccess extends LoginBase {
 	@Test(dataProvider = "testdata", description = "输入正确的账号和密码登录") // allure用例名是description
 	@Description("输入正确的账号和密码并登录成功") // allure用例描述
 	@Severity(SeverityLevel.BLOCKER) // allure用例重要等级
-	public void loginSucess(String username, String password, String expect) throws Exception {
+	public void loginSucess(String username, String password, String expect) {
 		// 账号登陆
 		LoginOperation.login(seleniumUtil, username, password, testurl);
 		// 获取cookies保存，便于其他用例免登录

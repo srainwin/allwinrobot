@@ -23,7 +23,7 @@ public class HomePage_008_Overview_DailyLife extends LoginBase {
 	@Test(dataProvider = "testdata", description = "总览快捷跳转每日生活") // allure用例名是description
 	@Description("登录邮箱后，在首页Tab右方用户总览点击每日生活") // allure用例描述
 	@Severity(SeverityLevel.NORMAL) // allure用例重要等级
-	public void overviewDailyLife(String expect) throws Exception {
+	public void overviewDailyLife(String expect) {
 		// 打开已登录页面
 		LoginOperation.loginFree(seleniumUtil, testurl, cookiesConfigFilePath);
 		// 点击总览安全度
