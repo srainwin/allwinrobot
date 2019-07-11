@@ -4,7 +4,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
-import com.demo.pagesteps.LoginOperation;
+import com.demo.pagesteps.LoginSteps;
 import com.demo.utils.TestNGListener;
 
 import io.qameta.allure.Description;
@@ -24,8 +24,8 @@ public class LoginPage_002_LoginFail extends  LoginBase {
 	@Severity(SeverityLevel.BLOCKER) // allure用例重要等级
 	public void loginFail(String username,String password,String expect) {
 		//登陆
-		LoginOperation.login(seleniumUtil,username, password,testurl);
+		LoginSteps.login(seleniumUtil,username, password,testurl);
 		//用户信息断言
-		LoginOperation.assertLoginErrorInfo(seleniumUtil, expect);
+		LoginSteps.assertLoginErrorInfo(seleniumUtil, expect);
 	}
 }

@@ -17,9 +17,9 @@
 	<parameter name="screenImageFolderPath" value="result/screenshot" />
 	<!-- 填写测试的网站url -->
 	<parameter name="testurl" value="https://mail.126.com" />
-	<!-- 填写页面加载等待超时时间 -->
+	<!-- 填写页面加载等待超时时间(秒) -->
 	<parameter name="pageLoadTimeout" value="20" />
-	<!-- 填写保留测试日志天数 -->
+	<!-- 填写保留测试日志时间(天) -->
 	<parameter name="keepLogDay" value="10" />
 	<listeners>
 		<!-- 测试用例运行失败截图处理监听 -->
@@ -41,6 +41,7 @@
 			<class name="com.demo.cases.home.HomePage_006_Overview_SafetyDegree" />
 			<class name="com.demo.cases.home.HomePage_007_Overview_LoginProtect" />
 			<class name="com.demo.cases.home.HomePage_008_Overview_DailyLife" />
+			<class name="com.demo.cases.home.WriteLettersPage_001_WriteLetterAndSendSuccess" />
 			<class name="com.demo.cases.login.LoginPage_003_Logout" />
 		</classes>
 	</test>

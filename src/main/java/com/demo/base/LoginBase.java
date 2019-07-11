@@ -32,10 +32,13 @@ public class LoginBase {
 	
 	protected String browserName;
 	protected String testurl;
-	protected String pageLoadTimeout;
+	protected int pageLoadTimeout;
 	protected String cookiesConfigFilePath;
 	protected String testDataFilePath;
 	protected String sikuliImageFolderPath;
+	protected String screenImageFolderPath;
+	protected String autoitFolderPath;
+	protected String driverConfigFilePath;
 
 	static Logger logger = Logger.getLogger(LoginBase.class.getName());
 
@@ -52,14 +55,16 @@ public class LoginBase {
 			testDataFilePath = itestcontext.getCurrentXmlTest().getParameter("testDataFilePath");
 			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
 			testurl = itestcontext.getCurrentXmlTest().getParameter("testurl");
-			pageLoadTimeout = itestcontext.getCurrentXmlTest().getParameter("pageLoadTimeout");
+			pageLoadTimeout = Integer.parseInt(itestcontext.getCurrentXmlTest().getParameter("pageLoadTimeout"));
 			sikuliImageFolderPath = itestcontext.getCurrentXmlTest().getParameter("sikuliImageFolderPath");
+			screenImageFolderPath = itestcontext.getCurrentXmlTest().getParameter("screenImageFolderPath");
+			autoitFolderPath = itestcontext.getCurrentXmlTest().getParameter("autoitFolderPath");
+			driverConfigFilePath = itestcontext.getCurrentXmlTest().getParameter("driverConfigFilePath");
 
-			int plTimeout = Integer.parseInt(pageLoadTimeout);
 			//启动某款浏览器
-			seleniumUtil.launchBrowser(browserName,itestcontext,plTimeout);
+			seleniumUtil.launchBrowser(browserName,driverConfigFilePath,pageLoadTimeout);
 			//启动sikuli屏幕操作器
-			sikuliUtil.launchScreen("sikuliImageFolderPath");
+			sikuliUtil.launchScreen(sikuliImageFolderPath);
 			
 			logger.info(browserName + "浏览器启动成功!");
 		} catch (Exception e) {

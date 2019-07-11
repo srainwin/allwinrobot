@@ -4,8 +4,8 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
-import com.demo.pagesteps.HomeOperation;
-import com.demo.pagesteps.LoginOperation;
+import com.demo.pagesteps.HomeSteps;
+import com.demo.pagesteps.LoginSteps;
 import com.demo.utils.TestNGListener;
 
 import io.qameta.allure.Description;
@@ -25,10 +25,10 @@ public class HomePage_003_Overview_TodoMail extends LoginBase {
 	@Severity(SeverityLevel.NORMAL) // allure用例重要等级
 	public void overviewTodoMail(String expect) {
 		// 打开已登录页面
-		LoginOperation.loginFree(seleniumUtil, testurl, cookiesConfigFilePath);
+		LoginSteps.loginFree(seleniumUtil, testurl, cookiesConfigFilePath);
 		// 点击总览待办邮件
-		HomeOperation.overviewTodoMailClick(seleniumUtil);
+		HomeSteps.overviewTodoMailClick(seleniumUtil);
 		// 进入待办邮件断言
-		HomeOperation.assertOverviewTodoMailTab(seleniumUtil, expect);
+		HomeSteps.assertOverviewTodoMailTab(seleniumUtil, expect);
 	}
 }

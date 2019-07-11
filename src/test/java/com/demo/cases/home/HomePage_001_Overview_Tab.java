@@ -4,8 +4,8 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
-import com.demo.pagesteps.HomeOperation;
-import com.demo.pagesteps.LoginOperation;
+import com.demo.pagesteps.HomeSteps;
+import com.demo.pagesteps.LoginSteps;
 import com.demo.utils.TestNGListener;
 
 import io.qameta.allure.Description;
@@ -25,10 +25,10 @@ public class HomePage_001_Overview_Tab extends LoginBase {
 	@Severity(SeverityLevel.NORMAL) // allure用例重要等级
 	public void overviewTabSwitch(String username, String expect) {
 		// 打开已登录页面
-		LoginOperation.loginFree(seleniumUtil, testurl, cookiesConfigFilePath);
+		LoginSteps.loginFree(seleniumUtil, testurl, cookiesConfigFilePath);
 		// 点击首页tab
-		HomeOperation.homepageTabClick(seleniumUtil);
+		HomeSteps.homepageTabClick(seleniumUtil);
 		// 进入首页tab断言
-		HomeOperation.assertHomepageSign(seleniumUtil, "expect");//模仿断言失败看截图与重跑效果
+		HomeSteps.assertHomepageSign(seleniumUtil, "expect");//模仿断言失败看截图与重跑效果
 	}
 }

@@ -4,8 +4,8 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.demo.base.LoginBase;
-import com.demo.pagesteps.HomeOperation;
-import com.demo.pagesteps.LoginOperation;
+import com.demo.pagesteps.HomeSteps;
+import com.demo.pagesteps.LoginSteps;
 import com.demo.utils.TestNGListener;
 
 import io.qameta.allure.Description;
@@ -25,10 +25,10 @@ public class HomePage_008_Overview_DailyLife extends LoginBase {
 	@Severity(SeverityLevel.NORMAL) // allure用例重要等级
 	public void overviewDailyLife(String expect) {
 		// 打开已登录页面
-		LoginOperation.loginFree(seleniumUtil, testurl, cookiesConfigFilePath);
-		// 点击总览安全度
-		HomeOperation.overviewDailyLifeClick(seleniumUtil);
+		LoginSteps.loginFree(seleniumUtil, testurl, cookiesConfigFilePath);
+		// 点击总览每日生活
+		HomeSteps.overviewDailyLifeClick(seleniumUtil);
 		// 进入安全度断言
-		HomeOperation.assertOverviewDailyLifeTab(seleniumUtil, expect);
+		HomeSteps.assertOverviewDailyLifeTab(seleniumUtil, expect);
 	}
 }
