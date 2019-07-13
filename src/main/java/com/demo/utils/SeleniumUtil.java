@@ -1108,8 +1108,7 @@ public class SeleniumUtil {
 	/**
 	 * 元素高亮显示，红色边框，黄色背景
 	 */
-	public Object highLight(WebElement webElement) {
-		Object obj = null;
+	public void highLight(WebElement webElement) {
 		try{
 			executeJS("arguments[0].setAttribute('style', 'border: 2px solid red;');",webElement);
 			logger.info("成功高亮元素");
@@ -1118,7 +1117,6 @@ public class SeleniumUtil {
 			//由testng的失败断言来控制用例运行是否失败
 			Assert.fail();
 		}
-		return obj;
 	}
 	
 	/**
