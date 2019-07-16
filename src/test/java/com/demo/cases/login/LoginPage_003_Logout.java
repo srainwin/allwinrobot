@@ -22,7 +22,7 @@ public class LoginPage_003_Logout extends LoginBase {
 	@Test(dataProvider = "testdata", description = "登出邮箱") // allure用例名是description
 	@Description("输入正确的用户名和密码登录后，点击登出邮箱成功。注意：登出邮箱后之前获取保存的cookies将失效，需重新登录后getcookies保存。") // allure用例描述
 	@Severity(SeverityLevel.BLOCKER) // allure用例重要等级
-	public void loginSucess(String expect) {
+	public void loginOut(String expect) {
 		// 登陆
 		LoginSteps.loginFree(seleniumUtil, testurl, cookiesConfigFilePath);
 		// 登出

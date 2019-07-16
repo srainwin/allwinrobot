@@ -46,10 +46,20 @@ public class SeleniumUtil {
 	/***
 	 * 启动浏览器，testng的beforeclass使用
 	 */
-	public void launchBrowser(String browserName, String driverConfigFilePath, int timeOut) {
-		SelectBrowser selectbrowser = new SelectBrowser();
-		// 可选择不同的浏览器来启动，并使得类中成员变量driver获得浏览器驱动值，以便于其他成员方法共用同一个driver有值
-		driver = selectbrowser.selectByName(browserName, driverConfigFilePath);
+	public void launchBrowser(String browserName, String driverConfigFilePath, String isRemote, String huburl, int timeOut) {
+		System.out.println(isRemote);
+		if( isRemote.equals("true") ){
+			logger.info("远程浏览器准备中");
+			SelectRemoteBrowser selectremotebrowser = new SelectRemoteBrowser();
+			// 可选择不同的远程浏览器来启动，并使得类中成员变量driver获得浏览器驱动值，以便于其他成员方法共用同一个driver有值
+			driver = selectremotebrowser.selectByName(browserName, huburl);
+		}else{
+			logger.info("本地浏览器准备中");
+			SelectLocalBrowser selectlocalbrowser = new SelectLocalBrowser();
+			// 可选择不同的本地浏览器来启动，并使得类中成员变量driver获得浏览器驱动值，以便于其他成员方法共用同一个driver有值
+			driver = selectlocalbrowser.selectByName(browserName, driverConfigFilePath);
+		}
+		
 		try {
 			maxWindow();
 			pageLoadTimeout(timeOut);
@@ -95,7 +105,7 @@ public class SeleniumUtil {
 	}
 
 	/** 获得屏幕的分辨率 - 宽和高 */
-	public static double[] getScreenWidth() {
+	public double[] getScreenWidth() {
 		double[] wh = new double[2];
 		try{
 			wh[0] = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
@@ -518,7 +528,6 @@ public class SeleniumUtil {
 			findElementBy(byElement).click();
 			logger.info("成功点击元素");
 		} catch (Exception e) {
-			new Date().getTime();
 			if (System.currentTimeMillis() - startTime > timeOut) {
 				logger.error(byElement + "元素不可点击", e);
 				//由testng的失败断言来控制用例运行是否失败

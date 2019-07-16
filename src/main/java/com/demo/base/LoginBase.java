@@ -39,6 +39,8 @@ public class LoginBase {
 	protected String screenImageFolderPath;
 	protected String autoitFolderPath;
 	protected String driverConfigFilePath;
+	protected String isRemote;
+	protected String huburl;
 
 	static Logger logger = Logger.getLogger(LoginBase.class.getName());
 
@@ -60,9 +62,11 @@ public class LoginBase {
 			screenImageFolderPath = itestcontext.getCurrentXmlTest().getParameter("screenImageFolderPath");
 			autoitFolderPath = itestcontext.getCurrentXmlTest().getParameter("autoitFolderPath");
 			driverConfigFilePath = itestcontext.getCurrentXmlTest().getParameter("driverConfigFilePath");
+			isRemote = itestcontext.getCurrentXmlTest().getParameter("isRemote");
+			huburl = itestcontext.getCurrentXmlTest().getParameter("huburl");
 
-			//启动某款浏览器
-			seleniumUtil.launchBrowser(browserName,driverConfigFilePath,pageLoadTimeout);
+			//启动本地或者远程的某款浏览器
+			seleniumUtil.launchBrowser(browserName,driverConfigFilePath,isRemote,huburl,pageLoadTimeout);
 			//启动sikuli屏幕操作器
 			sikuliUtil.launchScreen(sikuliImageFolderPath);
 			

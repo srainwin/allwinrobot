@@ -1,6 +1,6 @@
 # autotestddt
 DDT数据驱动+类BBD行为驱动的自动化测试  
-java+maven+testng+selenium+sikuli+allure+“testdata from excel”  
+java + maven + testng + selenium + sikuli + allure  
 
 ## 主要工具
 java:主编程语言（jdk8）  
@@ -17,12 +17,14 @@ selenium常用api封装提供调用ui自动化操作
 sikuli常用api封装提供调用图像识别自动化操作  
 可调用autoit的exe脚本进行windows自动化操作  
 提供选择ie、chrome、firefox和ghost浏览器进行测试  
+支持并行分布式执行用例  
+PO模式设计维护用例
 添加cookies免登录  
 从excel获取测试数据  
 记录用例运行日志信息  
-提供美观的测试报告  
-监听失败用例截图  
-监听失败用例重跑  
+提供美观步级的测试报告  
+失败用例可截图  
+失败用例可重跑  
 DDT数据驱动测试
 类BDD行为驱动测试  
 
@@ -52,5 +54,17 @@ DDT数据驱动测试
 
 ## pom说明
 pom.xml：默认使用了nexus私服仓库  
-pom1.txt：使用nexus私服仓库的配置  
-pom2.txt：不使用nexus私服仓库配置  
+pom1.txt：使用nexus私服仓库的配置信息，需要时复制到pom.xml  
+pom2.txt：不使用nexus私服仓库配置 信息，需要时复制到pom.xml  
+
+## selenium grid分布式使用说明
+(1)准备多台机子并能互相网络访问，vm虚拟机要用桥接网络方式，并每台机正确安装各类浏览器  
+(2)下载grid包  
+selenium-server-standalone-3.141.59.jar  
+(3)启动hub节点为控制端（hub机执行），然后访问http://localhost:4444/grid/console  
+java -jar selenium-server-standalone-3.141.59.jar -role hub  
+(4)建立node节点连接（node机执行），然后刷新访问http://localhost:4444/grid/console  
+java -Dwebdriver.chrome.driver="D:/snc/workspace2/autotestddt/src/main/resources/driver/chromedriver.exe" -Dwebdriver.gecko.driver="D:/snc/workspace2/autotestddt/src/main/resources/driver/geckodriver.exe" -jar selenium-server-standalone-3.141.59.jar -role node -host 192.168.1.101 -hub http://192.168.1.101:4444/grid/register -browser browserName=chrome,seleniumProtocol=WebDriver,maxInstances=5,platform=WINDOWS -browser browserName=firefox,seleniumProtocol=WebDriver,maxInstances=5,platform=WINDOWS  
+(5)testng.xml/debug.xml填写isRemote和huburl参数值  
+
+
