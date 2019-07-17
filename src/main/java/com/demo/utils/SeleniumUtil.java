@@ -42,6 +42,9 @@ import org.testng.Assert;
 public class SeleniumUtil {
 	public static Logger logger = Logger.getLogger(SeleniumUtil.class.getName());
 	public static WebDriver driver = null;//使用static是用于监听类的用例失败截图功能takePhoto()调用到driver
+	//WebDriver作为成员变量是线程不安全的，线程安全的通常做法是作为方法内的局部变量
+	//另一线程安全做法是使用ThreadLocal来提供线程局部变量，也就是变量只对当前线程可见，即是存放的值是线程内独享的线程间互斥的
+	public static ThreadLocal<WebDriver> threadLocalWebDriver = new ThreadLocal<WebDriver>();
 
 	/***
 	 * 启动浏览器，testng的beforeclass使用
@@ -52,12 +55,16 @@ public class SeleniumUtil {
 			logger.info("远程浏览器准备中");
 			SelectRemoteBrowser selectremotebrowser = new SelectRemoteBrowser();
 			// 可选择不同的远程浏览器来启动，并使得类中成员变量driver获得浏览器驱动值，以便于其他成员方法共用同一个driver有值
-			driver = selectremotebrowser.selectByName(browserName, huburl);
+			// 并由ThreadLocal提供线程局部变量
+			threadLocalWebDriver.set(selectremotebrowser.selectByName(browserName, huburl));
+			driver = threadLocalWebDriver.get();
 		}else{
 			logger.info("本地浏览器准备中");
 			SelectLocalBrowser selectlocalbrowser = new SelectLocalBrowser();
 			// 可选择不同的本地浏览器来启动，并使得类中成员变量driver获得浏览器驱动值，以便于其他成员方法共用同一个driver有值
-			driver = selectlocalbrowser.selectByName(browserName, driverConfigFilePath);
+			// 并由ThreadLocal提供线程局部变量
+			threadLocalWebDriver.set(selectlocalbrowser.selectByName(browserName, driverConfigFilePath));
+			driver = threadLocalWebDriver.get();
 		}
 		
 		try {
@@ -147,7 +154,8 @@ public class SeleniumUtil {
 	 */
 	public void quit() {
 		try {
-			driver.quit();
+			threadLocalWebDriver.get().quit();
+			threadLocalWebDriver.remove();
 			logger.info("成功退出浏览器");
 		} catch (Exception e) {
 			logger.error("退出浏览器异常", e);
@@ -1074,6 +1082,22 @@ public class SeleniumUtil {
 			Assert.fail();
 		}
 		return value;
+	}
+	
+	/**
+	 * 获取表格的行数
+	 */
+	public int getTableRowCount(By byTableElement) {
+		int count = 0;
+		try{
+			findElementByWait(5, byTableElement).findElements(By.tagName("tr"));
+			logger.info("");
+		}catch(Exception e){
+			logger.error("",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+		return count;
 	}
 
 	/**

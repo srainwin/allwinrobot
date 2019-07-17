@@ -29,7 +29,7 @@ classes:每个class使用一个线程
 	<!-- 填写保留测试日志时间(天) -->
 	<parameter name="keepLogDay" value="10" />
 	<!-- 填写grid分布式测试是否开启，true：开启，false：关闭 -->
-	<parameter name="isRemote" value="true" />
+	<parameter name="isRemote" value="false" />
 	<!-- 填写grid分布式测试的hub节点，若不使用分布式可不填 -->
 	<parameter name="huburl" value="http://192.168.1.101:4444/wd/hub" />
 	<listeners>
