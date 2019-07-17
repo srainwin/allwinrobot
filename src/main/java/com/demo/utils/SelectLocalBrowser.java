@@ -9,7 +9,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.os.WindowsUtils;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -71,9 +70,6 @@ public class SelectLocalBrowser {
 
 	/** 启用本地IE浏览器 */
 	public static WebDriver createLocalIEDriver(String iedriverPath) {
-		// 杀遗留旧进程
-		WindowsUtils.killByName("iexplore.exe");
-		WindowsUtils.killByName("IEDriverServer.exe");
 		System.setProperty("webdriver.ie.driver", iedriverPath);
 		// IE的常规设置，需要忽略浏览器安全保护模式的设置避免各个域的安全级别不一致导致的错误,还有忽略浏览器缩放级别设置，便于执行自动化测试。
 		DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
@@ -90,9 +86,6 @@ public class SelectLocalBrowser {
 
 	// 启用本地调用chrome
 	public static WebDriver createLocalChromeDriver(String chromedriverPath) {
-		// 杀遗留旧进程
-		WindowsUtils.killByName("chrome.exe");
-		WindowsUtils.killByName("chromedriver.exe");
 		System.setProperty("webdriver.chrome.driver", chromedriverPath);
 		// 去掉提示“chrome正受到自动化测试软件的控制”
 		ChromeOptions option = new ChromeOptions();
@@ -108,9 +101,6 @@ public class SelectLocalBrowser {
 
 	// 启用本地调用firefox
 	public static WebDriver createLocalFirefoxDriver(String firefoxdriverPath) {
-		// 杀遗留旧进程
-		WindowsUtils.killByName("firefox.exe");
-		WindowsUtils.killByName("geckodriver.exe");
 		System.setProperty("webdriver.gecko.driver", firefoxdriverPath);
 		// 返回火狐浏览器对象
 		try {
@@ -130,8 +120,6 @@ public class SelectLocalBrowser {
 
 	// 启用本地调用phantomjs
 	public static WebDriver createLocalPhantomjsDriver(String ghostdriverPath) {
-		// 杀遗留旧进程
-		WindowsUtils.killByName("phantomjs.exe");
 		// ghost的常规设置
 		DesiredCapabilities ghostCapabilities = new DesiredCapabilities();
 		ghostCapabilities.setJavascriptEnabled(true);

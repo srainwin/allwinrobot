@@ -15,9 +15,12 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.os.WindowsUtils;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
 
 import com.demo.utils.LogConfiguration;
@@ -25,11 +28,11 @@ import com.demo.utils.SeleniumUtil;
 import com.demo.utils.SikuliUtil;
 
 public class LoginBase {
-	//seleniumUtil对象的driver成员变量最终会通过BeforeClass中运行launchBrowser成员方法获取对应浏览器驱动，所有用例继承LoginBase都使用这个seleniumUtil对象中的driver成员变量
+	// seleniumUtil对象的driver成员变量最终会通过BeforeClass中运行launchBrowser成员方法获取对应浏览器驱动，所有用例继承LoginBase都使用这个seleniumUtil对象中的driver成员变量
 	protected static SeleniumUtil seleniumUtil = new SeleniumUtil();
-	//sikuliUtil对象的Screen成员变量最终会通过BeforeClass中运行launchScreen成员方法获取屏幕，所有用例继承LoginBase都使用这个sikuliUtil对象中的Screen成员变量
+	// sikuliUtil对象的Screen成员变量最终会通过BeforeClass中运行launchScreen成员方法获取屏幕，所有用例继承LoginBase都使用这个sikuliUtil对象中的Screen成员变量
 	protected static SikuliUtil sikuliUtil = new SikuliUtil();
-	
+
 	protected String browserName;
 	protected String testurl;
 	protected int pageLoadTimeout;
@@ -44,15 +47,37 @@ public class LoginBase {
 
 	static Logger logger = Logger.getLogger(LoginBase.class.getName());
 
+	/**
+	 * @Description 在BeforeClass的setup前清理本地机残留的浏览器程序和driver进程，分布式远程机不支持
+	 * @param itestcontext
+	 */
+	@BeforeSuite
+	public void setupCleanup(ITestContext itestcontext) {
+		killDriver(itestcontext);
+	}
+
+	/**
+	 * @Description 在AfterClass的teardown后清理本地机残留的浏览器程序和driver进程，分布式远程机不支持
+	 * @param itestcontext
+	 */
+	@AfterSuite
+	public void teardownCleanup(ITestContext itestcontext) {
+		killDriver(itestcontext);
+	}
+
+	/**
+	 * @Description 启动浏览器
+	 * @param itestcontext
+	 */
 	@BeforeClass
 	public void setup(ITestContext itestcontext) {
 		try {
-			//initLog的参数filename与继承本类的测试类名相同，this指向调用这个setup()方法的测试类
+			// initLog的参数filename与继承本类的测试类名相同，this指向调用这个setup()方法的测试类
 			LogConfiguration.initLog(this.getClass().getSimpleName(), itestcontext);
 			logger.info("正启动浏览器");
 
-			//给共享数据赋值，供任意继承本类的@Test用例使用（itestcontext是测试的上下文，包含很多信息，包括TestNG配置文件中的参数信息）
-			//原本打算在@Test的用例方法传入itestcontext参数的，但@Test的用例使用了@dataProvider后运行会检查出参数个数不一致异常，因为多了itestcontext参数，所以决定把itestcontext获取共享数据放到@BeforeClass中进行
+			// 给共享数据赋值，供任意继承本类的@Test用例使用（itestcontext是测试的上下文，包含很多信息，包括TestNG配置文件中的参数信息）
+			// 原本打算在@Test的用例方法传入itestcontext参数的，但@Test的用例使用了@dataProvider后运行会检查出参数个数不一致异常，因为多了itestcontext参数，所以决定把itestcontext获取共享数据放到@BeforeClass中进行
 			cookiesConfigFilePath = itestcontext.getCurrentXmlTest().getParameter("cookiesConfigFilePath");
 			testDataFilePath = itestcontext.getCurrentXmlTest().getParameter("testDataFilePath");
 			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
@@ -65,17 +90,20 @@ public class LoginBase {
 			isRemote = itestcontext.getCurrentXmlTest().getParameter("isRemote");
 			huburl = itestcontext.getCurrentXmlTest().getParameter("huburl");
 
-			//启动本地或者远程的某款浏览器
-			seleniumUtil.launchBrowser(browserName,driverConfigFilePath,isRemote,huburl,pageLoadTimeout);
-			//启动sikuli屏幕操作器
+			// 启动本地或者远程的某款浏览器
+			seleniumUtil.launchBrowser(browserName, driverConfigFilePath, isRemote, huburl, pageLoadTimeout);
+			// 启动sikuli屏幕操作器
 			sikuliUtil.launchScreen(sikuliImageFolderPath);
-			
+
 			logger.info(browserName + "浏览器启动成功!");
 		} catch (Exception e) {
 			logger.error(browserName + "浏览器不能正常工作，请检查是不是被手动关闭或者其他原因", e);
 		}
 	}
 
+	/**
+	 * @Description 关闭浏览器
+	 */
 	@AfterClass
 	public void teardown() {
 		try {
@@ -142,20 +170,55 @@ public class LoginBase {
 			e.printStackTrace();
 			return null;
 		}
-		
+
 	}
 
 	/**
 	 * @Description 用于testData()方法里处理cell的多种类型值转化为string类型
 	 * @return
 	 */
-	private static String getCellValue(XSSFCell xssfcell) {
+	private String getCellValue(XSSFCell xssfcell) {
 		if (xssfcell.getCellType() == CellType.BOOLEAN) {
 			return String.valueOf(xssfcell.getBooleanCellValue());
 		} else if (xssfcell.getCellType() == CellType.NUMERIC) {
 			return String.valueOf(xssfcell.getNumericCellValue());
 		} else {
 			return String.valueOf(xssfcell.getStringCellValue());
+		}
+	}
+
+	/**
+	 * @Description 用于beforesuite和aftersuite清理浏览器driver进程
+	 */
+	private void killDriver(ITestContext itestcontext) {
+		try {
+			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
+			if (browserName.equalsIgnoreCase("ie")) {
+				// 杀遗留旧进程
+				WindowsUtils.killByName("iexplore.exe");
+				WindowsUtils.killByName("IEDriverServer.exe");
+
+			} else if (browserName.equalsIgnoreCase("chrome")) {
+				// 杀遗留旧进程
+				WindowsUtils.killByName("chrome.exe");
+				WindowsUtils.killByName("chromedriver.exe");
+
+			} else if (browserName.equalsIgnoreCase("firefox")) {
+				// 杀遗留旧进程
+				WindowsUtils.killByName("firefox.exe");
+				WindowsUtils.killByName("geckodriver.exe");
+
+			} else if (browserName.equalsIgnoreCase("ghost")) {
+				// 杀遗留旧进程
+				WindowsUtils.killByName("phantomjs.exe");
+			} else {
+				logger.warn(browserName + "浏览器不支持，支持ie、chrome、firefox和ghost，将默认使用chrome浏览器进行");
+				// 杀遗留旧进程
+				WindowsUtils.killByName("chrome.exe");
+				WindowsUtils.killByName("chromedriver.exe");
+			}
+		} catch (Exception e) {
+			logger.error("清理driver进程发生异常", e);
 		}
 	}
 }

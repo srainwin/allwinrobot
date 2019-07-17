@@ -105,7 +105,7 @@ public class TestNGListener extends TestListenerAdapter {
 			}
 			String screenPath = screenfolder.getAbsolutePath() + "/" + screenName;
 
-			File srcFile = ((TakesScreenshot) SeleniumUtil.driver).getScreenshotAs(OutputType.FILE);
+			File srcFile = ((TakesScreenshot) SeleniumUtil.threadLocalWebDriver.get()).getScreenshotAs(OutputType.FILE);
 			File destFile = new File(screenPath);
 			FileUtils.copyFile(srcFile, destFile);
 
@@ -128,7 +128,7 @@ public class TestNGListener extends TestListenerAdapter {
 	public byte[] takePhoto2() {
 		byte[] screenshotAs = null;
 		try {
-			screenshotAs = ((TakesScreenshot) SeleniumUtil.driver).getScreenshotAs(OutputType.BYTES);
+			screenshotAs = ((TakesScreenshot) SeleniumUtil.threadLocalWebDriver.get()).getScreenshotAs(OutputType.BYTES);
 			System.out.println("成功进行失败用例截图");
 		} catch (Exception e) {
 			System.out.println("失败用例截图发生异常");

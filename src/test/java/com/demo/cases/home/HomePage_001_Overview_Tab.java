@@ -29,6 +29,6 @@ public class HomePage_001_Overview_Tab extends LoginBase {
 		// 点击首页tab
 		HomeSteps.homepageTabClick(seleniumUtil);
 		// 进入首页tab断言
-		HomeSteps.assertHomepageSign(seleniumUtil, "expect");//模仿断言失败看截图与重跑效果
+		HomeSteps.assertHomepageSign(seleniumUtil, expect);//模仿断言失败看截图与重跑效果
 	}
 }
