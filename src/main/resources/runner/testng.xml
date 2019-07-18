@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="suite">
-	<!-- 填写启动浏览器名字：chrome、firefox、ie、ghost，推荐chrome -->
+<suite name="suite" parallel="classes" thread-count="1">
+<!-- 
+parallel="" thread-count=""
+并行选择：
+methods:每个method使用一个线程 
+tests:每个<test>标签中的所有方法使用一个线程 
+classes:每个class使用一个线程 
+-->
+	<!-- 填写启动浏览器名字：chrome、firefox、ie、ghost以及grid代表分布式，推荐chrome -->
 	<parameter name="browserName" value="chrome" />
 	<!-- 填写浏览器驱动存放路径的属性配置文件位置 -->
 	<parameter name="driverConfigFilePath" value="../src/main/resources/config/driver.properties" />
@@ -18,9 +25,13 @@
 	<!-- 填写测试的网站url -->
 	<parameter name="testurl" value="https://mail.126.com" />
 	<!-- 填写页面加载等待超时时间(秒) -->
-	<parameter name="pageLoadTimeout" value="20" />
+	<parameter name="pageLoadTimeout" value="30" />
 	<!-- 填写保留测试日志时间(天) -->
 	<parameter name="keepLogDay" value="10" />
+	<!-- 填写grid分布式测试是否开启，true：开启，false：关闭 -->
+	<parameter name="isRemote" value="false" />
+	<!-- 填写grid分布式测试的hub节点，若不使用分布式可不填 -->
+	<parameter name="huburl" value="http://192.168.1.100:4444/wd/hub" />
 	<listeners>
 		<!-- 测试用例运行失败截图处理监听 -->
 		<!-- 由于用了allure，截图的监听放这里的话allure测试报告不会显示截图图片，只能在每个测试类上加@Listeners({ TestNGListener.class})) -->
@@ -29,10 +40,17 @@
 		<!-- 测试用例运行失败重跑处理监听 -->
 		<listener class-name="com.demo.utils.TestNGRetryListener" />
 	</listeners>
-	<test name="test" preserve-order="true">
+	<test name="mail" preserve-order="true">
+		<groups>
+			<!-- 分组依赖使用testng6.10版本以上，6.10以下版本有问题 -->
+    		<dependencies>
+      			<group name="home" depends-on="login" />
+    		</dependencies>
+  		</groups>
 		<classes>
-			<class name="com.demo.cases.login.LoginPage_001_LoginSuccess" />
+			<class name="com.demo.cases.login.LoginPage_003_Logout" />
 			<class name="com.demo.cases.login.LoginPage_002_LoginFail" />
+			<class name="com.demo.cases.login.LoginPage_001_LoginSuccess" />
 			<class name="com.demo.cases.home.HomePage_001_Overview_Tab" />
 			<class name="com.demo.cases.home.HomePage_002_Overview_UnreadMail" />
 			<class name="com.demo.cases.home.HomePage_003_Overview_TodoMail" />
@@ -42,7 +60,6 @@
 			<class name="com.demo.cases.home.HomePage_007_Overview_LoginProtect" />
 			<class name="com.demo.cases.home.HomePage_008_Overview_DailyLife" />
 			<class name="com.demo.cases.home.WriteLettersPage_001_WriteLetterAndSendSuccess" />
-			<class name="com.demo.cases.login.LoginPage_003_Logout" />
 		</classes>
 	</test>
 </suite>

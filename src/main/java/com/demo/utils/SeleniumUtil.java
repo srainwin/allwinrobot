@@ -1097,16 +1097,56 @@ public class SeleniumUtil {
 	 * 获取表格的行数
 	 */
 	public int getTableRowCount(By byTableElement) {
-		int count = 0;
+		List<WebElement> rowElement = null;
 		try{
-			findElementByWait(5, byTableElement).findElements(By.tagName("tr"));
-			logger.info("");
+			rowElement = findElementByWait(5, byTableElement).findElements(By.tagName("tr"));
+			logger.info("成功获取表格的行数");
 		}catch(Exception e){
-			logger.error("",e);
+			logger.error("获取表格的行数发生异常",e);
 			//由testng的失败断言来控制用例运行是否失败
 			Assert.fail();
 		}
-		return count;
+		return rowElement.size();
+	}
+	
+	/**
+	 * 获取表格指定行的列数/字段数
+	 */
+	public int getTableColCount(By byTableElement, int rownum) {
+		List<WebElement> rowElement = null;
+		List<WebElement> colElement = null;
+		try{
+			rowElement = findElementByWait(5, byTableElement).findElements(By.tagName("tr"));
+			WebElement rownumElement = rowElement.get(rownum);
+			colElement = rownumElement.findElements(By.tagName("td"));
+			logger.info("成功获取表格指定行的列数/字段数");
+		}catch(Exception e){
+			logger.error("获取表格指定行的列数/字段数发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+		return colElement.size();
+	}
+	
+	/**
+	 * 获取表格指定单元格(指定行和列)内容
+	 */
+	public String getTableCelText(By byTableElement, int rownum, int colnum) {
+		List<WebElement> rowElement = null;
+		List<WebElement> colElement = null;
+		WebElement celElement = null;
+		try{
+			rowElement = findElementByWait(5, byTableElement).findElements(By.tagName("tr"));
+			WebElement rownumElement = rowElement.get(rownum);
+			colElement = rownumElement.findElements(By.tagName("td"));
+			celElement = colElement.get(colnum);
+			logger.info("成功获取表格指定行的列数/字段数");
+		}catch(Exception e){
+			logger.error("获取表格指定行的列数/字段数发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+		return celElement.getText();
 	}
 
 	/**

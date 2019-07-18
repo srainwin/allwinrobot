@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="suite" parallel="classes" thread-count="2">
+<suite name="suite" parallel="classes" thread-count="1">
 <!-- 
 parallel="" thread-count=""
 并行选择：
@@ -29,7 +29,7 @@ classes:每个class使用一个线程
 	<!-- 填写保留测试日志时间(天) -->
 	<parameter name="keepLogDay" value="10" />
 	<!-- 填写grid分布式测试是否开启，true：开启，false：关闭 -->
-	<parameter name="isRemote" value="true" />
+	<parameter name="isRemote" value="false" />
 	<!-- 填写grid分布式测试的hub节点，若不使用分布式可不填 -->
 	<parameter name="huburl" value="http://192.168.1.100:4444/wd/hub" />
 	<listeners>
@@ -47,20 +47,19 @@ classes:每个class使用一个线程
       			<group name="home" depends-on="login" />
     		</dependencies>
   		</groups>
-	
 		<classes>
-			<class name="com.demo.cases.login.LoginPage_003_Logout" /> 
+			<class name="com.demo.cases.login.LoginPage_003_Logout" />
 			<class name="com.demo.cases.login.LoginPage_002_LoginFail" />
 			<class name="com.demo.cases.login.LoginPage_001_LoginSuccess" />
 			<class name="com.demo.cases.home.HomePage_001_Overview_Tab" />
 			<class name="com.demo.cases.home.HomePage_002_Overview_UnreadMail" />
 			<class name="com.demo.cases.home.HomePage_003_Overview_TodoMail" />
 			<class name="com.demo.cases.home.HomePage_004_Overview_ContactMail" />
-			<!-- <class name="com.demo.cases.home.HomePage_005_Overview_Jifen" /> 积分功能已下架-->
+			<!-- <class name="com.demo.cases.home.HomePage_005_Overview_Jifen" /> -->
 			<class name="com.demo.cases.home.HomePage_006_Overview_SafetyDegree" />
 			<class name="com.demo.cases.home.HomePage_007_Overview_LoginProtect" />
 			<class name="com.demo.cases.home.HomePage_008_Overview_DailyLife" />
-			<!--<class name="com.demo.cases.home.WriteLettersPage_001_WriteLetterAndSendSuccess" />-->
+			<class name="com.demo.cases.home.WriteLettersPage_001_WriteLetterAndSendSuccess" />
 		</classes>
 	</test>
 </suite>

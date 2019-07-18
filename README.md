@@ -66,5 +66,7 @@ java -jar selenium-server-standalone-3.141.59.jar -role hub
 (4)建立node节点连接（node机执行），然后刷新访问http://localhost:4444/grid/console  
 java -Dwebdriver.chrome.driver="D:/snc/workspace2/autotestddt/src/main/resources/driver/chromedriver.exe" -Dwebdriver.gecko.driver="D:/snc/workspace2/autotestddt/src/main/resources/driver/geckodriver.exe" -jar selenium-server-standalone-3.141.59.jar -role node -host 192.168.1.101 -hub http://192.168.1.100:4444/grid/register -browser browserName=chrome,seleniumProtocol=WebDriver,maxInstances=5,platform=WINDOWS -browser browserName=firefox,seleniumProtocol=WebDriver,maxInstances=5,platform=WINDOWS  
 (5)testng.xml/debug.xml填写isRemote和huburl参数值  
+(6)使用分布式执行上传文件用例时注意每台机子都要存放相同路径的上传文件
 
-
+## 其他说明
+sikuli api仅作为辅助操作测试用，主要使用selenium api，因为sikuli图像识别这块缺少较好的断言方案，而且sikuli是对整个屏幕为对象操作而一台机只有一个屏幕导致无法使用并行执行用例
