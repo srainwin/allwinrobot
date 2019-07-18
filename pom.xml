@@ -92,6 +92,17 @@
 
 	<build>
 		<finalName>autotestddt</finalName>
+		<!-- 引入资源文件 -->
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>${project.basedir}/src/test/resources</directory>
+			</testResource>
+		</testResources>
 		<plugins>
 			<!--若需要本地显示allure测试报告还需要额外配置allure和jetty的maven插件，这里不需要本地显示allure测试报告，直接用jenkins下载allure插件配置即可查看测试报告 -->
 			<plugin>
