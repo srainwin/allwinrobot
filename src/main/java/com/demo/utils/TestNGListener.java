@@ -57,7 +57,7 @@ public class TestNGListener extends TestListenerAdapter {
 		super.onTestSkipped(result);
 		System.out.println(result.getName() + " Skipped");
 		// 截图
-		takePhoto3();
+		takePhoto2();
 	}
 
 	/* 每次调用测试之前调用 */
