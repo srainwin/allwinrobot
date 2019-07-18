@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="suite" parallel="classes" thread-count="3">
+<suite name="suite" parallel="classes" thread-count="2">
 <!-- 
 parallel="" thread-count=""
 并行选择：
@@ -31,29 +31,33 @@ classes:每个class使用一个线程
 	<!-- 填写grid分布式测试是否开启，true：开启，false：关闭 -->
 	<parameter name="isRemote" value="true" />
 	<!-- 填写grid分布式测试的hub节点，若不使用分布式可不填 -->
-	<parameter name="huburl" value="http://192.168.1.102:4444/wd/hub" />
+	<parameter name="huburl" value="http://192.168.1.100:4444/wd/hub" />
 	<listeners>
 		<!-- 测试用例运行失败截图处理监听 -->
 		<!-- 由于用了allure，截图的监听放这里的话allure测试报告不会显示截图图片，只能在每个测试类上加@Listeners({ TestNGListener.class})) -->
 		<!--<listener class-name="com.demo.utils.TestNGListener" />-->
+		<listener class-name="com.demo.utils.TestNGListener" />
 		
 		<!-- 测试用例运行失败重跑处理监听 -->
 		<listener class-name="com.demo.utils.TestNGRetryListener" />
 	</listeners>
-	<test name="login" preserve-order="true">
+	<test name="mail" preserve-order="true">
+		<groups>
+			<!-- 分组依赖使用testng6.10版本以上，6.10以下版本有问题 -->
+    		<dependencies>
+      			<group name="home" depends-on="login" />
+    		</dependencies>
+  		</groups>
+	
 		<classes>
-			<!--<class name="com.demo.cases.login.LoginPage_001_LoginSuccess" />-->
-			<!--<class name="com.demo.cases.login.LoginPage_002_LoginFail" />-->
-			<!--<class name="com.demo.cases.login.LoginPage_003_Logout" />-->
-		</classes>
-	</test>
-	<test name="home" preserve-order="true">
-		<classes>
+			<class name="com.demo.cases.login.LoginPage_003_Logout" /> 
+			<class name="com.demo.cases.login.LoginPage_002_LoginFail" />
+			<class name="com.demo.cases.login.LoginPage_001_LoginSuccess" />
 			<class name="com.demo.cases.home.HomePage_001_Overview_Tab" />
 			<class name="com.demo.cases.home.HomePage_002_Overview_UnreadMail" />
 			<class name="com.demo.cases.home.HomePage_003_Overview_TodoMail" />
 			<class name="com.demo.cases.home.HomePage_004_Overview_ContactMail" />
-			<!-- <class name="com.demo.cases.home.HomePage_005_Overview_Jifen" /> -->
+			<!-- <class name="com.demo.cases.home.HomePage_005_Overview_Jifen" /> 积分功能已下架-->
 			<class name="com.demo.cases.home.HomePage_006_Overview_SafetyDegree" />
 			<class name="com.demo.cases.home.HomePage_007_Overview_LoginProtect" />
 			<class name="com.demo.cases.home.HomePage_008_Overview_DailyLife" />

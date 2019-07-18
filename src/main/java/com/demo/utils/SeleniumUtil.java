@@ -132,6 +132,7 @@ public class SeleniumUtil {
 	 */
 	public void get(String testurl) {
 		try {
+			System.out.println(testurl);
 			threadLocalWebDriver.get().get(testurl);
 			logger.info("成功打开测试页面:[" + testurl + "]");
 		} catch (TimeoutException e) {
