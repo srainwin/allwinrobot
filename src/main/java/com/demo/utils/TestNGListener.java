@@ -48,7 +48,7 @@ public class TestNGListener extends TestListenerAdapter {
 		super.onTestFailure(result);
 		System.out.println(result.getName() + " Failure");
 		// 截图
-		takePhoto3();
+		takePhoto();
 	}
 
 	/* 每次跳过测试时调用 */
@@ -138,7 +138,7 @@ public class TestNGListener extends TestListenerAdapter {
 	}
 
 	/**
-	 * @Description 失败用例截图方案3,并添加到Allure测试报告中，兼容selenium与sikuli
+	 * @Description 失败用例截图方案3,并添加到Allure测试报告中，兼容web与windows截图
 	 */
 	public void takePhoto3() {
 		try {

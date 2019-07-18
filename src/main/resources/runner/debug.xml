@@ -36,7 +36,6 @@ classes:每个class使用一个线程
 		<!-- 测试用例运行失败截图处理监听 -->
 		<!-- 由于用了allure，截图的监听放这里的话allure测试报告不会显示截图图片，只能在每个测试类上加@Listeners({ TestNGListener.class})) -->
 		<!--<listener class-name="com.demo.utils.TestNGListener" />-->
-		<listener class-name="com.demo.utils.TestNGListener" />
 		
 		<!-- 测试用例运行失败重跑处理监听 -->
 		<listener class-name="com.demo.utils.TestNGRetryListener" />
