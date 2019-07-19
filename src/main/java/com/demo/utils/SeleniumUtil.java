@@ -30,12 +30,10 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.ITestContext;
 
 /**
  * @author xwr
@@ -43,21 +41,41 @@ import org.testng.ITestContext;
  */
 public class SeleniumUtil {
 	public static Logger logger = Logger.getLogger(SeleniumUtil.class.getName());
-	public static WebDriver driver = null;//使用static是用于监听类的用例失败截图功能调用到driver
+	//WebDriver作为成员变量是线程不安全的，线程安全的通常做法是作为方法内的局部变量
+	//另一线程安全做法是使用ThreadLocal来提供线程局部变量，也就是变量只对当前线程可见，即是存放的值是线程内独享的线程间互斥的
+	public static ThreadLocal<WebDriver> threadLocalWebDriver = new ThreadLocal<WebDriver>();
 
 	/***
 	 * 启动浏览器，testng的beforeclass使用
 	 */
-	public void launchBrowser(String browserName, ITestContext itestcontext, int timeOut) {
-		SelectBrowser selectbrowser = new SelectBrowser();
-		// 可选择不同的浏览器来启动，并使得类中成员变量driver获得浏览器驱动值，以便于其他成员方法共用同一个driver有值
-		driver = selectbrowser.selectByName(browserName, itestcontext);
+	public void launchBrowser(String browserName, String driverConfigFilePath, String isRemote, String huburl, int timeOut) {
+		if( isRemote.equals("true") ){
+			logger.info("远程浏览器准备中");
+			SelectRemoteBrowser selectremotebrowser = new SelectRemoteBrowser();
+			// 可选择不同的远程浏览器来启动，并使得类中成员变量driver获得浏览器驱动值，以便于其他成员方法共用同一个driver有值
+			// 并由ThreadLocal提供线程局部变量
+			threadLocalWebDriver.set(selectremotebrowser.selectByName(browserName, huburl));
+			// 然后在每个[@test用例中]或者[@test用例中调用的封装方法里]使用threadLocalWebDriver.get()来获取单个线程绑定的driver
+		}else if( isRemote.equals("false") ){
+			logger.info("本地浏览器准备中");
+			SelectLocalBrowser selectlocalbrowser = new SelectLocalBrowser();
+			// 可选择不同的本地浏览器来启动，并使得类中成员变量driver获得浏览器驱动值，以便于其他成员方法共用同一个driver有值
+			// 并由ThreadLocal提供线程局部变量
+			threadLocalWebDriver.set(selectlocalbrowser.selectByName(browserName, driverConfigFilePath));
+			// 然后在每个[@test用例中]或者[@test用例中调用的封装方法里]使用threadLocalWebDriver.get()来获取单个线程绑定的driver
+		}else{
+			logger.warn("testng.xml的isRemote参数值填写有误，请输入true或false!");
+			Assert.fail();
+		}
+		
 		try {
 			maxWindow();
 			pageLoadTimeout(timeOut);
 			logger.info("成功启动" + browserName + "浏览器");
 		} catch (Exception e) {
 			logger.error("启动" + browserName + "浏览器发生异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -66,10 +84,12 @@ public class SeleniumUtil {
 	 */
 	public void maxWindow() {
 		try {
-			driver.manage().window().maximize();
+			threadLocalWebDriver.get().manage().window().maximize();
 			logger.info("成功最大化浏览器");
 		} catch (Exception e) {
 			logger.error("最大化浏览器失败", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -82,16 +102,18 @@ public class SeleniumUtil {
 	 */
 	public void setBrowserSize(int width, int height) {
 		try {
-			driver.manage().window().setSize(new Dimension(width, height));
+			threadLocalWebDriver.get().manage().window().setSize(new Dimension(width, height));
 			logger.info("成功设置浏览器窗口大小");
 		} catch (Exception e) {
 			logger.error("设置浏览器窗口大小失败", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 
 	}
 
 	/** 获得屏幕的分辨率 - 宽和高 */
-	public static double[] getScreenWidth() {
+	public double[] getScreenWidth() {
 		double[] wh = new double[2];
 		try{
 			wh[0] = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
@@ -99,6 +121,8 @@ public class SeleniumUtil {
 			logger.info("成功获得屏幕的分辨率-宽和高");
 		}catch(Exception e){
 			logger.error("获得屏幕的分辨率-宽和高 发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return wh;
 	}
@@ -108,15 +132,22 @@ public class SeleniumUtil {
 	 */
 	public void get(String testurl) {
 		try {
-			driver.get(testurl);
+			System.out.println(testurl);
+			threadLocalWebDriver.get().get(testurl);
 			logger.info("成功打开测试页面:[" + testurl + "]");
 		} catch (TimeoutException e) {
 			logger.error("注意：页面没有完全加载出来，正在刷新重试！！", e);
 			refresh();
 			String status = (String) (executeJS("return document.readyState"));
 			logger.info("打印状态：" + status);
+			if(status != "complete"){
+				//由testng的失败断言来控制用例运行是否失败
+				Assert.fail();
+			}
 		} catch (Exception e) {
 			logger.error("打开测试页面异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -125,10 +156,13 @@ public class SeleniumUtil {
 	 */
 	public void quit() {
 		try {
-			driver.quit();
+			threadLocalWebDriver.get().quit();
+			threadLocalWebDriver.remove();
 			logger.info("成功退出浏览器");
 		} catch (Exception e) {
 			logger.error("退出浏览器异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -137,10 +171,12 @@ public class SeleniumUtil {
 	 */
 	public void close() {
 		try {
-			driver.close();
+			threadLocalWebDriver.get().close();
 			logger.info("成功关闭网页");
 		} catch (Exception e) {
 			logger.error("关闭网页异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -149,10 +185,12 @@ public class SeleniumUtil {
 	 */
 	public void refresh() {
 		try {
-			driver.navigate().refresh();
+			threadLocalWebDriver.get().navigate().refresh();
 			logger.info("成功刷新页面");
 		} catch (Exception e) {
 			logger.error("刷新网页异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -161,10 +199,12 @@ public class SeleniumUtil {
 	 */
 	public void back() {
 		try {
-			driver.navigate().back();
+			threadLocalWebDriver.get().navigate().back();
 			logger.info("成功回退上一个网页");
 		} catch (Exception e) {
 			logger.error("回退上一个网页异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -173,10 +213,12 @@ public class SeleniumUtil {
 	 */
 	public void forward() {
 		try {
-			driver.navigate().forward();
+			threadLocalWebDriver.get().navigate().forward();
 			logger.info("成功重返网页");
 		} catch (Exception e) {
 			logger.error("重返网页异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -186,7 +228,7 @@ public class SeleniumUtil {
 	public void cookiesSaveInFile(String cookiesConfigFilePath) {
 		logger.info("暂缓两秒保存当前cookies");
 		pause(2000);
-		Set<Cookie> cookies = driver.manage().getCookies();
+		Set<Cookie> cookies = threadLocalWebDriver.get().manage().getCookies();
 		File file = new File(cookiesConfigFilePath);
 		if(file.exists()) {
             try {
@@ -196,6 +238,8 @@ public class SeleniumUtil {
                 logger.info("成功创建新的cookies空文件");
             } catch (Exception e) {
             	logger.error("重建cookies文件发生异常",e);
+    			//由testng的失败断言来控制用例运行是否失败
+    			Assert.fail();
             }
         }
 		try {
@@ -220,6 +264,8 @@ public class SeleniumUtil {
             }
         } catch (Exception e) {
         	logger.error("获取网站cookies并写入到cookies文件中发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
         }
 		
 	}
@@ -246,12 +292,14 @@ public class SeleniumUtil {
                 }
                 Boolean isSecure = Boolean.valueOf(strArray[5]);
                 Cookie ck = new Cookie(name,value,domain,path,expiry,isSecure);
-                driver.manage().addCookie(ck);
+                threadLocalWebDriver.get().manage().addCookie(ck);
             }
             br.close();
 			logger.info("成功给浏览器添加cookies");
 		} catch (Exception e) {
         	logger.error("给浏览器添加cookies发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -260,10 +308,12 @@ public class SeleniumUtil {
 	 */
 	public void delAllcookies(){
 		try {
-			driver.manage().deleteAllCookies();
+			threadLocalWebDriver.get().manage().deleteAllCookies();
 			logger.info("成功给浏览器清除cookies");
 		} catch (Exception e) {
         	logger.error("给浏览器清除cookies发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -273,12 +323,14 @@ public class SeleniumUtil {
 	public WebElement findElementBy(By byElement) {
 		WebElement element = null;
 		try {
-			element = driver.findElement(byElement);
+			element = threadLocalWebDriver.get().findElement(byElement);
 			//高亮显示
 			highLight(element);
 			logger.info("成功定位元素");
 		} catch (Exception e) {
 			logger.error("定位元素异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return element;
 	}
@@ -289,7 +341,7 @@ public class SeleniumUtil {
 	public List<WebElement> findElementsBy(By byElement) {
 		List<WebElement> elements = null;
 		try {
-			elements = driver.findElements(byElement);
+			elements = threadLocalWebDriver.get().findElements(byElement);
 			Iterator<WebElement> itelements = elements.iterator();
 			while(itelements.hasNext()){
 				//高亮显示
@@ -298,36 +350,48 @@ public class SeleniumUtil {
 			logger.info("成功定位元素");
 		} catch (Exception e) {
 			logger.error("定位元素异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return elements;
 	}
 
 	/**
-	 * WebDriverWait，显示等待。在给定的时间内去定位查找元素，如果没找到则超时，抛出异常
+	 * WebDriverWait，显示等待。在给定的时间内去定位查找特定条件元素，如果没找到则超时，抛出异常
+	 * WebDriverWait的until(ExpectedCondition)功能是在限定时间内一直等待元素某个条件为真，并返回元素本身
+	 * ExpectedConditions是selenium的工具类，可对元素做各种期望判断，如是否可点击、是否包含某文本等等
+	 * 例如:
+	 * 等待元素可见可点击webDriverWait.until(ExpectedConditions.elementToBeClickable(By locator));
+	 * 等待元素被选中webDriverWait.until(ExpectedConditions.elementToBeSelected(WebElement element));
+	 * 等待存在一个元素webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By locator));
+	 * 等待元素中出现指定癿文本webDriverWait.until(ExpectedConditions.textToBePresentInElement(By locator, String text));
+	 * 等待元素癿值webDriverWait.until(ExpectedConditions.textToBePresentInElementValue(By locator, Stringtext));
+	 * 等待标题webDriverWait.until(ExpectedConditions.titleContains(String title));
+	 * 
 	 */
 	public WebElement findElementByWait(int timeOutInSeconds, final By byElement) {
 		WebElement element = null;
 		try {
 			//元素最多等待timeOut秒
-			WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
-			//等待元素可见且可被单击
-			//WebDriverWait的until()功能是在限定时间内一直等待元素某个条件为真，并返回元素本身
-			//ExpectedConditions是selenium的工具类，可对元素做各种期望判断，如是否可点击、是否包含某文本等等)
-			wait.until(ExpectedConditions.elementToBeClickable(byElement));
-			//获取元素
-			element = wait.until(new ExpectedCondition<WebElement>() {
-				@Override
-				public WebElement apply(WebDriver driver) {
-					return driver.findElement(byElement);
-				}
-			});
+			WebDriverWait webDriverWait = new WebDriverWait(threadLocalWebDriver.get(), timeOutInSeconds);
+			element = webDriverWait.until(ExpectedConditions.presenceOfElementLocated(byElement));
+//			element = webDriverWait.until(new ExpectedCondition<WebElement>() {
+//				@Override
+//				public WebElement apply(WebDriver driver) {
+//					return threadLocalWebDriver.get().findElement(byElement);
+//				}
+//			});
 			//高亮显示
 			highLight(element);
 			logger.info("成功找到了元素");
 		} catch (TimeoutException e) {
 			logger.error("超时!! " + timeOutInSeconds + " 秒之后还没找到元素 [" + byElement + "]", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		} catch (Exception e) {
 			logger.error("给定的时间内定位查找元素异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return element;
 	}
@@ -335,12 +399,16 @@ public class SeleniumUtil {
 	/** implicitlyWait，隐式等待。识别对象时的超时时间。过了这个时间如果对象还没找到的话就会抛出NoSuchElement异常 */
 	public void implicitlyWait(long timeOut) {
 		try {
-			driver.manage().timeouts().implicitlyWait(timeOut, TimeUnit.SECONDS);
+			threadLocalWebDriver.get().manage().timeouts().implicitlyWait(timeOut, TimeUnit.SECONDS);
 			logger.info("成功等待元素定位出现");
 		} catch (NoSuchElementException e) {
 			logger.error("超时未找到元素", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		} catch (Exception e) {
 			logger.error("未能等待元素定位出现，发生异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -351,20 +419,24 @@ public class SeleniumUtil {
 
 	public void pageLoadTimeout(long pageLoadTime) {
 		try {
-			driver.manage().timeouts().pageLoadTimeout(pageLoadTime, TimeUnit.SECONDS);
+			threadLocalWebDriver.get().manage().timeouts().pageLoadTimeout(pageLoadTime, TimeUnit.SECONDS);
 			logger.info("成功加载页面");
 		} catch (Exception e) {
 			logger.error("超时未能完全加载页面", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
 	/** setScriptTimeout。异步脚本的超时时间。webdriver可以异步执行脚本，这个是设置异步执行脚本脚本返回结果的超时时间 */
 	public void setScriptTimeout(long timeOut) {
 		try {
-			driver.manage().timeouts().setScriptTimeout(timeOut, TimeUnit.SECONDS);
+			threadLocalWebDriver.get().manage().timeouts().setScriptTimeout(timeOut, TimeUnit.SECONDS);
 			logger.info("成功异步执行脚本");
 		} catch (Exception e) {
 			logger.error("超时未能异步执行脚本", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -382,6 +454,8 @@ public class SeleniumUtil {
 			logger.info("开始恢复当前用例的执行");
 		} catch (Exception e) {
 			logger.error("暂停执行当前用例无效，发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -391,10 +465,12 @@ public class SeleniumUtil {
 	public String getTitle() {
 		String title = null;
 		try {
-			title = driver.getTitle();
+			title = threadLocalWebDriver.get().getTitle();
 			logger.info("成功获取页面标题");
 		} catch (Exception e) {
 			logger.error("获取页面标题异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return title;
 	}
@@ -409,6 +485,8 @@ public class SeleniumUtil {
 			logger.info("成功获取元素的文本");
 		} catch (Exception e) {
 			logger.error("获取元素的文本异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return text;
 	}
@@ -423,6 +501,8 @@ public class SeleniumUtil {
 			logger.info("成功获取元素的属性值");
 		} catch (Exception e) {
 			logger.error("获取元素的属性值发生异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return attributeText;
 	}
@@ -436,6 +516,8 @@ public class SeleniumUtil {
 			logger.info("成功清除元素 [" + byElement + "]上的内容");
 		} catch (Exception e) {
 			logger.error("清除元素 [" + byElement + "] 上的内容异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -448,8 +530,12 @@ public class SeleniumUtil {
 			logger.info("成功点击元素 [" + byElement + "]");
 		} catch (StaleElementReferenceException e) {
 			logger.error("你点击的元素:[" + byElement + "]不再存在!", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		} catch (Exception e) {
 			logger.error("点击元素 [" + byElement + "]发生异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -459,9 +545,10 @@ public class SeleniumUtil {
 			findElementBy(byElement).click();
 			logger.info("成功点击元素");
 		} catch (Exception e) {
-			new Date().getTime();
 			if (System.currentTimeMillis() - startTime > timeOut) {
 				logger.error(byElement + "元素不可点击", e);
+				//由testng的失败断言来控制用例运行是否失败
+				Assert.fail();
 			} else {
 				logger.warn(byElement + "元素不可点击, 重试中");
 				Thread.sleep(500);
@@ -479,6 +566,8 @@ public class SeleniumUtil {
 			logger.info("成功输入[" + sendkeys + "] 到 [" + byElement + "]");
 		} catch (Exception e) {
 			logger.error("输入 [" + sendkeys + "] 到 元素[" + byElement + "]异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -491,6 +580,8 @@ public class SeleniumUtil {
 			logger.info("成功表单提交");
 		} catch (Exception e) {
 			logger.error("表单提交发生异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -504,6 +595,8 @@ public class SeleniumUtil {
 			logger.info("成功键盘操作" + key.name() + "+" + keyword);
 		} catch (Exception e) {
 			logger.error("键盘操作" + key.name() + "+" + keyword + "异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -517,7 +610,7 @@ public class SeleniumUtil {
 		final int ONE_ROUND_WAIT = 200;
 		for (long i = 0; i < waitMillisecondsForAlert; i += ONE_ROUND_WAIT) {
 			try {
-				alert = driver.switchTo().alert();
+				alert = threadLocalWebDriver.get().switchTo().alert();
 				return alert;
 			} catch (NoAlertPresentException e) {
 				logger.error("提示框不存在",e);
@@ -530,6 +623,8 @@ public class SeleniumUtil {
 
 			if (System.currentTimeMillis() > endTime) {
 				logger.warn("已超时，页面仍未能切换到提示框窗口");
+				//由testng的失败断言来控制用例运行是否失败
+				Assert.fail();
 				break;
 			}
 		}
@@ -541,10 +636,12 @@ public class SeleniumUtil {
 	 */
 	public void inFrame(String nameOrId) {
 		try{
-			driver.switchTo().frame(nameOrId);
+			threadLocalWebDriver.get().switchTo().frame(nameOrId);
 			logger.info("成功切换frame");
 		}catch(Exception e){
 			logger.error("切换frame发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -553,10 +650,12 @@ public class SeleniumUtil {
 	 */
 	public void inFrame(int index) {
 		try{
-			driver.switchTo().frame(index);
+			threadLocalWebDriver.get().switchTo().frame(index);
 			logger.info("成功切换frame");
 		}catch(Exception e){
 			logger.error("切换frame发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -566,10 +665,12 @@ public class SeleniumUtil {
 	public void inFrame(By ByframeElement) {
 		try {
 			logger.info("正在切换frame");
-			driver.switchTo().frame(findElementByWait(5,ByframeElement));
+			threadLocalWebDriver.get().switchTo().frame(findElementByWait(5,ByframeElement));
 			logger.info("成功切换frame");
 		} catch (Exception e) {
 			logger.error("切换frame发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -578,10 +679,12 @@ public class SeleniumUtil {
 	 */
 	public void outFrame() {
 		try{
-			driver.switchTo().defaultContent();
+			threadLocalWebDriver.get().switchTo().defaultContent();
 			logger.info("成功跳出frame");
 		}catch(Exception e){
 			logger.error("跳出frame发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -591,10 +694,12 @@ public class SeleniumUtil {
 	public String getHandleTitle (){
 		String title = null;
 		try{
-			driver.getTitle();
+			threadLocalWebDriver.get().getTitle();
 			logger.info("成功获取窗口标题");
 		}catch(Exception e){
 			logger.error("获取窗口标题发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return title;
 	}
@@ -605,10 +710,12 @@ public class SeleniumUtil {
 	public String getCurrentHandle() {
 		String handle = null;
 		try {
-			handle = driver.getWindowHandle();
+			handle = threadLocalWebDriver.get().getWindowHandle();
 			logger.info("成功获取所有窗口句柄");
 		} catch (Exception e) {
 			logger.error(" 获取所有窗口句柄发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return handle;
 	}
@@ -619,10 +726,12 @@ public class SeleniumUtil {
 	public Set<String> getAllHandles() {
 		Set<String> handles = null;
 		try {
-			handles = driver.getWindowHandles();
+			handles = threadLocalWebDriver.get().getWindowHandles();
 			logger.info("成功获取所有窗口句柄");
 		} catch (Exception e) {
 			logger.error(" 获取所有窗口句柄发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return handles;
 	}
@@ -633,15 +742,17 @@ public class SeleniumUtil {
 	public void switchToHandle(String handle) {
 		try {
 			logger.info("正在切换handle");
-			driver.switchTo().window(handle);
+			threadLocalWebDriver.get().switchTo().window(handle);
 			logger.info("成功切换handle");
 		} catch (Exception e) {
 			logger.error("切换handle发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
 	/**
-	 * 多窗口切换handle - 只有两个窗口时切换另一个窗口句柄
+	 * 多窗口切换handle - 只有两个窗口的情况时切换另一个窗口句柄
 	 */
 	public void switchToAnotherHandle() {
 		String handle = null;
@@ -659,6 +770,8 @@ public class SeleniumUtil {
 			logger.info("成功切换另一个handle");
 		} catch (Exception e) {
 			logger.error("切换另一个handle发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -667,11 +780,13 @@ public class SeleniumUtil {
 	 */
 	public void mouseLeftClick(By byElement) {
 		try{
-			Actions builder = new Actions(driver);
+			Actions builder = new Actions(threadLocalWebDriver.get());
 			builder.click(findElementByWait(5,byElement)).perform();
 			logger.info("成功鼠标左击");
 		}catch(Exception e){
 			logger.error("鼠标左击发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -680,11 +795,13 @@ public class SeleniumUtil {
 	 */
 	public void mouseRightClick(By byElement) {
 		try{
-			Actions builder = new Actions(driver);
+			Actions builder = new Actions(threadLocalWebDriver.get());
 			builder.contextClick(findElementByWait(5,byElement)).perform();
 			logger.info("成功鼠标右击");
 		}catch(Exception e){
 			logger.error("鼠标右击发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -693,11 +810,13 @@ public class SeleniumUtil {
 	 */
 	public void mouseDoubleClick(By byElement) {
 		try{
-			Actions builder = new Actions(driver);
+			Actions builder = new Actions(threadLocalWebDriver.get());
 			builder.doubleClick(findElementByWait(5,byElement)).perform();
 			logger.info("成功鼠标双击");
 		}catch(Exception e){
 			logger.error("鼠标双击发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -706,11 +825,13 @@ public class SeleniumUtil {
 	 */
 	public void mouseMoveToElement(By byElement) {
 		try{
-			Actions builder = new Actions(driver);
+			Actions builder = new Actions(threadLocalWebDriver.get());
 			builder.moveToElement(findElementByWait(5,byElement)).perform();
 			logger.info("成功移动鼠标到指定元素");
 		}catch(Exception e){
 			logger.error("移动鼠标到指定元素发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -719,11 +840,13 @@ public class SeleniumUtil {
 	 */
 	public void mouseMoveToElement(By byElement,int xOffset,int yOffset) {
 		try{
-			Actions builder = new Actions(driver);
+			Actions builder = new Actions(threadLocalWebDriver.get());
 			builder.moveToElement(findElementByWait(5,byElement), xOffset, yOffset).perform();
 			logger.info("成功移动鼠标到指定元素的(x,y)位置");
 		}catch(Exception e){
 			logger.error("移动鼠标到指定元素的(x,y)位置发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -732,11 +855,13 @@ public class SeleniumUtil {
 	 */
 	public void mouseDragAndDrop(By BySourceElement,By ByTargetElement) {
 		try{
-			Actions builder = new Actions(driver);
+			Actions builder = new Actions(threadLocalWebDriver.get());
 			builder.dragAndDrop(findElementByWait(5,BySourceElement), findElementByWait(5,ByTargetElement)).perform();
 			logger.info("成功鼠标拖拽source元素到target元素位置");
 		}catch(Exception e){
 			logger.error("鼠标拖拽source元素到target元素位置发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -745,11 +870,13 @@ public class SeleniumUtil {
 	 */
 	public void mouseDragAndDrop(By BySourceElement,int xOffset,int yOffset) {
 		try{
-			Actions builder = new Actions(driver);
+			Actions builder = new Actions(threadLocalWebDriver.get());
 			builder.dragAndDropBy(findElementByWait(5,BySourceElement), xOffset, yOffset).perform();
 			logger.info("成功鼠标拖拽source元素到(xOffset, yOffset)位置");
 		}catch(Exception e){
 			logger.error("鼠标拖拽source元素到(xOffset, yOffset)位置发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -758,11 +885,13 @@ public class SeleniumUtil {
 	 */
 	public void mouseClickAndHold(By byElement) {
 		try{
-			Actions builder = new Actions(driver);
+			Actions builder = new Actions(threadLocalWebDriver.get());
 			builder.clickAndHold(findElementByWait(5,byElement)).perform();
 			logger.info("成功鼠标悬停");
 		}catch(Exception e){
 			logger.error("鼠标悬停发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -771,11 +900,13 @@ public class SeleniumUtil {
 	 */
 	public void mouseRelease() {
 		try{
-			Actions builder = new Actions(driver);
+			Actions builder = new Actions(threadLocalWebDriver.get());
 			builder.release().perform();
 			logger.info("成功鼠标悬停");
 		}catch(Exception e){
 			logger.error("鼠标悬停发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -787,6 +918,8 @@ public class SeleniumUtil {
 			logger.info("成功获得CSS value");
 		}catch(Exception e){
 			logger.error("获得CSS value发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return css;
 	}
@@ -805,6 +938,8 @@ public class SeleniumUtil {
 			}
 		} catch (Exception e) {
 			logger.error("检查元素是否可编辑发生异常", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return isEdit;
 	}
@@ -821,6 +956,8 @@ public class SeleniumUtil {
 			}
 		}catch(Exception e){
 			logger.error("检查元素是否显示发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return isDisplay;
 	}
@@ -836,6 +973,8 @@ public class SeleniumUtil {
 			return false;
 		} catch (Exception e) {
 			logger.info("检查元素是否存在时发生异常");
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 			return false;
 		}
 
@@ -853,6 +992,8 @@ public class SeleniumUtil {
 			}
 		}catch(Exception e){
 			logger.error("检查CheckBox是否勾选发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return flag;
 	}
@@ -867,6 +1008,8 @@ public class SeleniumUtil {
 			logger.info("成功根据value选择下拉选项");
 		}catch(Exception e){
 			logger.error("根据value选择下拉选项发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -880,6 +1023,8 @@ public class SeleniumUtil {
 			logger.info("成功根据index角标选择下拉选项");
 		}catch(Exception e){
 			logger.error("根据index角标选择下拉选项发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		
 	}
@@ -894,6 +1039,8 @@ public class SeleniumUtil {
 			logger.info("成功根据文本内容选择下拉选项");
 		}catch(Exception e){
 			logger.error("根据文本内容选择下拉选项发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -908,6 +1055,8 @@ public class SeleniumUtil {
 			logger.info("成功获得当前下拉的所有选项的元素定位");
 		}catch(Exception e){
 			logger.error("获得当前下拉的所有选项的元素定位发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return optionsList;
 	}
@@ -925,7 +1074,7 @@ public class SeleniumUtil {
 			case "name":
 				// 把JS执行的值返回出去
 				String jsByName = "return document.getElementsByName('" + nameOrIdValue + "')[0].value;"; 
-				value = (String) ((JavascriptExecutor) driver).executeScript(jsByName);
+				value = (String) ((JavascriptExecutor) threadLocalWebDriver.get()).executeScript(jsByName);
 				break;
 			case "id":
 				// 把JS执行的值返回出去
@@ -938,8 +1087,66 @@ public class SeleniumUtil {
 			logger.info("成功获得输入框的值");
 		}catch(Exception e){
 			logger.error("获得输入框的值发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return value;
+	}
+	
+	/**
+	 * 获取表格的行数
+	 */
+	public int getTableRowCount(By byTableElement) {
+		List<WebElement> rowElement = null;
+		try{
+			rowElement = findElementByWait(5, byTableElement).findElements(By.tagName("tr"));
+			logger.info("成功获取表格的行数");
+		}catch(Exception e){
+			logger.error("获取表格的行数发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+		return rowElement.size();
+	}
+	
+	/**
+	 * 获取表格指定行的列数/字段数
+	 */
+	public int getTableColCount(By byTableElement, int rownum) {
+		List<WebElement> rowElement = null;
+		List<WebElement> colElement = null;
+		try{
+			rowElement = findElementByWait(5, byTableElement).findElements(By.tagName("tr"));
+			WebElement rownumElement = rowElement.get(rownum);
+			colElement = rownumElement.findElements(By.tagName("td"));
+			logger.info("成功获取表格指定行的列数/字段数");
+		}catch(Exception e){
+			logger.error("获取表格指定行的列数/字段数发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+		return colElement.size();
+	}
+	
+	/**
+	 * 获取表格指定单元格(指定行和列)内容
+	 */
+	public String getTableCelText(By byTableElement, int rownum, int colnum) {
+		List<WebElement> rowElement = null;
+		List<WebElement> colElement = null;
+		WebElement celElement = null;
+		try{
+			rowElement = findElementByWait(5, byTableElement).findElements(By.tagName("tr"));
+			WebElement rownumElement = rowElement.get(rownum);
+			colElement = rownumElement.findElements(By.tagName("td"));
+			celElement = colElement.get(colnum);
+			logger.info("成功获取表格指定行的列数/字段数");
+		}catch(Exception e){
+			logger.error("获取表格指定行的列数/字段数发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+		return celElement.getText();
 	}
 
 	/**
@@ -948,10 +1155,12 @@ public class SeleniumUtil {
 	public Object executeJS(String js) {
 		Object obj = null;
 		try{
-			obj = ((JavascriptExecutor) driver).executeScript(js);
+			obj = ((JavascriptExecutor) threadLocalWebDriver.get()).executeScript(js);
 			logger.info("成功执行JavaScript语句：[" + js + "]");
 		}catch(Exception e){
 			logger.error("执行JavaScript语句：[" + js + "]发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return obj;
 	}
@@ -961,17 +1170,19 @@ public class SeleniumUtil {
 	 * 用法：seleniumUtil.executeJS("arguments[0].click();",seleniumUtil.findElementBy(By));
 	 * 		右边参数结果代入arguments[?]
 	 * 常用于html5处理，如:
-	 * 		WebElement vedio = driver.findElement(By.id("preview-player_html5_api"));
+	 * 		WebElement vedio = threadLocalWebDriver.get().findElement(By.id("preview-player_html5_api"));
 	 * 		JavascriptExecutor js = (JavascriptExecutor) driver;
 	 * 		js.executeScript("arguments[0].play()", vedio)
 	 */
 	public Object executeJS(String js, Object... args) {
 		Object obj = null;
 		try{
-			((JavascriptExecutor) driver).executeScript(js, args);
+			((JavascriptExecutor) threadLocalWebDriver.get()).executeScript(js, args);
 			logger.info("成功执行JavaScript语句[" + js + "]");
 		}catch(Exception e){
 			logger.error("执行JavaScript语句[" + js + "]异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return obj;
 	}
@@ -979,15 +1190,15 @@ public class SeleniumUtil {
 	/**
 	 * 元素高亮显示，红色边框，黄色背景
 	 */
-	public Object highLight(WebElement webElement) {
-		Object obj = null;
+	public void highLight(WebElement webElement) {
 		try{
 			executeJS("arguments[0].setAttribute('style', 'border: 2px solid red;');",webElement);
 			logger.info("成功高亮元素");
 		}catch(Exception e){
 			logger.error("高亮元素发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
-		return obj;
 	}
 	
 	/**
@@ -998,11 +1209,12 @@ public class SeleniumUtil {
 	public void isActualContainsExpect(String actual, String expect) {
 		try {
 			Assert.assertTrue(actual.contains(expect));
+			logger.info("实际文本[" + actual + "]包含期望文本[" + expect + "]");
 		} catch (AssertionError e) {
 			logger.error("实际文本[" + actual + "]不包含期望文本[" + expect + "]");
-			Assert.fail("实际文本[" + actual + "]包含期望文本[" + expect + "]");
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
-		logger.info("The [" + actual + "] is contains [" + expect + "]");
 	}
 
 	/**
@@ -1013,7 +1225,9 @@ public class SeleniumUtil {
 			Assert.assertEquals(actual, expected);
 			logger.info("成功找到了期望的文字: [" + expected + "]");
 		} catch (AssertionError e) {
-			Assert.fail("期望的文字是 [" + expected + "] 但是找到了 [" + actual + "]", e);
+			logger.error("期望的文字是 [" + expected + "] 但是找到了 [" + actual + "]", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -1025,6 +1239,8 @@ public class SeleniumUtil {
 			logger.info("成功断言获取元素的text是否含有指定内容");
 		}catch(Exception e){
 			logger.error("断言获取元素的text是否含有指定内容发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		
 	}
@@ -1035,10 +1251,12 @@ public class SeleniumUtil {
 	 */
 	public void loginOnWinGUI(String username, String password, String url) {
 		try{
-			driver.get(username + ":" + password + "@" + url);
+			threadLocalWebDriver.get().get(username + ":" + password + "@" + url);
 			logger.info("成功处理windows GUI的登陆弹出框");
 		}catch(Exception e){
 			logger.error("处理windows GUI的登陆弹出框发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -1055,6 +1273,8 @@ public class SeleniumUtil {
 			logger.info("成功通过定位上传按钮后sendKeys()上传文件");
 		} catch (Exception e) {
 			logger.error("通过定位上传按钮后sendKeys()上传文件发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -1062,28 +1282,30 @@ public class SeleniumUtil {
 	 * @Description 上传文件，通过执行autoit的exe脚本上传文件，预先利用autoit编写上传脚本并生成exe可执行文件存放到项目
 	 * @param byElement 定位上传按钮
 	 * @param exeName autoit的exe文件名
-	 * @param itestcontext 通过获取testng.xml文件参数来获得autoit文件存放路径
+	 * @param autoitFolderPath 通过获取testng.xml文件参数来获得autoit文件存放路径
 	 */
-	public void uploadFile(By byElement, String exeName, ITestContext itestcontext) {
+	public void uploadFile(By byElement, String exeName, String autoitFolderPath) {
 		try {
 			// 点击上传按钮弹出windows选择文件窗口
 			click(byElement);
 			pause(1000);
 			//调用执行autoit脚本方法
-			autoitExe(exeName,itestcontext);
+			autoitExe(exeName,autoitFolderPath);
 			logger.info("成功上传文件");
 		} catch (Exception e) {
 			logger.error("上传文件发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
 	/**
 	 * @Description 调用执行外部exe脚本：autoit（windows ui操作）
 	 * @param exeName
-	 * @param itestcontext
+	 * @param autoitFolderPath
 	 */
-	public void autoitExe(String exeName, ITestContext itestcontext){
-		String scriptPath = itestcontext.getCurrentXmlTest().getParameter("autoitFolderPath") + "/" + exeName;
+	public void autoitExe(String exeName, String autoitFolderPath){
+		String scriptPath = autoitFolderPath + "/" + exeName;
 		try{
 			Runtime rn = Runtime.getRuntime();
 			Process p = rn.exec(scriptPath);
@@ -1093,29 +1315,35 @@ public class SeleniumUtil {
 				logger.info("成功执行autoit脚本，正常终止脚本进程");
 			}else{
 				logger.warn("执行autoit脚本发生异常，异常终止脚本进程");
+				//由testng的失败断言来控制用例运行是否失败
+				Assert.fail();
 			}
 		}catch(Exception e){
 			logger.error("执行autoit的exe脚本发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
 	/**
 	 * @Description 截图保存功能
 	 */
-	public void takesScreenshot() {
+	public void takesScreenshot(String screenImageFolderPath) {
 		String screenName = String.valueOf(new Date().getTime()) + ".png";
-		File dir = new File("./result/screenshot");
+		File dir = new File(screenImageFolderPath);
 		if(!dir.exists()){
 			dir.mkdirs();
 		}
         try {
 			String screenPath = dir.getAbsolutePath() + "/"+screenName;
-			File srcFile = ((TakesScreenshot) SeleniumUtil.driver).getScreenshotAs(OutputType.FILE);
+			File srcFile = ((TakesScreenshot) SeleniumUtil.threadLocalWebDriver.get()).getScreenshotAs(OutputType.FILE);
 			File destFile = new File(screenPath);
 			FileUtils.copyFile(srcFile, destFile);
 			logger.info("成功截图保存");
         } catch (IOException e) {
         	logger.error("截图保存发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
         }
 	}
 }

@@ -53,4 +53,9 @@ public class HomePage {
 	/** 总览-每日生活Tab-标题:严选每日推荐 */
 	public static final By overviewDailyLifeTab = By.cssSelector("li[id^='_mail_tabitem'][role='tab'][title='严选每日推荐']");
 	
+	/** 收信 */
+	public static final By receiveLetters = By.xpath("//span[text()='收 信']");
+	
+	/** 写信 */
+	public static final By writeLetters = By.xpath("//span[text()='写 信']");
 }

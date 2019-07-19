@@ -25,6 +25,8 @@ public class TestNGRetry implements IRetryAnalyzer {
 				return true;
 			}else{
 				logger.info("已超过最大重跑次数，不再尝试");
+				// 重置起跑次数，使得下一个失败用例从第一次开始重跑（因为多个失败用例用的是同一个TestNGRetry对象，retryCount是成员变量不是方法内局部变量）
+				retryCount = 1;
 				return false;
 			}
 		}catch(Exception e){

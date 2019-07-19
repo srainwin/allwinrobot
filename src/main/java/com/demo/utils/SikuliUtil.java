@@ -14,6 +14,7 @@ import org.sikuli.script.Match;
 import org.sikuli.script.Pattern;
 import org.sikuli.script.Region;
 import org.sikuli.script.Screen;
+import org.testng.Assert;
 import org.testng.ITestContext;
 
 /**
@@ -24,17 +25,19 @@ import org.testng.ITestContext;
  * 				可用sikuliX IDE调试获取图像x、y、w、h坐标
  */
 public class SikuliUtil {
-	public static Screen screen = null;
 	public static Logger logger = Logger.getLogger(SikuliUtil.class.getName());
+	public static Screen screen = null;
 	
 	/** 启动sikuli的Screen对象，以及指定ImagePath存放图像文件位置(sikuli所有操作的图像都会在这找)，testng的beforeclass使用 */
-	public void launchScreen(String imageFolderPath){
+	public void launchScreen(String sikuliImageFolderPath){
 		try{
 			screen = new Screen();
-			ImagePath.add(imageFolderPath);
+			ImagePath.add(sikuliImageFolderPath);
 			logger.info("成功启动屏幕图像识别器");
 		}catch(Exception e){
 			logger.error("启动屏幕图像识别器发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -43,7 +46,7 @@ public class SikuliUtil {
 		Match match = null;
 		Pattern pattern = null;
 		try{
-			pattern = new Pattern("imagename");
+			pattern = new Pattern(imagename);
 			match = screen.exists(pattern, imageTimeoutSecond);
 			if(match != null){
 				logger.info("成功检查图像存在");
@@ -54,12 +57,14 @@ public class SikuliUtil {
 			}
 		}catch(Exception e){
 			logger.error("检查图像是否存在发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 			return false;
 		}
 	}
 	
 	/** 检查图像1是否包含子图像2 */
-	public static boolean isContainText(Screen screen,String imagename1,String imagename2){
+	public boolean isContains(String imagename1,String imagename2){
 		Region region1 = null;
 		Region region2 = null;
 		boolean boo = false;
@@ -67,10 +72,30 @@ public class SikuliUtil {
 			region1 = screen.find(imagename1);
 			region2 = screen.find(imagename2);
 			boo = region1.contains(region2);
+			logger.info("成功检查图像1是否包含子图像2");
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.error("检查图像1是否包含子图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return boo;
+	}
+	
+	/** 获取图像中内部图像的区域 */
+	public Region getInnerRegion(String outterImage,String innerImage){
+		Match match1 = null;
+		Match match2 = null;
+		Region region = null;
+		try{
+			match1 = screen.find(outterImage);
+			match2 = match1.find(innerImage);
+			region = new Region(match2);
+		}catch(Exception e){
+			logger.error("获取图像中内部图像的区域发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+		return region;
 	}
 	
 	/** 等待图像出现 */
@@ -78,12 +103,14 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		Match matchImage = null;
 		try{
-			pattern = new Pattern("imagename");
+			pattern = new Pattern(imagename);
 			matchImage = screen.wait(pattern, imageTimeoutSecond);
 			matchImage.highlight("red");
 			logger.info("成功等待图像出现");
 		}catch(Exception e){
 			logger.error("等待图像出现发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return pattern;
 	}
@@ -91,12 +118,21 @@ public class SikuliUtil {
 	/** 等待图像消失 */
 	public Pattern waitVanishImage(String imagename, double imageTimeoutSecond){
 		Pattern pattern = null;
+		boolean boo = false;
 		try{
-			pattern = new Pattern("imagename");
-			screen.waitVanish(pattern, imageTimeoutSecond);
-			logger.info("成功等待图像消失");
+			pattern = new Pattern(imagename);
+			boo = screen.waitVanish(pattern, imageTimeoutSecond);
+			if(boo){
+				logger.info("成功等待图像消失");
+			}else{
+				logger.info("等待图像超时仍未消失");
+				//由testng的失败断言来控制用例运行是否失败
+				Assert.fail();
+			}
 		}catch(Exception e){
 			logger.error("等待图像消失发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return pattern;
 	}
@@ -112,8 +148,12 @@ public class SikuliUtil {
 			logger.info("成功查找到图像");
 		}catch(FindFailed e){
 			logger.error("查找不到图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("查找图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return matchImage;
 	}
@@ -131,24 +171,14 @@ public class SikuliUtil {
 			logger.info("成功查找到多个相同图像");
 		}catch(FindFailed e){
 			logger.error("查找不到多个相同图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("查找多个相同图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return matchImages;
-	}
-
-	/** 处理图像位置偏移量(精准图像到某个点) */
-	public Pattern imageOffset(String imagename, int X, int Y,double imageTimeoutSecond){
-		Pattern pattern = null;
-		try{
-			waitImage(imagename,imageTimeoutSecond);
-			pattern = new Pattern("imagename");
-			pattern.targetOffset(X, Y);
-			logger.info("成功处理图像位置偏移量");
-		}catch(Exception e){
-			logger.error("处理图像位置偏移量发生异常",e);
-		}
-		return pattern;
 	}
 	
 	/** 获取图像的上方指定高度的区域 */
@@ -160,6 +190,8 @@ public class SikuliUtil {
 			logger.info("成功获取图像的上方指定高度的区域");
 		}catch(Exception e){
 			logger.error("获取图像的上方指定高度的区域发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return region;
 	}
@@ -173,6 +205,8 @@ public class SikuliUtil {
 			logger.info("成功获取图像的下方指定高度的区域");
 		}catch(Exception e){
 			logger.error("获取图像的下方指定高度的区域发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return region;
 	}
@@ -183,9 +217,11 @@ public class SikuliUtil {
 		try{
 			waitImage(imagename,imageTimeoutSecond);
 			region = screen.getLastMatch().left(width);
-			logger.info("成功获取图像的左方指定高度的区域");
+			logger.info("成功获取图像的左方指定宽度的区域");
 		}catch(Exception e){
-			logger.error("获取图像的左方指定高度的区域发生异常",e);
+			logger.error("获取图像的左方指定宽度的区域发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return region;
 	}
@@ -196,9 +232,11 @@ public class SikuliUtil {
 		try{
 			waitImage(imagename,imageTimeoutSecond);
 			region = screen.getLastMatch().right(width);
-			logger.info("成功获取图像的右方指定高度的区域");
+			logger.info("成功获取图像的右方指定宽度的区域");
 		}catch(Exception e){
-			logger.error("获取图像的右方指定高度的区域发生异常",e);
+			logger.error("获取图像的右方指定宽度的区域发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return region;
 	}
@@ -211,6 +249,8 @@ public class SikuliUtil {
 			logger.info("成功截取区域图片，保存路径是：" + imagepath + "/" + imagename);
 		}catch(Exception e){
 			logger.error("截取区域图片发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return imagepath;
 	}
@@ -223,6 +263,8 @@ public class SikuliUtil {
 			logger.info("成功截取区域图片，保存路径是：" + imagepath + "/" + imagename);
 		}catch(Exception e){
 			logger.error("截取区域图片发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return imagepath;
 	}
@@ -243,6 +285,8 @@ public class SikuliUtil {
 			logger.info("获取两个图片TopLeft之间的区域");
 		}catch(Exception e){
 			logger.error("获取两个图片TopLeft之间的区域发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return region;
 	}
@@ -265,6 +309,8 @@ public class SikuliUtil {
 			logger.info("成功获取两个图片TopLeft之间的区域图片，保存路径是：" + imagepath + "/" + newImagename);
 		}catch(Exception e){
 			logger.error("获取两个图片TopLeft之间的区域图片发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return newImagename;
 	}
@@ -285,6 +331,8 @@ public class SikuliUtil {
 			logger.info("成功指定区域(x,y,w,h)坐标进行图像文字识别");
 		}catch(Exception e){
 			logger.error("指定区域(x,y,w,h)坐标进行图像文字识别发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return text;
 	}
@@ -304,6 +352,8 @@ public class SikuliUtil {
 			logger.info("成功指定图像进行图像识别文字");
 		}catch(Exception e){
 			logger.error("指定图像进行图像识别文字发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return text;
 	}
@@ -317,6 +367,8 @@ public class SikuliUtil {
 			logger.info("成功打开本地应用程序");
 		}catch(Exception e){
 			logger.error("打开本地应用程序发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return app;
 	}
@@ -328,6 +380,8 @@ public class SikuliUtil {
 			logger.info("成功关闭本地应用程序");
 		}catch(Exception e){
 			logger.error("关闭本地应用程序发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -339,10 +393,28 @@ public class SikuliUtil {
 			logger.info("成功切换本地应用程序");
 		}catch(Exception e){
 			logger.error("切换本地应用程序发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return app2;
 	}
 	
+	/** 鼠标移动到区域  */
+	public Region mouseMoveRegion(Region region){
+		try{
+			screen.mouseMove(region);
+			logger.info("成功鼠标移动到区域 ");
+		}catch(FindFailed e){
+			logger.error("查找不到鼠标要移动到的区域 ",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}catch(Exception e){
+			logger.error("鼠标移动到区域 发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+		return region;
+	}
 	
 	/** 鼠标移动到图像  */
 	public Pattern mouseMoveImage(String imagename, double imageTimeoutSecond){
@@ -353,8 +425,12 @@ public class SikuliUtil {
 			logger.info("成功鼠标移动到图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要移动到的图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("鼠标移动到图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return pattern;
 	}
@@ -363,15 +439,35 @@ public class SikuliUtil {
 	public Pattern mouseMoveImage(String imagename, int X, int Y, double imageTimeoutSecond){
 		Pattern pattern = null;
 		try{
-			pattern = imageOffset(imagename, X, Y, imageTimeoutSecond);
-			screen.mouseMove(pattern);
+			pattern = waitImage(imagename,imageTimeoutSecond);
+			screen.mouseMove(pattern.targetOffset(X, Y));
 			logger.info("成功鼠标移动到图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要移动到的图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("鼠标移动到图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 		return pattern;
+	}
+	
+	/** 鼠标点击区域  */
+	public void mouseClickRegion(Region region){
+		try{
+			screen.click(region);
+			logger.info("成功鼠标点击区域");
+		}catch(FindFailed e){
+			logger.error("查找不到鼠标要点击的区域",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}catch(Exception e){
+			logger.error("鼠标点击区域发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
 	}
 	
 	/** 鼠标点击图像  */
@@ -383,8 +479,12 @@ public class SikuliUtil {
 			logger.info("成功鼠标点击图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要点击的图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("鼠标点击图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -392,13 +492,32 @@ public class SikuliUtil {
 	public void mouseClickImage(String imagename, int X, int Y, double imageTimeoutSecond){
 		Pattern pattern = null;
 		try{
-			pattern = imageOffset(imagename, X, Y, imageTimeoutSecond);
-			screen.click(pattern);
+			pattern = waitImage(imagename,imageTimeoutSecond);
+			screen.click(pattern.targetOffset(X, Y));
 			logger.info("成功鼠标点击图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要点击的图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("鼠标点击图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 鼠标延迟点击区域 */
+	public void mouseDelayClickRegion(Region region, int delayTimeMillisMax1000){
+		try{
+			//先鼠标移动到区域处
+			mouseMoveRegion(region);
+			//然后进行延迟点击
+			screen.delayClick(delayTimeMillisMax1000);
+			logger.info("成功鼠标延迟点击区域");
+		}catch(Exception e){
+			logger.error("鼠标延迟点击区域发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -412,6 +531,8 @@ public class SikuliUtil {
 			logger.info("成功鼠标延迟点击图像");
 		}catch(Exception e){
 			logger.error("鼠标延迟点击图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -425,6 +546,24 @@ public class SikuliUtil {
 			logger.info("成功鼠标延迟点击图像");
 		}catch(Exception e){
 			logger.error("鼠标延迟点击图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 鼠标双击区域 */
+	public void mouseDoublieClickRegion(Region region){
+		try{
+			screen.doubleClick(region);
+			logger.info("成功鼠标双击区域");
+		}catch(FindFailed e){
+			logger.error("查找不到鼠标要双击的区域",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}catch(Exception e){
+			logger.error("鼠标双击区域发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -436,8 +575,12 @@ public class SikuliUtil {
 			logger.info("成功鼠标双击图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要双击的图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("鼠标双击图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -445,13 +588,33 @@ public class SikuliUtil {
 	public void mouseDoublieClickImage(String imagename, int X, int Y, double imageTimeoutSecond){
 		Pattern pattern = null;
 		try{
-			pattern = imageOffset(imagename, X, Y, imageTimeoutSecond);
-			screen.doubleClick(pattern);
+			pattern = waitImage(imagename,imageTimeoutSecond);
+			screen.doubleClick(pattern.targetOffset(X, Y));
 			logger.info("成功鼠标双击图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要双击的图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("鼠标双击图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 鼠标右击区域*/
+	public void mouseRightClickRegion(Region region){
+		try{
+			screen.rightClick(region);
+			logger.info("成功鼠标右击击区域");
+		}catch(FindFailed e){
+			logger.error("查找不到鼠标要右击的区域",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}catch(Exception e){
+			logger.error("鼠标右击区域发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -463,8 +626,12 @@ public class SikuliUtil {
 			logger.info("成功鼠标右击击图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要右击的图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("鼠标右击图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -472,13 +639,35 @@ public class SikuliUtil {
 	public void mouseRightClickImage(String imagename, int X, int Y, double imageTimeoutSecond){
 		Pattern pattern = null;
 		try{
-			pattern = imageOffset(imagename, X, Y, imageTimeoutSecond);
-			screen.rightClick(pattern);
+			pattern = waitImage(imagename,imageTimeoutSecond);
+			screen.rightClick(pattern.targetOffset(X, Y));
 			logger.info("成功鼠标右击击图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要右击的图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("鼠标右击图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 鼠标点击区域达到指定时间后再释放左键  */
+	public void mouseLeftClickForTimeRegion(Region region, long millis){
+		try{
+			// 先鼠标移动到区域处
+			mouseMoveRegion(region);
+			// 然后按下鼠标左键不释放
+			screen.mouseDown(Button.LEFT);
+			// 等待指定时间后释放左键
+			Thread.sleep(millis);
+			screen.mouseUp();
+			logger.info("成功鼠标点击区域达到指定时间后再释放左键");
+		}catch(Exception e){
+			logger.error("鼠标点击区域达到指定时间后再释放左键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -495,6 +684,26 @@ public class SikuliUtil {
 			logger.info("成功鼠标点击图像达到指定时间后再释放左键");
 		}catch(Exception e){
 			logger.error("鼠标点击图像达到指定时间后再释放左键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 鼠标右击区域达到指定时间后再释放右键  */
+	public void mouseRightClickForTimeRegion(Region region, long millis){
+		try{
+			// 先鼠标移动到区域处
+			mouseMoveRegion(region);
+			// 然后按下鼠标左键不释放
+			screen.mouseDown(Button.RIGHT);
+			// 等待指定时间后释放右键
+			Thread.sleep(millis);
+			screen.mouseUp();
+			logger.info("成功鼠标右击区域达到指定时间后再释放右键");
+		}catch(Exception e){
+			logger.error("鼠标右击区域达到指定时间后再释放右键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -511,6 +720,26 @@ public class SikuliUtil {
 			logger.info("成功鼠标右击图像达到指定时间后再释放右键");
 		}catch(Exception e){
 			logger.error("鼠标右击图像达到指定时间后再释放右键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+
+	/** 鼠标中击区域达到指定时间后再释放中键  */
+	public void mouseMiddleClickForTimeRegion(Region region, long millis){
+		try{
+			// 先鼠标移动到区域处
+			mouseMoveRegion(region);
+			// 然后按下鼠标中键不释放
+			screen.mouseDown(Button.MIDDLE);
+			// 等待指定时间后释放中键
+			Thread.sleep(millis);
+			screen.mouseUp();
+			logger.info("成功鼠标中击区域达到指定时间后再释放中键");
+		}catch(Exception e){
+			logger.error("鼠标中击区域达到指定时间后再释放中键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
@@ -527,6 +756,32 @@ public class SikuliUtil {
 			logger.info("成功鼠标中击图像达到指定时间后再释放中键");
 		}catch(Exception e){
 			logger.error("鼠标中击图像达到指定时间后再释放中键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 鼠标中轮向上滚动指定次数  */
+	public void mouseWheelUpForTime(int numberOfRolls){
+		try{
+			screen.wheel(Button.WHEEL_UP, numberOfRolls);
+			logger.info("成功鼠标中轮向上滚动指定次数");
+		}catch(Exception e){
+			logger.error("鼠标中轮向上滚动指定次数发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 鼠标在滚动条区域中轮向上滚动指定次数  */
+	public void mouseWheelUpForTimeRegion(Region region, int numberOfRolls){
+		try{
+			screen.wheel(region, Button.WHEEL_UP, numberOfRolls);
+			logger.info("成功鼠标在滚动条区域中轮向上滚动指定次数");
+		}catch(Exception e){
+			logger.error("鼠标在滚动条区域中轮向上滚动指定次数发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -539,9 +794,34 @@ public class SikuliUtil {
 			logger.info("成功鼠标在滚动条图像中轮向上滚动指定次数");
 		}catch(Exception e){
 			logger.error("鼠标在滚动条图像中轮向上滚动指定次数发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
+	/** 鼠标中轮向下滚动指定次数  */
+	public void mouseWheelDownForTime(int numberOfRolls){
+		try{
+			screen.wheel(Button.WHEEL_DOWN, numberOfRolls);
+			logger.info("成功鼠标中轮向下滚动指定次数 ");
+		}catch(Exception e){
+			logger.error("鼠标中轮向下滚动指定次数发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 鼠标在滚动条区域中轮向下滚动指定次数  */
+	public void mouseWheelDownForTimeRegion(Region region, int numberOfRolls){
+		try{
+			screen.wheel(region, Button.WHEEL_DOWN, numberOfRolls);
+			logger.info("成功鼠标在滚动条区域中轮向下滚动指定次数");
+		}catch(Exception e){
+			logger.error("鼠标在滚动条区域中轮向下滚动指定次数发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
 	
 	/** 鼠标在滚动条图像中轮向下滚动指定次数  */
 	public void mouseWheelDownForTimeImage(String imagename, double imageTimeoutSecond, int numberOfRolls){
@@ -552,6 +832,20 @@ public class SikuliUtil {
 			logger.info("成功鼠标在滚动条图像中轮向下滚动指定次数");
 		}catch(Exception e){
 			logger.error("鼠标在滚动条图像中轮向下滚动指定次数发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 鼠标悬停在区域 */
+	public void mouseHoverRegion(Region region){
+		try{
+			screen.hover(region);
+			logger.info("成功鼠标悬停在区域");
+		}catch(Exception e){
+			logger.error("鼠标悬停在区域发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -563,8 +857,12 @@ public class SikuliUtil {
 			logger.info("成功鼠标悬停在图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要悬停在的图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("鼠标悬停在图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -572,13 +870,29 @@ public class SikuliUtil {
 	public void mouseHoverImage(String imagename, int X, int Y, double imageTimeoutSecond){
 		Pattern pattern = null;
 		try{
-			pattern = imageOffset(imagename, X, Y, imageTimeoutSecond);
-			screen.hover(pattern);
+			pattern = waitImage(imagename,imageTimeoutSecond);
+			screen.hover(pattern.targetOffset(X, Y));
 			logger.info("成功鼠标悬停在图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要悬停在的图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("鼠标悬停在图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 鼠标拖拽区域 */
+	public void mouseDragDropRegion(String sourcRegion, String targetRegion){
+		try{
+			screen.dragDrop(sourcRegion, targetRegion);
+			logger.info("成功鼠标拖拽区域");
+		}catch(Exception e){
+			logger.error("鼠标拖拽区域发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -591,8 +905,12 @@ public class SikuliUtil {
 			logger.info("成功鼠标拖拽图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要拖拽的图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("鼠标拖拽图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -601,14 +919,55 @@ public class SikuliUtil {
 		Pattern pattern1 = null;
 		Pattern pattern2 = null;
 		try{
-			pattern1 = imageOffset(sourceImage, X1, Y1, imageTimeoutSecond);
-			pattern2 = imageOffset(targetImage, X2, Y2, imageTimeoutSecond);
-			screen.dragDrop(pattern1, pattern2);
+			pattern1 = waitImage(sourceImage,imageTimeoutSecond);
+			pattern2 = waitImage(targetImage,imageTimeoutSecond);
+			screen.dragDrop(pattern1.targetOffset(X1, Y1), pattern2.targetOffset(X2, Y2));
 			logger.info("成功鼠标拖拽图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要拖拽的图像",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}catch(Exception e){
 			logger.error("鼠标拖拽图像发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 键盘在区域中写文字（区域前提是可输入框） */
+	public void keyboardWriteTextRegion(Region region, String text){
+		try{
+			region.write(text);
+			logger.info("成功用键盘在区域中写文字");
+		}catch(Exception e){
+			logger.error("键盘在区域中写文字发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 键盘在图像中写文字（图像前提是可输入框） */
+	public void keyboardWriteTextImages(String imagename, String text, double imageTimeoutSecond){
+		try{
+			waitImage(imagename,imageTimeoutSecond);
+			screen.type(imagename,text);
+			logger.info("成功用键盘在图像中写文字");
+		}catch(Exception e){
+			logger.error("键盘在图像中写文字发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 键盘在区域中输入文字（区域前提是可输入框） */
+	public void keyboardTypeTextRegion(Region region, String text){
+		try{
+			screen.type(region,text);
+			logger.info("成功用键盘在区域中输入文字");
+		}catch(Exception e){
+			logger.error("键盘在区域中输入文字发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -620,6 +979,20 @@ public class SikuliUtil {
 			logger.info("成功用键盘在图像中输入文字");
 		}catch(Exception e){
 			logger.error("键盘在图像中输入文字发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 键盘在区域中粘贴文字（区域前提是可输入框） */
+	public void keyboardPasteTextRegion(Region region, String text){
+		try{
+			screen.paste(region,text);
+			logger.info("成功用键盘在区域中粘贴文字");
+		}catch(Exception e){
+			logger.error("键盘在区域中粘贴文字发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -627,10 +1000,24 @@ public class SikuliUtil {
 	public void keyboardPasteTextImages(String imagename, String text, double imageTimeoutSecond){
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			screen.paste(text);
+			screen.paste(imagename,text);
 			logger.info("成功用键盘在图像中粘贴文字");
 		}catch(Exception e){
 			logger.error("键盘在图像中粘贴文字发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 键盘在区域中输入CTRL+KEY组合按键,KEY可以是键盘任意按键 */
+	public void keyboardTypeCtrlPlusKeyRegion(Region region, String key){
+		try{
+			screen.type(region, key, KeyModifier.CTRL);
+			logger.info("成功用键盘在区域中输入CTRL+KEY组合按键");
+		}catch(Exception e){
+			logger.error("键盘在区域中输入CTRL+KEY组合按键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -642,6 +1029,20 @@ public class SikuliUtil {
 			logger.info("成功用键盘在图像中输入CTRL+KEY组合按键");
 		}catch(Exception e){
 			logger.error("键盘在图像中输入CTRL+KEY组合按键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 键盘在区域中输入单个KEY按键,KEY是org.sikuli.script.Key.xxx:String */
+	public void keyboardTypeKeyRegion(Region region, String key){
+		try{
+			screen.type(region,key);
+			logger.info("成功用键盘在区域中输入单个KEY按键");
+		}catch(Exception e){
+			logger.error("键盘在区域中输入单个KEY按键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -653,6 +1054,20 @@ public class SikuliUtil {
 			logger.info("成功用键盘在图像中输入单个KEY按键");
 		}catch(Exception e){
 			logger.error("键盘在图像中输入单个KEY按键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 键盘在区域中输入任意KEY1+KEY2组合按键，KEY1是org.sikuli.script.Key.xxx:String，KEY2是org.sikuli.script.KeyModifier.xxx:String */
+	public void keyboardTypeTwoKeysRegion(Region region, String key, String keyModifier){
+		try{
+			screen.type(region, key, keyModifier);
+			logger.info("成功用键盘在区域中输入任意KEY1+KEY2组合按键");
+		}catch(Exception e){
+			logger.error("键盘在区域中输入任意KEY1+KEY2组合按键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -664,6 +1079,8 @@ public class SikuliUtil {
 			logger.info("成功用键盘在图像中输入任意KEY1+KEY2组合按键");
 		}catch(Exception e){
 			logger.error("键盘在图像中输入任意KEY1+KEY2组合按键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -679,6 +1096,8 @@ public class SikuliUtil {
 			logger.info("成功按着某个键一定时间后再释放按键");
 		}catch(Exception e){
 			logger.error("按着某个键一定时间后再释放按键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 	
@@ -696,6 +1115,8 @@ public class SikuliUtil {
 			logger.info("成功按下KEY1+KEY2+KEY3三键组合");
 		}catch(Exception e){
 			logger.error("按下KEY1+KEY2+KEY3三键组合发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
 		}
 	}
 
