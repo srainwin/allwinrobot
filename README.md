@@ -18,7 +18,7 @@ sikuli常用api封装提供调用图像识别自动化操作
 可调用autoit的exe脚本进行windows自动化操作  
 提供选择ie、chrome、firefox和ghost浏览器进行测试  
 支持并行分布式执行用例  
-PO模式设计维护用例
+PO模式设计维护用例  
 添加cookies免登录  
 从excel获取测试数据  
 记录用例运行日志信息  
