@@ -44,25 +44,28 @@ public class LoginBase {
 	protected String driverConfigFilePath;
 	protected String isRemote;
 	protected String huburl;
+	protected String isVNC;
+	protected String vncPassword;
+	
 
 	static Logger logger = Logger.getLogger(LoginBase.class.getName());
 
 	/**
-	 * @Description 在BeforeClass的setup前清理本地机残留的浏览器程序和driver进程，分布式远程机不支持
+	 * @Description 在BeforeClass的setup前清理本地机残留的浏览器程序和driver进程，远程机暂不支持清理
 	 * @param itestcontext
 	 */
 	@BeforeSuite
 	public void setupCleanup(ITestContext itestcontext) {
-		killDriver(itestcontext);
+		killDriver2(itestcontext);
 	}
 
 	/**
-	 * @Description 在AfterClass的teardown后清理本地机残留的浏览器程序和driver进程，分布式远程机不支持
+	 * @Description 在AfterClass的teardown后清理本地机残留的浏览器程序和driver进程，远程机暂不支持清理
 	 * @param itestcontext
 	 */
 	@AfterSuite
 	public void teardownCleanup(ITestContext itestcontext) {
-		killDriver(itestcontext);
+		killDriver2(itestcontext);
 	}
 
 	/**
@@ -89,11 +92,20 @@ public class LoginBase {
 			driverConfigFilePath = itestcontext.getCurrentXmlTest().getParameter("driverConfigFilePath");
 			isRemote = itestcontext.getCurrentXmlTest().getParameter("isRemote");
 			huburl = itestcontext.getCurrentXmlTest().getParameter("huburl");
+			isVNC = itestcontext.getCurrentXmlTest().getParameter("isVNC");
+			vncPassword = itestcontext.getCurrentXmlTest().getParameter("vncPassword");
 
 			// 启动本地或者远程的某款浏览器
 			seleniumUtil.launchBrowser(browserName, driverConfigFilePath, isRemote, huburl, pageLoadTimeout);
+			
 			// 启动sikuli屏幕操作器
-			sikuliUtil.launchScreen(sikuliImageFolderPath);
+			if(isVNC.equals("true")){
+				// VNC
+				sikuliUtil.launchVNCScreen(seleniumUtil.getGridIP(huburl), vncPassword, sikuliImageFolderPath);
+			}else{
+				// local
+				sikuliUtil.launchScreen(sikuliImageFolderPath);
+			}
 
 			logger.info(browserName + "浏览器启动成功!");
 		} catch (Exception e) {
@@ -102,14 +114,19 @@ public class LoginBase {
 	}
 
 	/**
-	 * @Description 关闭浏览器
+	 * @Description 关闭浏览器之类的善后工作
 	 */
 	@AfterClass
 	public void teardown() {
 		try {
+			// 关闭浏览器
 			seleniumUtil.quit();
+			// 当开启VNC时关闭VNC连接
+			if( isVNC.equals("true") ){
+				sikuliUtil.closeVNC();
+			}
 		} catch (Exception e) {
-			logger.error("浏览器异常，无法关闭", e);
+			logger.error("浏览器等善后工作发送异常，无法关闭", e);
 		}
 	}
 
@@ -188,8 +205,9 @@ public class LoginBase {
 	}
 
 	/**
-	 * @Description 用于beforesuite和aftersuite清理浏览器driver进程
+	 * @Description 用于beforesuite和aftersuite清理服务器上的浏览器driver进程
 	 */
+	@SuppressWarnings("unused") //忽略never use警告
 	private void killDriver(ITestContext itestcontext) {
 		try {
 			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
@@ -216,6 +234,42 @@ public class LoginBase {
 				// 杀遗留旧进程
 				WindowsUtils.killByName("chrome.exe");
 				WindowsUtils.killByName("chromedriver.exe");
+			}
+		} catch (Exception e) {
+			logger.error("清理driver进程发生异常", e);
+		}
+	}
+	
+	/**
+	 * @Description 用于beforesuite和aftersuite清理服务器上的浏览器driver进程
+	 */
+	private void killDriver2(ITestContext itestcontext) {
+		try {
+			browserName = itestcontext.getCurrentXmlTest().getParameter("browserName");
+			Runtime rn = Runtime.getRuntime();
+			if (browserName.equalsIgnoreCase("ie")) {
+				// 杀遗留旧进程
+				rn.exec("taskkill /t /f /im iexplore.exe");
+				rn.exec("taskkill /t /f /im IEDriverServer.exe");
+
+			} else if (browserName.equalsIgnoreCase("chrome")) {
+				// 杀遗留旧进程
+				rn.exec("taskkill /t /f /im chrome.exe");
+				rn.exec("taskkill /t /f /im chromedriver.exe");
+
+			} else if (browserName.equalsIgnoreCase("firefox")) {
+				// 杀遗留旧进程
+				rn.exec("taskkill /t /f /im firefox.exe");
+				rn.exec("taskkill /t /f /im geckodriver.exe");
+
+			} else if (browserName.equalsIgnoreCase("ghost")) {
+				// 杀遗留旧进程
+				rn.exec("taskkill /t /f /im phantomjs.exe");
+			} else {
+				System.out.println(browserName + "浏览器不支持，支持ie、chrome、firefox和ghost，将默认使用chrome浏览器进行");
+				// 杀遗留旧进程
+				rn.exec("taskkill /t /f /im chrome.exe");
+				rn.exec("taskkill /t /f /im chromedriver.exe");
 			}
 		} catch (Exception e) {
 			logger.error("清理driver进程发生异常", e);

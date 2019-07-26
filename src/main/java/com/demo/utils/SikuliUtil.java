@@ -14,6 +14,7 @@ import org.sikuli.script.Match;
 import org.sikuli.script.Pattern;
 import org.sikuli.script.Region;
 import org.sikuli.script.Screen;
+import org.sikuli.vnc.VNCScreen;
 import org.testng.Assert;
 import org.testng.ITestContext;
 
@@ -27,19 +28,65 @@ import org.testng.ITestContext;
 public class SikuliUtil {
 	public static Logger logger = Logger.getLogger(SikuliUtil.class.getName());
 	public static Screen screen = null;
+	public static VNCScreen vncscreen = null;
 	
 	/** 启动sikuli的Screen对象，以及指定ImagePath存放图像文件位置(sikuli所有操作的图像都会在这找)，testng的beforeclass使用 */
 	public void launchScreen(String sikuliImageFolderPath){
 		try{
+			logger.info("本地服务器屏幕准备中");
 			screen = new Screen();
 			ImagePath.add(sikuliImageFolderPath);
-			logger.info("成功启动屏幕图像识别器");
+			logger.info("成功启动本地服务器屏幕图像识别器");
 		}catch(Exception e){
-			logger.error("启动屏幕图像识别器发生异常",e);
+			logger.error("启动本地服务器屏幕图像识别器发生异常",e);
 			//由testng的失败断言来控制用例运行是否失败
 			Assert.fail();
 		}
 	}
+	
+	/** 启动sikuli的VNCScreen对象 */
+	public void launchVNCScreen(String vncIP, String vncPassword, String sikuliImageFolderPath){
+		try{
+			logger.info("远程服务器屏幕准备中");
+			vncscreen = VNCScreen.start(vncIP, 5900, vncPassword, 10, 100000);
+			ImagePath.add(sikuliImageFolderPath);
+			logger.info("成功启动远程服务器屏幕图像识别器");
+		}catch(Exception e){
+			logger.error("启动远程服务器屏幕图像识别器发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 关闭sikuli vnc连接 */
+	public void closeVNC(){
+		try{
+			vncscreen.close();
+			vncscreen.stop();
+			logger.info("成功关闭sikuli vnc连接");
+		}catch(Exception e){
+			logger.error("关闭sikuli vnc连接发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 从图像集里挑选一个符合匹配的图像
+	 *  场景之一：同一处图像在不同渲染屏幕[如不同远程服务器]时容易findfailde，需要用此方法并提供多个同一处却不同渲染的图像来迭代匹配 */
+	public String pickOneImage(String... images){
+		for(String image:images){
+			 try{
+				 Pattern p = new Pattern(image);
+				 vncscreen.wait(p);
+				 return image;
+			 }catch(FindFailed e){
+				 e.printStackTrace();
+				 continue;
+			 }
+		 }
+		 return null;
+	}
+	
 	
 	/** 检查图像是否存在 */
 	public boolean existsImage(String imagename, double imageTimeoutSecond){

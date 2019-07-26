@@ -32,17 +32,17 @@ import io.qameta.allure.Attachment;
  */
 public class TestNGListener extends TestListenerAdapter {
 
-	/* 在重写的onstart方法中获取testng.xml参数赋值，然后用于截图方法中 */
+	/* 在重写的onstart方法中获取testng.xml的screenImageFolderPath参数赋值，然后用于截图方法中 */
 	String screenImageFolderPath = null;
 
-	/* 每次测试成功时调用 */
+	/* 测试用例级别，每次测试成功时调用 */
 	@Override
 	public void onTestSuccess(ITestResult result) {
 		super.onTestSuccess(result);
 		System.out.println(result.getName() + " Success");
 	}
 
-	/* 每次测试失败时调用 */
+	/* 测试用例级别，每次测试失败时调用 */
 	@Override
 	public void onTestFailure(ITestResult result) {
 		super.onTestFailure(result);
@@ -51,7 +51,7 @@ public class TestNGListener extends TestListenerAdapter {
 		takePhoto();
 	}
 
-	/* 每次跳过测试时调用 */
+	/* 测试用例级别，每次跳过测试时调用 */
 	@Override
 	public void onTestSkipped(ITestResult result) {
 		super.onTestSkipped(result);
@@ -60,21 +60,23 @@ public class TestNGListener extends TestListenerAdapter {
 		takePhoto2();
 	}
 
-	/* 每次调用测试之前调用 */
+	/* 测试用例级别，在测试类被实例化之前调用 */
 	@Override
 	public void onTestStart(ITestResult result) {
 		super.onTestStart(result);
 		System.out.println(result.getName() + " Start");
 	}
 
-	/* 在测试类被实例化之后调用，并在调用任何配置方法之前调用 */
+	/* 测试集级别，在所有测试运行之前调用 */
 	@Override
 	public void onStart(ITestContext testContext) {
 		super.onStart(testContext);
+		// takePhoto()方法需要用到screenImageFolderPath参数
 		screenImageFolderPath = testContext.getCurrentXmlTest().getParameter("screenImageFolderPath");
+		
 	}
 
-	/* 在所有测试运行之后调用，并且所有的配置方法都被调用 */
+	/* 测试集级别，在所有测试运行之后调用 */
 	@Override
 	public void onFinish(ITestContext testContext) {
 		super.onFinish(testContext);
@@ -168,4 +170,5 @@ public class TestNGListener extends TestListenerAdapter {
 			e.printStackTrace();
 		}
 	}
+
 }
