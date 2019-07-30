@@ -75,8 +75,8 @@ java -Dwebdriver.chrome.driver="D:/snc/workspace2/autotestddt/src/main/resources
 (3)testng.xml/debug.xml填写isVNC和vncPassword参数值  
 (4)testng.xml/debug.xml配置的并发数不能大于分布式服务器总数，因为一个sikuli的screen只对应一个屏幕、鼠标和键盘做操作   
 (5)建议每台服务器屏幕分辨率与开发环境屏幕分辨率一致，否则会很容易报错findfailed找不到图像，另外图片的大小、宽高、色差、像素强度等等不一致也容易报错findfailed找不到图像，即同一个图像在不同渲染场景容易findfailed，这是当前sikuli的缺点  
-(6)对于上一点使用说明，sikuli作者暂未提供解决方案，查找官网问题论坛中发现有提出过同样问题，作者回复建议是使用image图像集存放多个来自不同渲染环境的共同目标图像，然后迭代访问image图像集的图像直到其中一个找成功即可，作者另一个建议就是利用第三方开源命令行工具ImageMagick进行图像处理但难度较高，本框架决定接受使用第一个建议并封装方法到SikuliUtil.java的pickOneImage(String... images)方法  
-对于这个问题的官方问题论坛贴如下：
-https://answers.launchpad.net/sikuli/+question/205371  
-https://answers.launchpad.net/sikuli/+question/647444  
-(7)当开启sikuli vnc分布式测试时，也必须开启selenium grid分布式测试，因为vnc使用的ip是从selenium grid的session里来获取的
+(6)对于上一点使用说明，sikuli作者暂未提供解决方案，查找官网问题论坛中发现有提出过同样问题，作者回复建议是使用image图像集存放多个来自不同渲染环境的目标区域图像，然后迭代访问image图像集的图像直到其中一个找成功即可，作者另一个建议就是利用第三方开源命令行工具ImageMagick进行图像处理但难度较高，本框架决定接受使用第一个建议并封装方法到SikuliUtil.java的pickOneImage(String... images)方法  
+(7)当开启sikuli vnc分布式测试时，也必须开启selenium grid分布式测试，因为vnc使用的ip是从selenium grid的session里来获取的  
+(8)sikuli输入文字时注意当前输入法的影响  
+(9)vnc时paste方法输入中文经常会乱码，不稳定，已向作者提出问题  
+(10)若vnc远程机是node节点而不是hub节点，则paste方法输入的是系统原来粘贴板的内容，已向作者提出问题  

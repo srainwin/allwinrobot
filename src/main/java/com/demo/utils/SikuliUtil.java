@@ -75,12 +75,20 @@ public class SikuliUtil {
 	 *  场景之一：同一处图像在不同渲染屏幕[如不同远程服务器]时容易findfailde，需要用此方法并提供多个同一处却不同渲染的图像来迭代匹配 */
 	public String pickOneImage(String... images){
 		for(String image:images){
+			int i = 0;
 			 try{
+				 i++;
+				 logger.info("正在查找图库集的“" + image + "”图像");
 				 Pattern p = new Pattern(image);
-				 vncscreen.wait(p);
+				 (screen == null? vncscreen:screen).wait(p);
+				 logger.info("图库集的“" + image + "”图像已匹配上");
 				 return image;
 			 }catch(FindFailed e){
-				 e.printStackTrace();
+				 if(i<images.length){
+					 logger.warn("图库集的“" + image + "”图像未匹配上，换下一张图匹配");
+				 }else{
+					 logger.error("图库集的所有图像均未能匹配上",e);
+				 }
 				 continue;
 			 }
 		 }
@@ -94,7 +102,7 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		try{
 			pattern = new Pattern(imagename);
-			match = screen.exists(pattern, imageTimeoutSecond);
+			match = (screen == null? vncscreen:screen).exists(pattern, imageTimeoutSecond);
 			if(match != null){
 				logger.info("成功检查图像存在");
 				return true;
@@ -116,8 +124,8 @@ public class SikuliUtil {
 		Region region2 = null;
 		boolean boo = false;
 		try{
-			region1 = screen.find(imagename1);
-			region2 = screen.find(imagename2);
+			region1 = (screen == null? vncscreen:screen).find(imagename1);
+			region2 = (screen == null? vncscreen:screen).find(imagename2);
 			boo = region1.contains(region2);
 			logger.info("成功检查图像1是否包含子图像2");
 		}catch(Exception e){
@@ -134,7 +142,7 @@ public class SikuliUtil {
 		Match match2 = null;
 		Region region = null;
 		try{
-			match1 = screen.find(outterImage);
+			match1 = (screen == null? vncscreen:screen).find(outterImage);
 			match2 = match1.find(innerImage);
 			region = new Region(match2);
 		}catch(Exception e){
@@ -151,7 +159,7 @@ public class SikuliUtil {
 		Match matchImage = null;
 		try{
 			pattern = new Pattern(imagename);
-			matchImage = screen.wait(pattern, imageTimeoutSecond);
+			matchImage = (screen == null? vncscreen:screen).wait(pattern, imageTimeoutSecond);
 			matchImage.highlight("red");
 			logger.info("成功等待图像出现");
 		}catch(Exception e){
@@ -168,7 +176,7 @@ public class SikuliUtil {
 		boolean boo = false;
 		try{
 			pattern = new Pattern(imagename);
-			boo = screen.waitVanish(pattern, imageTimeoutSecond);
+			boo = (screen == null? vncscreen:screen).waitVanish(pattern, imageTimeoutSecond);
 			if(boo){
 				logger.info("成功等待图像消失");
 			}else{
@@ -190,7 +198,7 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		try{
 			pattern = new Pattern(imagename);
-			matchImage = screen.find(pattern); //相当于没有等待超时的wait()
+			matchImage = (screen == null? vncscreen:screen).find(pattern); //相当于没有等待超时的wait()
 			matchImage.highlight("red");
 			logger.info("成功查找到图像");
 		}catch(FindFailed e){
@@ -211,7 +219,7 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		try{
 			pattern = new Pattern(imagename);
-			matchImages = screen.findAll(pattern);
+			matchImages = (screen == null? vncscreen:screen).findAll(pattern);
 			while(matchImages.hasNext()){
 				matchImages.next().highlight("red");
 			}
@@ -233,7 +241,7 @@ public class SikuliUtil {
 		Region region = null;
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			region = screen.getLastMatch().above(height);
+			region = (screen == null? vncscreen:screen).getLastMatch().above(height);
 			logger.info("成功获取图像的上方指定高度的区域");
 		}catch(Exception e){
 			logger.error("获取图像的上方指定高度的区域发生异常",e);
@@ -248,7 +256,7 @@ public class SikuliUtil {
 		Region region = null;
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			region = screen.getLastMatch().below(height);
+			region = (screen == null? vncscreen:screen).getLastMatch().below(height);
 			logger.info("成功获取图像的下方指定高度的区域");
 		}catch(Exception e){
 			logger.error("获取图像的下方指定高度的区域发生异常",e);
@@ -263,7 +271,7 @@ public class SikuliUtil {
 		Region region = null;
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			region = screen.getLastMatch().left(width);
+			region = (screen == null? vncscreen:screen).getLastMatch().left(width);
 			logger.info("成功获取图像的左方指定宽度的区域");
 		}catch(Exception e){
 			logger.error("获取图像的左方指定宽度的区域发生异常",e);
@@ -278,7 +286,7 @@ public class SikuliUtil {
 		Region region = null;
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			region = screen.getLastMatch().right(width);
+			region = (screen == null? vncscreen:screen).getLastMatch().right(width);
 			logger.info("成功获取图像的右方指定宽度的区域");
 		}catch(Exception e){
 			logger.error("获取图像的右方指定宽度的区域发生异常",e);
@@ -292,7 +300,7 @@ public class SikuliUtil {
 	public String saveRegionImage(String imagename, int X, int Y, int W, int H, ITestContext itestcontext){
 		String imagepath = itestcontext.getCurrentXmlTest().getParameter("screenImageFolderPath");
 		try{
-			screen.capture(Region.create(X, Y, W, H)).save(imagepath, imagename);
+			(screen == null? vncscreen:screen).capture(Region.create(X, Y, W, H)).save(imagepath, imagename);
 			logger.info("成功截取区域图片，保存路径是：" + imagepath + "/" + imagename);
 		}catch(Exception e){
 			logger.error("截取区域图片发生异常",e);
@@ -306,7 +314,7 @@ public class SikuliUtil {
 	public String saveScreenImage(String imagename, ITestContext itestcontext){
 		String imagepath = itestcontext.getCurrentXmlTest().getParameter("screenImageFolderPath");
 		try{
-			screen.capture(Region.create(screen.x, screen.y, screen.w, screen.h)).save(imagepath, imagename);
+			(screen == null? vncscreen:screen).capture(Region.create((screen == null? vncscreen:screen).x, (screen == null? vncscreen:screen).y, (screen == null? vncscreen:screen).w, (screen == null? vncscreen:screen).h)).save(imagepath, imagename);
 			logger.info("成功截取区域图片，保存路径是：" + imagepath + "/" + imagename);
 		}catch(Exception e){
 			logger.error("截取区域图片发生异常",e);
@@ -322,10 +330,10 @@ public class SikuliUtil {
 		try{
 			Pattern p1 = new Pattern(imagename1);
 			Pattern p2 = new Pattern(imagename2);
-			int x = screen.find(p1).getX();
-			int y = screen.find(p1).getY();
-			int x2 = screen.find(p2).getX();
-			int y2 = screen.find(p2).getY();
+			int x = (screen == null? vncscreen:screen).find(p1).getX();
+			int y = (screen == null? vncscreen:screen).find(p1).getY();
+			int x2 = (screen == null? vncscreen:screen).find(p2).getX();
+			int y2 = (screen == null? vncscreen:screen).find(p2).getY();
 			int w = x2-x;
 			int h = y2-y;
 			region = Region.create(x, y, w, h);
@@ -345,14 +353,14 @@ public class SikuliUtil {
 		try{
 			Pattern p1 = new Pattern(imagename1);
 			Pattern p2 = new Pattern(imagename2);
-			int x = screen.find(p1).getX();
-			int y = screen.find(p1).getY();
-			int x2 = screen.find(p2).getX();
-			int y2 = screen.find(p2).getY();
+			int x = (screen == null? vncscreen:screen).find(p1).getX();
+			int y = (screen == null? vncscreen:screen).find(p1).getY();
+			int x2 = (screen == null? vncscreen:screen).find(p2).getX();
+			int y2 = (screen == null? vncscreen:screen).find(p2).getY();
 			int w = x2-x;
 			int h = y2-y;
 			region = Region.create(x, y, w, h);
-			screen.capture(region).save(imagepath, newImagename);
+			(screen == null? vncscreen:screen).capture(region).save(imagepath, newImagename);
 			logger.info("成功获取两个图片TopLeft之间的区域图片，保存路径是：" + imagepath + "/" + newImagename);
 		}catch(Exception e){
 			logger.error("获取两个图片TopLeft之间的区域图片发生异常",e);
@@ -393,7 +401,7 @@ public class SikuliUtil {
 			Settings.OcrTextSearch = true;
 			Settings.OcrTextRead = true;
 			// 建立region
-			region = screen.find(imagename).getROI();
+			region = (screen == null? vncscreen:screen).find(imagename).getROI();
 			// 获取区域中的文本
 			text = region.text();
 			logger.info("成功指定图像进行图像识别文字");
@@ -449,7 +457,7 @@ public class SikuliUtil {
 	/** 鼠标移动到区域  */
 	public Region mouseMoveRegion(Region region){
 		try{
-			screen.mouseMove(region);
+			(screen == null? vncscreen:screen).mouseMove(region);
 			logger.info("成功鼠标移动到区域 ");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要移动到的区域 ",e);
@@ -468,7 +476,7 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		try{
 			pattern = waitImage(imagename,imageTimeoutSecond);
-			screen.mouseMove(pattern);
+			(screen == null? vncscreen:screen).mouseMove(pattern);
 			logger.info("成功鼠标移动到图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要移动到的图像",e);
@@ -487,7 +495,7 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		try{
 			pattern = waitImage(imagename,imageTimeoutSecond);
-			screen.mouseMove(pattern.targetOffset(X, Y));
+			(screen == null? vncscreen:screen).mouseMove(pattern.targetOffset(X, Y));
 			logger.info("成功鼠标移动到图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要移动到的图像",e);
@@ -504,7 +512,7 @@ public class SikuliUtil {
 	/** 鼠标点击区域  */
 	public void mouseClickRegion(Region region){
 		try{
-			screen.click(region);
+			(screen == null? vncscreen:screen).click(region);
 			logger.info("成功鼠标点击区域");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要点击的区域",e);
@@ -522,7 +530,7 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		try{
 			pattern = waitImage(imagename,imageTimeoutSecond);
-			screen.click(pattern);
+			(screen == null? vncscreen:screen).click(pattern);
 			logger.info("成功鼠标点击图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要点击的图像",e);
@@ -540,7 +548,7 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		try{
 			pattern = waitImage(imagename,imageTimeoutSecond);
-			screen.click(pattern.targetOffset(X, Y));
+			(screen == null? vncscreen:screen).click(pattern.targetOffset(X, Y));
 			logger.info("成功鼠标点击图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要点击的图像",e);
@@ -559,7 +567,7 @@ public class SikuliUtil {
 			//先鼠标移动到区域处
 			mouseMoveRegion(region);
 			//然后进行延迟点击
-			screen.delayClick(delayTimeMillisMax1000);
+			(screen == null? vncscreen:screen).delayClick(delayTimeMillisMax1000);
 			logger.info("成功鼠标延迟点击区域");
 		}catch(Exception e){
 			logger.error("鼠标延迟点击区域发生异常",e);
@@ -574,7 +582,7 @@ public class SikuliUtil {
 			//先鼠标移动到图像处
 			mouseMoveImage(imagename,imageTimeoutSecond);
 			//然后进行延迟点击
-			screen.delayClick(delayTimeMillisMax1000);
+			(screen == null? vncscreen:screen).delayClick(delayTimeMillisMax1000);
 			logger.info("成功鼠标延迟点击图像");
 		}catch(Exception e){
 			logger.error("鼠标延迟点击图像发生异常",e);
@@ -589,7 +597,7 @@ public class SikuliUtil {
 			//先鼠标移动到图像处
 			mouseMoveImage(imagename,X,Y,imageTimeoutSecond);
 			//然后进行延迟点击
-			screen.delayClick(delayTimeMillisMax1000);
+			(screen == null? vncscreen:screen).delayClick(delayTimeMillisMax1000);
 			logger.info("成功鼠标延迟点击图像");
 		}catch(Exception e){
 			logger.error("鼠标延迟点击图像发生异常",e);
@@ -601,7 +609,7 @@ public class SikuliUtil {
 	/** 鼠标双击区域 */
 	public void mouseDoublieClickRegion(Region region){
 		try{
-			screen.doubleClick(region);
+			(screen == null? vncscreen:screen).doubleClick(region);
 			logger.info("成功鼠标双击区域");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要双击的区域",e);
@@ -618,7 +626,7 @@ public class SikuliUtil {
 	public void mouseDoublieClickImage(String imagename, double imageTimeoutSecond){
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			screen.doubleClick(imagename);
+			(screen == null? vncscreen:screen).doubleClick(imagename);
 			logger.info("成功鼠标双击图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要双击的图像",e);
@@ -636,7 +644,7 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		try{
 			pattern = waitImage(imagename,imageTimeoutSecond);
-			screen.doubleClick(pattern.targetOffset(X, Y));
+			(screen == null? vncscreen:screen).doubleClick(pattern.targetOffset(X, Y));
 			logger.info("成功鼠标双击图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要双击的图像",e);
@@ -652,7 +660,7 @@ public class SikuliUtil {
 	/** 鼠标右击区域*/
 	public void mouseRightClickRegion(Region region){
 		try{
-			screen.rightClick(region);
+			(screen == null? vncscreen:screen).rightClick(region);
 			logger.info("成功鼠标右击击区域");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要右击的区域",e);
@@ -669,7 +677,7 @@ public class SikuliUtil {
 	public void mouseRightClickImage(String imagename, double imageTimeoutSecond){
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			screen.rightClick(imagename);
+			(screen == null? vncscreen:screen).rightClick(imagename);
 			logger.info("成功鼠标右击击图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要右击的图像",e);
@@ -687,7 +695,7 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		try{
 			pattern = waitImage(imagename,imageTimeoutSecond);
-			screen.rightClick(pattern.targetOffset(X, Y));
+			(screen == null? vncscreen:screen).rightClick(pattern.targetOffset(X, Y));
 			logger.info("成功鼠标右击击图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要右击的图像",e);
@@ -706,10 +714,10 @@ public class SikuliUtil {
 			// 先鼠标移动到区域处
 			mouseMoveRegion(region);
 			// 然后按下鼠标左键不释放
-			screen.mouseDown(Button.LEFT);
+			(screen == null? vncscreen:screen).mouseDown(Button.LEFT);
 			// 等待指定时间后释放左键
 			Thread.sleep(millis);
-			screen.mouseUp();
+			(screen == null? vncscreen:screen).mouseUp();
 			logger.info("成功鼠标点击区域达到指定时间后再释放左键");
 		}catch(Exception e){
 			logger.error("鼠标点击区域达到指定时间后再释放左键发生异常",e);
@@ -724,10 +732,10 @@ public class SikuliUtil {
 			// 先鼠标移动到图像处
 			mouseMoveImage(imagename, imageTimeoutSecond);
 			// 然后按下鼠标左键不释放
-			screen.mouseDown(Button.LEFT);
+			(screen == null? vncscreen:screen).mouseDown(Button.LEFT);
 			// 等待指定时间后释放左键
 			Thread.sleep(millis);
-			screen.mouseUp();
+			(screen == null? vncscreen:screen).mouseUp();
 			logger.info("成功鼠标点击图像达到指定时间后再释放左键");
 		}catch(Exception e){
 			logger.error("鼠标点击图像达到指定时间后再释放左键发生异常",e);
@@ -742,10 +750,10 @@ public class SikuliUtil {
 			// 先鼠标移动到区域处
 			mouseMoveRegion(region);
 			// 然后按下鼠标左键不释放
-			screen.mouseDown(Button.RIGHT);
+			(screen == null? vncscreen:screen).mouseDown(Button.RIGHT);
 			// 等待指定时间后释放右键
 			Thread.sleep(millis);
-			screen.mouseUp();
+			(screen == null? vncscreen:screen).mouseUp();
 			logger.info("成功鼠标右击区域达到指定时间后再释放右键");
 		}catch(Exception e){
 			logger.error("鼠标右击区域达到指定时间后再释放右键发生异常",e);
@@ -760,10 +768,10 @@ public class SikuliUtil {
 			// 先鼠标移动到图像处
 			mouseMoveImage(imagename, imageTimeoutSecond);
 			// 然后按下鼠标左键不释放
-			screen.mouseDown(Button.RIGHT);
+			(screen == null? vncscreen:screen).mouseDown(Button.RIGHT);
 			// 等待指定时间后释放右键
 			Thread.sleep(millis);
-			screen.mouseUp();
+			(screen == null? vncscreen:screen).mouseUp();
 			logger.info("成功鼠标右击图像达到指定时间后再释放右键");
 		}catch(Exception e){
 			logger.error("鼠标右击图像达到指定时间后再释放右键发生异常",e);
@@ -778,10 +786,10 @@ public class SikuliUtil {
 			// 先鼠标移动到区域处
 			mouseMoveRegion(region);
 			// 然后按下鼠标中键不释放
-			screen.mouseDown(Button.MIDDLE);
+			(screen == null? vncscreen:screen).mouseDown(Button.MIDDLE);
 			// 等待指定时间后释放中键
 			Thread.sleep(millis);
-			screen.mouseUp();
+			(screen == null? vncscreen:screen).mouseUp();
 			logger.info("成功鼠标中击区域达到指定时间后再释放中键");
 		}catch(Exception e){
 			logger.error("鼠标中击区域达到指定时间后再释放中键发生异常",e);
@@ -796,10 +804,10 @@ public class SikuliUtil {
 			// 先鼠标移动到图像处
 			mouseMoveImage(imagename, imageTimeoutSecond);
 			// 然后按下鼠标中键不释放
-			screen.mouseDown(Button.MIDDLE);
+			(screen == null? vncscreen:screen).mouseDown(Button.MIDDLE);
 			// 等待指定时间后释放中键
 			Thread.sleep(millis);
-			screen.mouseUp();
+			(screen == null? vncscreen:screen).mouseUp();
 			logger.info("成功鼠标中击图像达到指定时间后再释放中键");
 		}catch(Exception e){
 			logger.error("鼠标中击图像达到指定时间后再释放中键发生异常",e);
@@ -811,7 +819,7 @@ public class SikuliUtil {
 	/** 鼠标中轮向上滚动指定次数  */
 	public void mouseWheelUpForTime(int numberOfRolls){
 		try{
-			screen.wheel(Button.WHEEL_UP, numberOfRolls);
+			(screen == null? vncscreen:screen).wheel(Button.WHEEL_UP, numberOfRolls);
 			logger.info("成功鼠标中轮向上滚动指定次数");
 		}catch(Exception e){
 			logger.error("鼠标中轮向上滚动指定次数发生异常",e);
@@ -823,7 +831,7 @@ public class SikuliUtil {
 	/** 鼠标在滚动条区域中轮向上滚动指定次数  */
 	public void mouseWheelUpForTimeRegion(Region region, int numberOfRolls){
 		try{
-			screen.wheel(region, Button.WHEEL_UP, numberOfRolls);
+			(screen == null? vncscreen:screen).wheel(region, Button.WHEEL_UP, numberOfRolls);
 			logger.info("成功鼠标在滚动条区域中轮向上滚动指定次数");
 		}catch(Exception e){
 			logger.error("鼠标在滚动条区域中轮向上滚动指定次数发生异常",e);
@@ -837,7 +845,7 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		try{
 			pattern = waitImage(imagename, imageTimeoutSecond);
-			screen.wheel(pattern, Button.WHEEL_UP, numberOfRolls);
+			(screen == null? vncscreen:screen).wheel(pattern, Button.WHEEL_UP, numberOfRolls);
 			logger.info("成功鼠标在滚动条图像中轮向上滚动指定次数");
 		}catch(Exception e){
 			logger.error("鼠标在滚动条图像中轮向上滚动指定次数发生异常",e);
@@ -849,7 +857,7 @@ public class SikuliUtil {
 	/** 鼠标中轮向下滚动指定次数  */
 	public void mouseWheelDownForTime(int numberOfRolls){
 		try{
-			screen.wheel(Button.WHEEL_DOWN, numberOfRolls);
+			(screen == null? vncscreen:screen).wheel(Button.WHEEL_DOWN, numberOfRolls);
 			logger.info("成功鼠标中轮向下滚动指定次数 ");
 		}catch(Exception e){
 			logger.error("鼠标中轮向下滚动指定次数发生异常",e);
@@ -861,7 +869,7 @@ public class SikuliUtil {
 	/** 鼠标在滚动条区域中轮向下滚动指定次数  */
 	public void mouseWheelDownForTimeRegion(Region region, int numberOfRolls){
 		try{
-			screen.wheel(region, Button.WHEEL_DOWN, numberOfRolls);
+			(screen == null? vncscreen:screen).wheel(region, Button.WHEEL_DOWN, numberOfRolls);
 			logger.info("成功鼠标在滚动条区域中轮向下滚动指定次数");
 		}catch(Exception e){
 			logger.error("鼠标在滚动条区域中轮向下滚动指定次数发生异常",e);
@@ -875,7 +883,7 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		try{
 			pattern = waitImage(imagename, imageTimeoutSecond);
-			screen.wheel(pattern, Button.WHEEL_DOWN, numberOfRolls);
+			(screen == null? vncscreen:screen).wheel(pattern, Button.WHEEL_DOWN, numberOfRolls);
 			logger.info("成功鼠标在滚动条图像中轮向下滚动指定次数");
 		}catch(Exception e){
 			logger.error("鼠标在滚动条图像中轮向下滚动指定次数发生异常",e);
@@ -887,7 +895,7 @@ public class SikuliUtil {
 	/** 鼠标悬停在区域 */
 	public void mouseHoverRegion(Region region){
 		try{
-			screen.hover(region);
+			(screen == null? vncscreen:screen).hover(region);
 			logger.info("成功鼠标悬停在区域");
 		}catch(Exception e){
 			logger.error("鼠标悬停在区域发生异常",e);
@@ -900,7 +908,7 @@ public class SikuliUtil {
 	public void mouseHoverImage(String imagename, double imageTimeoutSecond){
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			screen.hover(imagename);
+			(screen == null? vncscreen:screen).hover(imagename);
 			logger.info("成功鼠标悬停在图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要悬停在的图像",e);
@@ -918,7 +926,7 @@ public class SikuliUtil {
 		Pattern pattern = null;
 		try{
 			pattern = waitImage(imagename,imageTimeoutSecond);
-			screen.hover(pattern.targetOffset(X, Y));
+			(screen == null? vncscreen:screen).hover(pattern.targetOffset(X, Y));
 			logger.info("成功鼠标悬停在图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要悬停在的图像",e);
@@ -934,7 +942,7 @@ public class SikuliUtil {
 	/** 鼠标拖拽区域 */
 	public void mouseDragDropRegion(String sourcRegion, String targetRegion){
 		try{
-			screen.dragDrop(sourcRegion, targetRegion);
+			(screen == null? vncscreen:screen).dragDrop(sourcRegion, targetRegion);
 			logger.info("成功鼠标拖拽区域");
 		}catch(Exception e){
 			logger.error("鼠标拖拽区域发生异常",e);
@@ -948,7 +956,7 @@ public class SikuliUtil {
 		try{
 			waitImage(sourceImage,imageTimeoutSecond);
 			waitImage(targetImage,imageTimeoutSecond);
-			screen.dragDrop(sourceImage, targetImage);
+			(screen == null? vncscreen:screen).dragDrop(sourceImage, targetImage);
 			logger.info("成功鼠标拖拽图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要拖拽的图像",e);
@@ -968,7 +976,7 @@ public class SikuliUtil {
 		try{
 			pattern1 = waitImage(sourceImage,imageTimeoutSecond);
 			pattern2 = waitImage(targetImage,imageTimeoutSecond);
-			screen.dragDrop(pattern1.targetOffset(X1, Y1), pattern2.targetOffset(X2, Y2));
+			(screen == null? vncscreen:screen).dragDrop(pattern1.targetOffset(X1, Y1), pattern2.targetOffset(X2, Y2));
 			logger.info("成功鼠标拖拽图像");
 		}catch(FindFailed e){
 			logger.error("查找不到鼠标要拖拽的图像",e);
@@ -997,7 +1005,7 @@ public class SikuliUtil {
 	public void keyboardWriteTextImages(String imagename, String text, double imageTimeoutSecond){
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			screen.type(imagename,text);
+			(screen == null? vncscreen:screen).type(imagename,text);
 			logger.info("成功用键盘在图像中写文字");
 		}catch(Exception e){
 			logger.error("键盘在图像中写文字发生异常",e);
@@ -1009,7 +1017,7 @@ public class SikuliUtil {
 	/** 键盘在区域中输入文字（区域前提是可输入框） */
 	public void keyboardTypeTextRegion(Region region, String text){
 		try{
-			screen.type(region,text);
+			(screen == null? vncscreen:screen).type(region,text);
 			logger.info("成功用键盘在区域中输入文字");
 		}catch(Exception e){
 			logger.error("键盘在区域中输入文字发生异常",e);
@@ -1022,7 +1030,7 @@ public class SikuliUtil {
 	public void keyboardTypeTextImages(String imagename, String text, double imageTimeoutSecond){
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			screen.type(imagename,text);
+			(screen == null? vncscreen:screen).type(imagename,text);
 			logger.info("成功用键盘在图像中输入文字");
 		}catch(Exception e){
 			logger.error("键盘在图像中输入文字发生异常",e);
@@ -1031,10 +1039,11 @@ public class SikuliUtil {
 		}
 	}
 	
-	/** 键盘在区域中粘贴文字（区域前提是可输入框） */
+	/** 键盘在区域中粘贴文字，不受输入法影响（区域前提是可输入框） */
 	public void keyboardPasteTextRegion(Region region, String text){
 		try{
-			screen.paste(region,text);
+//			System.out.println("当前系统编码是"+System.getProperty("sun.jnu.encoding"));
+			(screen == null? vncscreen:screen).paste(region,new String(text.getBytes("UTF-8"),"UTF-8"));
 			logger.info("成功用键盘在区域中粘贴文字");
 		}catch(Exception e){
 			logger.error("键盘在区域中粘贴文字发生异常",e);
@@ -1043,11 +1052,11 @@ public class SikuliUtil {
 		}
 	}
 	
-	/** 键盘在图像中粘贴文字（图像前提是可输入框） */
+	/** 键盘在图像中粘贴文字，不受输入法影响（图像前提是可输入框） */
 	public void keyboardPasteTextImages(String imagename, String text, double imageTimeoutSecond){
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			screen.paste(imagename,text);
+			(screen == null? vncscreen:screen).paste(imagename,new String(text.getBytes("UTF-8"),"UTF-8"));
 			logger.info("成功用键盘在图像中粘贴文字");
 		}catch(Exception e){
 			logger.error("键盘在图像中粘贴文字发生异常",e);
@@ -1059,7 +1068,7 @@ public class SikuliUtil {
 	/** 键盘在区域中输入CTRL+KEY组合按键,KEY可以是键盘任意按键 */
 	public void keyboardTypeCtrlPlusKeyRegion(Region region, String key){
 		try{
-			screen.type(region, key, KeyModifier.CTRL);
+			(screen == null? vncscreen:screen).type(region, key, KeyModifier.CTRL);
 			logger.info("成功用键盘在区域中输入CTRL+KEY组合按键");
 		}catch(Exception e){
 			logger.error("键盘在区域中输入CTRL+KEY组合按键发生异常",e);
@@ -1072,7 +1081,7 @@ public class SikuliUtil {
 	public void keyboardTypeCtrlPlusKeyImages(String imagename, String key, double imageTimeoutSecond){
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			screen.type(imagename, key, KeyModifier.CTRL);
+			(screen == null? vncscreen:screen).type(imagename, key, KeyModifier.CTRL);
 			logger.info("成功用键盘在图像中输入CTRL+KEY组合按键");
 		}catch(Exception e){
 			logger.error("键盘在图像中输入CTRL+KEY组合按键发生异常",e);
@@ -1084,7 +1093,7 @@ public class SikuliUtil {
 	/** 键盘在区域中输入单个KEY按键,KEY是org.sikuli.script.Key.xxx:String */
 	public void keyboardTypeKeyRegion(Region region, String key){
 		try{
-			screen.type(region,key);
+			(screen == null? vncscreen:screen).type(region,key);
 			logger.info("成功用键盘在区域中输入单个KEY按键");
 		}catch(Exception e){
 			logger.error("键盘在区域中输入单个KEY按键发生异常",e);
@@ -1097,7 +1106,7 @@ public class SikuliUtil {
 	public void keyboardTypeKeyImages(String imagename, String key, double imageTimeoutSecond){
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			screen.type(imagename,key);
+			(screen == null? vncscreen:screen).type(imagename,key);
 			logger.info("成功用键盘在图像中输入单个KEY按键");
 		}catch(Exception e){
 			logger.error("键盘在图像中输入单个KEY按键发生异常",e);
@@ -1109,7 +1118,7 @@ public class SikuliUtil {
 	/** 键盘在区域中输入任意KEY1+KEY2组合按键，KEY1是org.sikuli.script.Key.xxx:String，KEY2是org.sikuli.script.KeyModifier.xxx:String */
 	public void keyboardTypeTwoKeysRegion(Region region, String key, String keyModifier){
 		try{
-			screen.type(region, key, keyModifier);
+			(screen == null? vncscreen:screen).type(region, key, keyModifier);
 			logger.info("成功用键盘在区域中输入任意KEY1+KEY2组合按键");
 		}catch(Exception e){
 			logger.error("键盘在区域中输入任意KEY1+KEY2组合按键发生异常",e);
@@ -1122,7 +1131,7 @@ public class SikuliUtil {
 	public void keyboardTypeTwoKeysImages(String imagename, String key, String keyModifier, double imageTimeoutSecond){
 		try{
 			waitImage(imagename,imageTimeoutSecond);
-			screen.type(imagename, key, keyModifier);
+			(screen == null? vncscreen:screen).type(imagename, key, keyModifier);
 			logger.info("成功用键盘在图像中输入任意KEY1+KEY2组合按键");
 		}catch(Exception e){
 			logger.error("键盘在图像中输入任意KEY1+KEY2组合按键发生异常",e);
@@ -1135,11 +1144,11 @@ public class SikuliUtil {
 	public void keyboardPressKeyForTime(String key, long millis){
 		try{
 			// 按下某键不放
-			screen.keyDown(key);
+			(screen == null? vncscreen:screen).keyDown(key);
 			// 按住等多少毫秒
 			Thread.sleep(millis);
 			// 时间到就释放按键
-			screen.keyUp();
+			(screen == null? vncscreen:screen).keyUp();
 			logger.info("成功按着某个键一定时间后再释放按键");
 		}catch(Exception e){
 			logger.error("按着某个键一定时间后再释放按键发生异常",e);
@@ -1152,13 +1161,13 @@ public class SikuliUtil {
 	public void keyboardPressThreeKeys(String key1,String key2,String key3, long millis){
 		try{
 			// 连续按下三个键键不放
-			screen.keyDown(key1);
-			screen.keyDown(key2);
-			screen.keyDown(key3);
+			(screen == null? vncscreen:screen).keyDown(key1);
+			(screen == null? vncscreen:screen).keyDown(key2);
+			(screen == null? vncscreen:screen).keyDown(key3);
 			// 按住等多少毫秒
 			Thread.sleep(millis);
 			// 时间到就释放所有按键
-			screen.keyUp();
+			(screen == null? vncscreen:screen).keyUp();
 			logger.info("成功按下KEY1+KEY2+KEY3三键组合");
 		}catch(Exception e){
 			logger.error("按下KEY1+KEY2+KEY3三键组合发生异常",e);

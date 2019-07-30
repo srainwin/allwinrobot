@@ -45,10 +45,25 @@ classes:每个class使用一个线程
 		<listener class-name="com.demo.utils.TestNGRetryListener" />
 	</listeners>
 	<test name="mail" preserve-order="true">
+		<groups>
+			<!-- 分组依赖使用testng6.10版本以上，6.10以下版本有问题 -->
+    		<dependencies>
+      			<group name="home" depends-on="login" />
+    		</dependencies>
+  		</groups>
 		<classes>
+			<class name="com.demo.cases.login.LoginPage_003_Logout" />
+			<class name="com.demo.cases.login.LoginPage_002_LoginFail" />
 			<class name="com.demo.cases.login.LoginPage_001_LoginSuccess" />
-			<class name="com.demo.cases.home.WriteLettersPage_001_WriteLetterAndSendSuccess2" />
-			
+			<class name="com.demo.cases.home.HomePage_001_Overview_Tab" />
+			<class name="com.demo.cases.home.HomePage_002_Overview_UnreadMail" />
+			<class name="com.demo.cases.home.HomePage_003_Overview_TodoMail" />
+			<class name="com.demo.cases.home.HomePage_004_Overview_ContactMail" />
+			<!-- <class name="com.demo.cases.home.HomePage_005_Overview_Jifen" /> -->
+			<class name="com.demo.cases.home.HomePage_006_Overview_SafetyDegree" />
+			<class name="com.demo.cases.home.HomePage_007_Overview_LoginProtect" />
+			<class name="com.demo.cases.home.HomePage_008_Overview_DailyLife" />
+			<class name="com.demo.cases.home.WriteLettersPage_001_WriteLetterAndSendSuccess" />
 		</classes>
 	</test>
 </suite>
