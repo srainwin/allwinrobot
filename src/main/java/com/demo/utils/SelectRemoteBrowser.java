@@ -68,6 +68,7 @@ public class SelectRemoteBrowser {
 		ieCapabilities.setPlatform(Platform.ANY);
 		try {
 			RemoteWebDriver rw = new RemoteWebDriver(new URL(huburl), ieCapabilities);
+			//获取session用于以后获取ip，ip暂用于sikuli vncscreen使用
 			sessionid = rw.getSessionId();
 			return rw;
 		} catch (Exception e) {
@@ -83,6 +84,7 @@ public class SelectRemoteBrowser {
 		// chrome常规设置，去掉提示“chrome正受到自动化测试软件的控制”
 		ChromeOptions option = new ChromeOptions();
 		option.addArguments("disable-infobars");
+		option.addArguments("start-maximized");
 		chromeCapability.setCapability(ChromeOptions.CAPABILITY, option);
 		// 设置浏览器名字
 		chromeCapability.setBrowserName("chrome");
@@ -92,6 +94,7 @@ public class SelectRemoteBrowser {
 		chromeCapability.setPlatform(Platform.ANY);
 		try {
 			RemoteWebDriver rw = new RemoteWebDriver(new URL(huburl), chromeCapability);
+			//获取session用于以后获取ip，ip暂用于sikuli vncscreen使用
 			sessionid = rw.getSessionId();
 			return rw;
 		} catch (Exception e) {
@@ -114,6 +117,7 @@ public class SelectRemoteBrowser {
 		firefoxCapability.setPlatform(Platform.ANY);
 		try {
 			RemoteWebDriver rw = new RemoteWebDriver(new URL(huburl), firefoxCapability);
+			//获取session用于以后获取ip，ip暂用于sikuli vncscreen使用
 			sessionid = rw.getSessionId();
 			return rw;
 		} catch (Exception e) {
@@ -134,6 +138,7 @@ public class SelectRemoteBrowser {
 		phantomjsCapability.setPlatform(Platform.ANY);
 		try {
 			RemoteWebDriver rw = new RemoteWebDriver(new URL(huburl), phantomjsCapability);
+			//获取session用于以后获取ip，ip暂用于sikuli vncscreen使用
 			sessionid = rw.getSessionId();
 			return rw;
 		} catch (Exception e) {

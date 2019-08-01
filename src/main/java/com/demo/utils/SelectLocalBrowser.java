@@ -84,7 +84,7 @@ public class SelectLocalBrowser {
 		}
 	}
 
-	// 启用本地调用chrome
+	/** 启用本地chrome浏览器 */
 	public static WebDriver createLocalChromeDriver(String chromedriverPath) {
 		System.setProperty("webdriver.chrome.driver", chromedriverPath);
 		// 去掉提示“chrome正受到自动化测试软件的控制”
@@ -99,7 +99,7 @@ public class SelectLocalBrowser {
 		}
 	}
 
-	// 启用本地调用firefox
+	/** 启用本地firefox浏览器 */
 	public static WebDriver createLocalFirefoxDriver(String firefoxdriverPath) {
 		System.setProperty("webdriver.gecko.driver", firefoxdriverPath);
 		// 返回火狐浏览器对象
@@ -118,7 +118,7 @@ public class SelectLocalBrowser {
 		// return new FirefoxDriver(capabilities);
 	}
 
-	// 启用本地调用phantomjs
+	/** 启用本地phantomjs无界面浏览器 */
 	public static WebDriver createLocalPhantomjsDriver(String ghostdriverPath) {
 		// ghost的常规设置
 		DesiredCapabilities ghostCapabilities = new DesiredCapabilities();

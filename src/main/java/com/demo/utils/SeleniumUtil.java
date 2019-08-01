@@ -81,7 +81,7 @@ public class SeleniumUtil {
 	}
 	
 	/**
-	 * 获取selenium grid分发运行的node服务器IP
+	 * 获取selenium grid分发运行的node服务器IP(场景之一：sikuli进行vnc时需要这里的IP)
 	 */
 	public String getGridIP(String huburl){
 		SelectRemoteBrowser srb = new SelectRemoteBrowser();

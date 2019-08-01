@@ -9,6 +9,7 @@ import org.sikuli.script.App;
 import org.sikuli.script.Button;
 import org.sikuli.script.FindFailed;
 import org.sikuli.script.ImagePath;
+import org.sikuli.script.Key;
 import org.sikuli.script.KeyModifier;
 import org.sikuli.script.Match;
 import org.sikuli.script.Pattern;
@@ -234,6 +235,49 @@ public class SikuliUtil {
 			Assert.fail();
 		}
 		return matchImages;
+	}
+	
+	/** 查找文字，不支持中文和标点符号，查找的文字最好不要跟其他文字拼接在一起  */
+	public Match findText(String text, double millisecondTimeout){
+		Match matchText = null;
+		try{
+			matchText = (screen == null? vncscreen:screen).findText(text, millisecondTimeout);
+			logger.info("成功查找到文字");
+		}catch(Exception e){
+			logger.error("查找文字发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+		return matchText;
+	}
+	
+	/** 查找多处相同文字，不支持中文和标点符号，查找的文字最好不要跟其他文字拼接在一起  */
+	public Iterator<Match> findTexts(String text){
+		Iterator<Match> matchTexts = null;
+		try{
+			matchTexts = (screen == null? vncscreen:screen).findAllText(text);
+			logger.info("成功查找到文字");
+		}catch(Exception e){
+			logger.error("查找文字发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+		return matchTexts;
+	}
+	
+	/** 查找文字并移动鼠标到文字那  */
+	public Match findTextMove(String text, double secondTimeout){
+		Match matchText = null;
+		try{
+			matchText = (screen == null? vncscreen:screen).findText(text, secondTimeout);
+			(screen == null? vncscreen:screen).mouseMove(matchText);
+			logger.info("成功查找文字并移动鼠标到文字那");
+		}catch(Exception e){
+			logger.error("查找文字并移动鼠标到文字那异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+		return matchText;
 	}
 	
 	/** 获取图像的上方指定高度的区域 */
@@ -1077,7 +1121,7 @@ public class SikuliUtil {
 		}
 	}
 	
-	/** 键盘在图像中输入CTRL+KEY组合按键,KEY可以是键盘任意按键 */
+	/** 键盘在图像中输入CTRL+KEY组合按键,KEY可以是键盘任意按键的名字且不区分大小写 */
 	public void keyboardTypeCtrlPlusKeyImages(String imagename, String key, double imageTimeoutSecond){
 		try{
 			waitImage(imagename,imageTimeoutSecond);
@@ -1085,6 +1129,18 @@ public class SikuliUtil {
 			logger.info("成功用键盘在图像中输入CTRL+KEY组合按键");
 		}catch(Exception e){
 			logger.error("键盘在图像中输入CTRL+KEY组合按键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 键盘在屏幕中输入单个KEY按键,KEY是org.sikuli.script.Key.xxx:String */
+	public void keyboardTypeKeyScreen(String key){
+		try{
+			(screen == null? vncscreen:screen).type(key);
+			logger.info("成功用键盘在屏幕中输入单个KEY按键");
+		}catch(Exception e){
+			logger.error("键盘在屏幕中输入单个KEY按键发生异常",e);
 			//由testng的失败断言来控制用例运行是否失败
 			Assert.fail();
 		}
@@ -1115,8 +1171,20 @@ public class SikuliUtil {
 		}
 	}
 	
-	/** 键盘在区域中输入任意KEY1+KEY2组合按键，KEY1是org.sikuli.script.Key.xxx:String，KEY2是org.sikuli.script.KeyModifier.xxx:String */
-	public void keyboardTypeTwoKeysRegion(Region region, String key, String keyModifier){
+	/** 键盘在屏幕中输入任意KEY1+KEY2组合按键，KEY2任意不区分大小写的按键名字或是org.sikuli.script.Key.xxx:String，KEY1是org.sikuli.script.KeyModifier.xxx:int */
+	public void keyboardTypeTwoKeysRegion(String key, int keyModifier){
+		try{
+			(screen == null? vncscreen:screen).type(key, keyModifier);
+			logger.info("成功用键盘在屏幕中输入任意KEY1+KEY2组合按键");
+		}catch(Exception e){
+			logger.error("键盘在屏幕中输入任意KEY1+KEY2组合按键发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 键盘在区域中输入任意KEY1+KEY2组合按键，KEY2任意不区分大小写的按键名字或是org.sikuli.script.Key.xxx:String，KEY1是org.sikuli.script.KeyModifier.xxx:int */
+	public void keyboardTypeTwoKeysRegion(Region region, String key, int keyModifier){
 		try{
 			(screen == null? vncscreen:screen).type(region, key, keyModifier);
 			logger.info("成功用键盘在区域中输入任意KEY1+KEY2组合按键");
@@ -1127,8 +1195,8 @@ public class SikuliUtil {
 		}
 	}
 	
-	/** 键盘在图像中输入任意KEY1+KEY2组合按键，KEY1是org.sikuli.script.Key.xxx:String，KEY2是org.sikuli.script.KeyModifier.xxx:String */
-	public void keyboardTypeTwoKeysImages(String imagename, String key, String keyModifier, double imageTimeoutSecond){
+	/** 键盘在图像中输入任意KEY1+KEY2组合按键，KEY2任意不区分大小写的按键名字或是org.sikuli.script.Key.xxx:String，KEY1是org.sikuli.script.KeyModifier.xxx:int */
+	public void keyboardTypeTwoKeysImages(String imagename, String key, int keyModifier, double imageTimeoutSecond){
 		try{
 			waitImage(imagename,imageTimeoutSecond);
 			(screen == null? vncscreen:screen).type(imagename, key, keyModifier);
@@ -1140,7 +1208,26 @@ public class SikuliUtil {
 		}
 	}
 	
-	/** 按着某个键一定时间后再释放按键，key可以是org.sikuli.script.Key.xxx:String或者是org.sikuli.script.KeyModifier.xxx:String */
+	/** 键盘在屏幕中按下KEY1+KEY2+KEY3三键组合，key可以是任意不区分大小写按键名字或者是org.sikuli.script.Key.xxx:String */
+	public void keyboardPressThreeKeys(String key1,String key2,String key3, long millis){
+		try{
+			// 连续按下三个键键不放
+			(screen == null? vncscreen:screen).keyDown(key1);
+			(screen == null? vncscreen:screen).keyDown(key2);
+			(screen == null? vncscreen:screen).keyDown(key3);
+			// 按住等多少毫秒
+			Thread.sleep(millis);
+			// 时间到就释放所有按键
+			(screen == null? vncscreen:screen).keyUp();
+			logger.info("成功键盘在屏幕中按下KEY1+KEY2+KEY3三键组合");
+		}catch(Exception e){
+			logger.error("键盘在屏幕中按下KEY1+KEY2+KEY3三键组合发生异常",e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/** 按着某个键一定时间后再释放按键，key可以是org.sikuli.script.Key.xxx:String */
 	public void keyboardPressKeyForTime(String key, long millis){
 		try{
 			// 按下某键不放
@@ -1157,21 +1244,45 @@ public class SikuliUtil {
 		}
 	}
 	
-	/** 按下KEY1+KEY2+KEY3三键组合，key可以是org.sikuli.script.Key.xxx:String或者是org.sikuli.script.KeyModifier.xxx:String */
-	public void keyboardPressThreeKeys(String key1,String key2,String key3, long millis){
+	/**
+	 * @Description 复制excel首行某字段下方的单元格内容并粘贴到目标图像处
+	 * （为解决vncscreen情况下paste方法缺陷而产生的输入文字新方案，经测试vncscreen情况下findtext无效，本方案需要用到findtext，马勒戈壁）
+	 * @param testdataName 与@test方法的参数(测试数据)名字一样的
+	 * @param excelPath 测试数据excel文件的完整路径（路径不可含中文）
+	 * @param inputImage 目标输入框的图像名字
+	 */
+	public void pasteFromExcel(String testdataName, String excelPath, String inputImage){
 		try{
-			// 连续按下三个键键不放
-			(screen == null? vncscreen:screen).keyDown(key1);
-			(screen == null? vncscreen:screen).keyDown(key2);
-			(screen == null? vncscreen:screen).keyDown(key3);
-			// 按住等多少毫秒
-			Thread.sleep(millis);
-			// 时间到就释放所有按键
-			(screen == null? vncscreen:screen).keyUp();
-			logger.info("成功按下KEY1+KEY2+KEY3三键组合");
+			// 按键win+r弹出“运行”窗口
+			(screen == null? vncscreen:screen).type("r", KeyModifier.WIN);
+			// “运行”窗口光标默认已在“打开(O)”输入框中，直接输入测试数据excel文件路径，并回车打开excel文件
+			(screen == null? vncscreen:screen).type("a", KeyModifier.CTRL);
+			(screen == null? vncscreen:screen).type(Key.BACKSPACE);
+			(screen == null? vncscreen:screen).write(excelPath);
+			(screen == null? vncscreen:screen).type(Key.ENTER);
+			// 根据测试数据excel文件的设计，sheet首行英文字段为测试数据的名字，英文字段名字是与@test方法的测试数据参数名字一样的，直接根据名字找它在屏幕中的位置
+			Match mat = (screen == null? vncscreen:screen).findText(testdataName,5);
+			// 找到测试数据英文字段后双击其下方的单元格并全选内容后按键ctrl+c复制
+			Region reg = new Region(mat.getCenter().getX(), (new Double(mat.getCenter().getY()+mat.getH())).intValue());
+			(screen == null? vncscreen:screen).mouseMove(reg);
+			(screen == null? vncscreen:screen).click(reg);
+			(screen == null? vncscreen:screen).type(Key.F2);
+			keyboardPressThreeKeys(Key.CTRL,Key.SHIFT,Key.HOME, 200);
+			(screen == null? vncscreen:screen).type("c", KeyModifier.CTRL);
+			Thread.sleep(2000);
+			// 按键alt+f4后回车保存关闭excel
+			(screen == null? vncscreen:screen).type(Key.F4, KeyModifier.ALT);
+			(screen == null? vncscreen:screen).type(Key.ENTER);
+			// 查找输入框的图像位置并点击输入框
+			mouseClickImage(inputImage, 5000);
+			// 按键ctrl+v粘贴
+			(screen == null? vncscreen:screen).type("v", KeyModifier.CTRL);
+			logger.info("成功复制excel首行某字段下方的单元格内容并粘贴到目标图像处");
 		}catch(Exception e){
-			logger.error("按下KEY1+KEY2+KEY3三键组合发生异常",e);
+			logger.error("复制excel首行某字段下方的单元格内容并粘贴到目标图像处发生异常",e);
 			//由testng的失败断言来控制用例运行是否失败
+			(screen == null? vncscreen:screen).type(Key.F4, KeyModifier.ALT);
+			(screen == null? vncscreen:screen).type(Key.ENTER);
 			Assert.fail();
 		}
 	}
