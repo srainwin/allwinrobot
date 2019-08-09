@@ -19,6 +19,7 @@ public class TestNGRetryListener implements IAnnotationTransformer {
 	
 	/* 注解转换器,通过重写transform方法可以改写@Test注解的属性，如下改写了RetryAnalyzer属性*/
 	@Override
+	@SuppressWarnings("rawtypes") //忽略rawtype警告
 	public void transform(ITestAnnotation annotation, Class testClass, Constructor testConstructor, Method testMethod) {
 		try{
 			IRetryAnalyzer iRetryAnalyzer = annotation.getRetryAnalyzer();

@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>com.sikuli</groupId>
 			<artifactId>sikuliapi</artifactId>
-			<version>1.1.2</version>
+			<version>1.1.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -120,7 +120,7 @@
 					</argLine>
 					<!--代表的是要执行的测试套件名称 -->
 					<suiteXmlFiles>
-						<suiteXmlFile>src/main/resources/runner/debug.xml</suiteXmlFile>
+						<suiteXmlFile>src/main/resources/runner/testng.xml</suiteXmlFile>
 					</suiteXmlFiles>
 					<!--maven工作根目录，如果不加的话则是默认根目录为项目名 -->
 					<workingDirectory>target/</workingDirectory>

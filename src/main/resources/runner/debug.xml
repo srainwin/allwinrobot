@@ -28,10 +28,14 @@ classes:每个class使用一个线程
 	<parameter name="pageLoadTimeout" value="30" />
 	<!-- 填写保留测试日志时间(天) -->
 	<parameter name="keepLogDay" value="10" />
-	<!-- 填写grid分布式测试是否开启，true：开启，false：关闭 -->
+	<!-- 填写selenium grid分布式测试是否开启，true：开启，false：关闭 -->
 	<parameter name="isRemote" value="false" />
-	<!-- 填写grid分布式测试的hub节点，若不使用分布式可不填 -->
+	<!-- 填写selenium grid分布式测试的hub节点，若不使用分布式可不填 -->
 	<parameter name="huburl" value="http://192.168.1.100:4444/wd/hub" />
+	<!-- 填写sikuli vnc分布式测试是否开启，true：开启，false：关闭 -->
+	<parameter name="isVNC" value="false" />
+	<!-- 填写sikuli vnc分布式每台vncserver统一的密码 -->
+	<parameter name="vncPassword" value="Gmcc_1234" />
 	<listeners>
 		<!-- 测试用例运行失败截图处理监听 -->
 		<!-- 由于用了allure，截图的监听放这里的话allure测试报告不会显示截图图片，只能在每个测试类上加@Listeners({ TestNGListener.class})) -->

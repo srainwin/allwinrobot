@@ -41,8 +41,8 @@ import org.testng.Assert;
  */
 public class SeleniumUtil {
 	public static Logger logger = Logger.getLogger(SeleniumUtil.class.getName());
-	//WebDriver作为成员变量是线程不安全的，线程安全的通常做法是作为方法内的局部变量
-	//另一线程安全做法是使用ThreadLocal来提供线程局部变量，也就是变量只对当前线程可见，即是存放的值是线程内独享的线程间互斥的
+	//WebDriver作为成员变量是线程不安全的，线程安全的通常做法是作为@Test测试用例方法内的局部变量
+	//另一线程安全做法是使用ThreadLocal来提供线程局部变量，也就是变量只对当前线程可见，变量存放的值是线程内独享的、线程间互斥的
 	public static ThreadLocal<WebDriver> threadLocalWebDriver = new ThreadLocal<WebDriver>();
 
 	/***
@@ -70,6 +70,7 @@ public class SeleniumUtil {
 		
 		try {
 			maxWindow();
+//			fullWindow();
 			pageLoadTimeout(timeOut);
 			logger.info("成功启动" + browserName + "浏览器");
 		} catch (Exception e) {
@@ -78,7 +79,15 @@ public class SeleniumUtil {
 			Assert.fail();
 		}
 	}
-
+	
+	/**
+	 * 获取selenium grid分发运行的node服务器IP(场景之一：sikuli进行vnc时需要这里的IP)
+	 */
+	public String getGridIP(String huburl){
+		SelectRemoteBrowser srb = new SelectRemoteBrowser();
+		return srb.getGridIP(huburl);
+	}
+	
 	/**
 	 * 最大化浏览器操作
 	 */
@@ -88,6 +97,20 @@ public class SeleniumUtil {
 			logger.info("成功最大化浏览器");
 		} catch (Exception e) {
 			logger.error("最大化浏览器失败", e);
+			//由testng的失败断言来控制用例运行是否失败
+			Assert.fail();
+		}
+	}
+	
+	/**
+	 * 全屏浏览器操作
+	 */
+	public void fullWindow() {
+		try {
+			threadLocalWebDriver.get().manage().window().fullscreen();
+			logger.info("成功全屏浏览器");
+		} catch (Exception e) {
+			logger.error("全屏浏览器失败", e);
 			//由testng的失败断言来控制用例运行是否失败
 			Assert.fail();
 		}
