@@ -79,7 +79,7 @@ public class LoginBase {
 			LogConfiguration.initLog(this.getClass().getSimpleName(), itestcontext);
 			logger.info("正启动浏览器");
 
-			// 给共享数据赋值，供任意继承本类的@Test用例使用（itestcontext是测试的上下文，包含很多信息，包括TestNG配置文件中的参数信息）
+			// 给共享数据赋值，供本类或任意继承本类的@Test用例使用（itestcontext是测试的上下文，包含很多信息，包括TestNG配置文件中的参数信息）
 			// 原本打算在@Test的用例方法传入itestcontext参数的，但@Test的用例使用了@dataProvider后运行会检查出参数个数不一致异常，因为多了itestcontext参数，所以决定把itestcontext获取共享数据放到@BeforeClass中进行
 			cookiesConfigFilePath = itestcontext.getCurrentXmlTest().getParameter("cookiesConfigFilePath");
 			testDataFilePath = itestcontext.getCurrentXmlTest().getParameter("testDataFilePath");

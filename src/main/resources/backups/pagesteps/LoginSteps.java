@@ -2,7 +2,8 @@ package com.demo.pagesteps;
 
 import org.apache.log4j.Logger;
 
-import com.demo.utils.JsonPageParser;
+import com.demo.pages.FramePage;
+import com.demo.pages.LoginPage;
 import com.demo.utils.SeleniumUtil;
 
 import io.qameta.allure.Step;
@@ -13,23 +14,20 @@ import io.qameta.allure.Step;
  */
 public class LoginSteps {
 	static Logger logger = Logger.getLogger(LoginSteps.class.getName());
-	static JsonPageParser loginPage = new JsonPageParser("LoginPage.json");
-	static JsonPageParser logoutPage = new JsonPageParser("LogoutPage.json");
-	static JsonPageParser portalPage = new JsonPageParser("PortalPage.json");
 
 	@Step("选择账号方式，并且输入用户名{1}和密码{2}，点击登录") // allure的步骤显示
 	public static void login(SeleniumUtil seleniumUtil, String username, String password, String testurl) {
 		logger.info("开始输入126邮箱网址");
 		seleniumUtil.get(testurl);
 		logger.info("使用账号方式登陆");
-		seleniumUtil.click(loginPage.getElementLocator("loginByAccount"));
+		seleniumUtil.click(LoginPage.loginByAccount);
 		logger.info("开始用户登录");
-		seleniumUtil.inFrame(loginPage.getElementLocator("loginFrame"));
-		seleniumUtil.clear(loginPage.getElementLocator("loginUsername"));
-		seleniumUtil.type(loginPage.getElementLocator("loginUsername"), username);
-		seleniumUtil.clear(loginPage.getElementLocator("loginPassword"));
-		seleniumUtil.type(loginPage.getElementLocator("loginPassword"), password);
-		seleniumUtil.click(loginPage.getElementLocator("loginButton"));
+		seleniumUtil.inFrame(FramePage.loginFrame);
+		seleniumUtil.clear(LoginPage.loginUsername);
+		seleniumUtil.type(LoginPage.loginUsername, username);
+		seleniumUtil.clear(LoginPage.loginPassword);
+		seleniumUtil.type(LoginPage.loginPassword, password);
+		seleniumUtil.click(LoginPage.loginButton);
 	}
 
 	@Step("打开126邮箱网址后添加cookies刷新免登录") // allure的步骤显示
@@ -46,7 +44,7 @@ public class LoginSteps {
 	public static String getLoginErrorInfo(SeleniumUtil seleniumUtil) {
 		String text = "";
 		logger.info("开始获取登陆错误提示信息");
-		text = seleniumUtil.getText(loginPage.getElementLocator("loginErrorInfo"));
+		text = seleniumUtil.getText(LoginPage.loginErrorInfo);
 		return text;
 	}
 
@@ -61,7 +59,7 @@ public class LoginSteps {
 	public static String getLoginCurrentUser(SeleniumUtil seleniumUtil) {
 		String text = "";
 		logger.info("开始获取当前登陆用户名信息");
-		text = seleniumUtil.getText(portalPage.getElementLocator("loginCurrentUser"));
+		text = seleniumUtil.getText(LoginPage.loginCurrentUser);
 		return text;
 	}
 
@@ -75,14 +73,14 @@ public class LoginSteps {
 	@Step("退出登录")
 	public static void logout(SeleniumUtil seleniumUtil) {
 		logger.info("开始退出登录");
-		seleniumUtil.click(portalPage.getElementLocator("logoutButton"));
+		seleniumUtil.click(LoginPage.logoutButton);
 	}
 
 	@Step("获取退出页面信息")
 	public static String getLogoutInfo(SeleniumUtil seleniumUtil) {
 		String text = "";
 		logger.info("开始获取退出页面信息");
-		text = seleniumUtil.getText(logoutPage.getElementLocator("logoutInfo"));
+		text = seleniumUtil.getText(LoginPage.logoutInfo);
 		return text;
 	}
 

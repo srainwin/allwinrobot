@@ -1,0 +1,11 @@
+{
+	"NOTE1": "注释：元素定位方式json格式如下：元素英文名:[元素中文名,定位方式,定位的值]，元素英文名不能有重复",
+	"NOTE2": "注释：元素定位方式有id、name、className、tagName、linkText、partialLinkText、xpath、cssSelector、imageName",
+	"THEME": "主题：登录126邮箱页面元素定位",
+	"loginFrame": ["登录表单frame名字","cssSelector","iframe[id^='x-URS-iframe']"],
+	"loginByAccount": ["登陆形式为账号形式","cssSelector","#lbNormal"],
+	"loginUsername": ["用户名输入框","cssSelector",".dlemail"],
+	"loginPassword": ["密码输入框","cssSelector",".dlpwd"],
+	"loginButton": ["登陆按钮","className","u-loginbtn"],
+	"loginErrorInfo": ["登陆错误提示信息","cssSelector",".ferrorhead"]
+}

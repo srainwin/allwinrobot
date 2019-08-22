@@ -1,0 +1,6 @@
+{
+	"NOTE1": "注释：元素定位方式json格式如下：元素英文名:[元素中文名,定位方式,定位的值]，元素英文名不能有重复",
+	"NOTE2": "注释：元素定位方式有id、name、className、tagName、linkText、partialLinkText、xpath、cssSelector、imageName",
+	"THEME": "主题：已退出126邮箱页面元素定位",
+	"logoutInfo": ["退出页面信息","cssSelector","section.info > h1"]
+}

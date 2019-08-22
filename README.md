@@ -11,6 +11,7 @@ sikuli：基于图像识别自动化测试工具（1.1.3）
 allure：测试报告工具（2.12.1）  
 poi excel：测试数据（4.1.0）  
 log4j：日志管理（1.2.16）  
+jsonpath：json解析页面对象库（2.2.0）
 
 ## 主要功能
 selenium常用api封装提供调用ui自动化操作  
@@ -31,13 +32,13 @@ DDT数据驱动测试
 # 框架分层
 * src/main/java  
   * com.demo.base:存放基类，每个用例都要继承  
-  * com.demo.pages:页面对象层，存放每个功能页的元素定位或图像名称  
+  * com.demo.pages:页面对象层，存放每个功能页的元素定位或图像名称（新版使用json文件，旧版java文件样例已归档到backups文件夹中）  
   * com.demo.pagesteps:页面对象操作层，存放每个功能页的操作步骤（每个步骤方法前添加@Step("业务逻辑描述")注解进行类似BDD行为驱动测试）  
   * com.demo.utils:存放封装工具类、配置类、监听类，等等  
 * src/main/resources  
   * config:存放配置信息文件  
   * driver:存放各类浏览器驱动  
-  * runner:存放配置控制testng运行的xml文件  
+  * runner:存放配置控制testng运行的xml文件（某些配置参数需在此文件填写，如url等等）  
 * src/test/java  
   * com.demo.cases.xxx:xxx功能模块的测试用例，直接调用pagesteps的步骤方法即可  
 * src/test/resources  

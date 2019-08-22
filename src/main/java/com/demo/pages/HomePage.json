@@ -1,0 +1,26 @@
+{
+	"NOTE1": "注释：元素定位方式json格式如下：元素英文名:[元素中文名,定位方式,定位的值]，元素英文名不能有重复",
+	"NOTE2": "注释：元素定位方式有id、name、className、tagName、linkText、partialLinkText、xpath、cssSelector、imageName",
+	"THEME": "主题：126邮箱首页元素定位",
+	"homeTabSign": ["首页Tab-标志：问候名","cssSelector","span[id$='dvGreetName']"],
+	"overview": ["首页右边总览",{
+		"overviewUnreadMail": ["总览-未读邮件","cssSelector",".gWel-mailInfo-unread"],
+		"overviewUnreadMailTab": ["总览-未读邮件Tab-标题:未读邮件","cssSelector","li[id^='_mail_tabitem'][role='tab'][title='未读邮件']"],
+		"overviewTodoMail": ["总览-待办邮件","cssSelector",".gWel-mailInfo-todo"],
+		"overviewTodoMailTab": ["总览-待办邮件Tab-标题:待办邮件","cssSelector","li[id^='_mail_tabitem'][role='tab'][title='待办邮件']"],
+		"overviewContactMail": ["总览-联系人邮件","cssSelector",".gWel-mailInfo-cnta"],
+		"overviewContactMailTab": ["总览-联系人Tab-标题:联系人邮件","cssSelector","li[id^='_mail_tabitem'][role='tab'][title='联系人邮件']"],
+		"overviewJifen": ["总览-积分","cssSelector","li[id$='_dvClub']"],
+		"overviewSafetyDegree": ["总览-安全度","cssSelector","li[id$='_dvHealth']"],
+		"overviewSafetyDegreeSign": ["总览-安全度-标志:邮箱健康指数","cssSelector",".ip0"],
+		"overviewLoginProtectFrame": ["总览-登录保护的表单iframe名字","cssSelector","iframe.frame-main-cont-iframe"],
+		"overviewLoginProtect": ["总览-登录保护","cssSelector","li.gWel-mailInfo-pinle[title='登录保护']"],
+		"overviewLoginProtectSign": ["总览-登录保护-标志:邮箱登录二次验证","cssSelector","div.P-intro > p:nth-child(2) > strong"],
+		"overviewDailyLife": ["总览-每日生活","cssSelector","li.gWel-mailInfo-pinle[title='每日生活']"],
+		"overviewDailyLifeTab": ["总览-每日生活Tab-标题:严选每日推荐","cssSelector","li[id^='_mail_tabitem'][role='tab'][title='严选每日推荐']"]
+	}],
+	"leftTree": ["首页左边目录树",{
+		"receiveLetters": ["收信","xpath","//span[text()='收 信']"],
+		"writeLetters": ["写信","xpath","//span[text()='写 信']"]
+	}]
+}
