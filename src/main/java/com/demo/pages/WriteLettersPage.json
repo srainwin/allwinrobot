@@ -1,0 +1,35 @@
+{
+	"NOTE1": "注释：元素定位方式json格式如下：元素英文名:[元素中文名,定位方式,定位的值]，元素英文名不能有重复",
+	"NOTE2": "注释：元素定位方式有id、name、className、tagName、linkText、partialLinkText、xpath、cssSelector、imageName",
+	"THEME": "主题：126邮箱写信图像定位封装（分布式需要每个屏幕的同一处截图）",
+	"addressee": ["收件人",{
+		"addressee1": ["收件人node1","imageName","收件人node1.png"],
+		"addressee2": ["收件人node2","imageName","收件人node2.png"]
+	}],
+	"theme": ["主题",{
+		"theme1": ["主题node1","imageName","主题node1.png"],
+		"theme2": ["主题node2","imageName","主题node2.png"]
+	}],
+	"addAttachments": ["添加附件","cssSelector","[id$='_attachBrowser']"],
+	"attachProgressOK": ["上传完成","xpath","//span[text()='上传完成']"],
+	"appendixTips": ["附件提示",{
+		"appendixTips1": ["附件提示node1","imageName","附件提示node1.png"],
+		"appendixTips2": ["附件提示node2","imageName","附件提示node2.png"]
+	}],
+	"appendixTipsClose": ["附件提示关闭",{
+		"appendixTipsClose1": ["附件提示关闭node1","imageName","附件提示关闭node1.png"],
+		"appendixTipsClose2": ["附件提示关闭node2","imageName","附件提示关闭node2.png"]
+	}],
+	"writingContent": ["写信内容框",{
+		"writingContent1": ["写信内容框node1","imageName","写信内容框node1.png"],
+		"writingContent2": ["写信内容框node2","imageName","写信内容框node2.png"]
+	}],
+	"upSendButton": ["上方发送按钮",{
+		"upSendButton1": ["上方发送按钮node1","imageName","上方发送按钮node1.png"],
+		"upSendButton2": ["上方发送按钮node2","imageName","上方发送按钮node2.png"]
+	}],
+	"sendSucc": ["发送成功标志",{
+		"sendSucc1": ["发送成功node1","imageName","发送成功node1.png"],
+		"sendSucc2": ["发送成功node2","imageName","发送成功node2.png"]
+	}]
+}

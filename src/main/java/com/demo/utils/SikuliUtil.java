@@ -161,7 +161,7 @@ public class SikuliUtil {
 		try{
 			pattern = new Pattern(imagename);
 			matchImage = (screen == null? vncscreen:screen).wait(pattern, imageTimeoutSecond);
-			matchImage.highlight("red");
+			matchImage.highlight(1,"red");
 			logger.info("成功等待图像出现");
 		}catch(Exception e){
 			logger.error("等待图像出现发生异常",e);
@@ -200,7 +200,7 @@ public class SikuliUtil {
 		try{
 			pattern = new Pattern(imagename);
 			matchImage = (screen == null? vncscreen:screen).find(pattern); //相当于没有等待超时的wait()
-			matchImage.highlight("red");
+			matchImage.highlight(1,"red");
 			logger.info("成功查找到图像");
 		}catch(FindFailed e){
 			logger.error("查找不到图像",e);
@@ -222,7 +222,7 @@ public class SikuliUtil {
 			pattern = new Pattern(imagename);
 			matchImages = (screen == null? vncscreen:screen).findAll(pattern);
 			while(matchImages.hasNext()){
-				matchImages.next().highlight("red");
+				matchImages.next().highlight(1,"red");
 			}
 			logger.info("成功查找到多个相同图像");
 		}catch(FindFailed e){
@@ -424,7 +424,7 @@ public class SikuliUtil {
 			Settings.OcrTextRead = true;
 			// 建立region
 			region = Region.create(X, Y, W, H);
-			region.highlight("red");
+			region.highlight(1,"red");
 			// 获取区域中的文本
 			text = region.text();
 			logger.info("成功指定区域(x,y,w,h)坐标进行图像文字识别");

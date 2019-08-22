@@ -27,8 +27,8 @@ public class HomePage_001_Overview_Tab extends LoginBase {
 		// 打开已登录页面
 		LoginSteps.loginFree(seleniumUtil, testurl, cookiesConfigFilePath);
 		// 点击首页tab
-		HomeSteps.homepageTabClick(seleniumUtil);
+		HomeSteps.homeTabClick(seleniumUtil);
 		// 进入首页tab断言
-		HomeSteps.assertHomepageSign(seleniumUtil, expect);
+		HomeSteps.asserthomePageSign(seleniumUtil, expect);
 	}
 }

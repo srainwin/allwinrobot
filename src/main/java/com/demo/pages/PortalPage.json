@@ -1,0 +1,13 @@
+{
+	"NOTE1": "注释：元素定位方式json格式如下：元素英文名:[元素中文名,定位方式,定位的值]，元素英文名不能有重复",
+	"NOTE2": "注释：元素定位方式有id、name、className、tagName、linkText、partialLinkText、xpath、cssSelector、imageName",
+	"THEME": "主题：126邮箱门户页元素定位",
+	"loginCurrentUser": ["当前用户名信息","id","spnUid"],
+	"logoutButton": ["退出按钮","linkText","退出"],
+	"topMenu":["顶部菜单栏",{
+		"homeTab": ["首页","id","_mail_tabitem_0_3"],
+		"addressBookTab": ["通讯录","id","_mail_tabitem_1_4"],
+		"appCenterTab": ["应用中心","id","_mail_tabitem_2_5"],
+		"inboxTab": ["收件箱","id","_mail_tabitem_3_6"]
+	}]
+}

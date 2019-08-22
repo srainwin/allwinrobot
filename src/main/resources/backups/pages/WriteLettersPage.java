@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 
 /**
  * @author XWR
- * @Description 126邮箱写信图像定位封装
+ * @Description 126邮箱写信图像定位封装（分布式需要每个屏幕的同一处截图）
  */
 public class WriteLettersPage {
 	/** 收件人 */

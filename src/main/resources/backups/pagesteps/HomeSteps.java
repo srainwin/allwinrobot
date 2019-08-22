@@ -2,7 +2,8 @@ package com.demo.pagesteps;
 
 import org.apache.log4j.Logger;
 
-import com.demo.utils.JsonPageParser;
+import com.demo.pages.FramePage;
+import com.demo.pages.HomePage;
 import com.demo.utils.SeleniumUtil;
 
 import io.qameta.allure.Step;
@@ -13,26 +14,24 @@ import io.qameta.allure.Step;
  */
 public class HomeSteps {
 	static Logger logger = Logger.getLogger(HomeSteps.class.getName());
-	static JsonPageParser portalPage = new JsonPageParser("PortalPage.json");
-	static JsonPageParser homePage = new JsonPageParser("HomePage.json");
 
 	@Step("点击切换首页tab") // allure的步骤显示
-	public static void homeTabClick(SeleniumUtil seleniumUtil) {
+	public static void homepageTabClick(SeleniumUtil seleniumUtil) {
 		logger.info("点击切换首页tab");
-		seleniumUtil.click(portalPage.getElementLocator("homeTab"));
+		seleniumUtil.click(HomePage.homepageTab);
 	}
 
 	@Step("获取首页Tab的问候名") // allure的步骤显示
-	public static String gethomeTabSign(SeleniumUtil seleniumUtil) {
+	public static String getHomepageSign(SeleniumUtil seleniumUtil) {
 		String text = "";
 		logger.info("获取首页Tab-标志：问候名");
-		text = seleniumUtil.getText(homePage.getElementLocator("homeTabSign"));
+		text = seleniumUtil.getText(HomePage.homepageSign);
 		return text;
 	}
 
 	@Step("断言获取首页Tab的问候名是否为“{1}”") // allure的步骤显示
-	public static void asserthomePageSign(SeleniumUtil seleniumUtil, String expect) {
-		String actual = HomeSteps.gethomeTabSign(seleniumUtil);
+	public static void assertHomepageSign(SeleniumUtil seleniumUtil, String expect) {
+		String actual = HomeSteps.getHomepageSign(seleniumUtil);
 		seleniumUtil.assertEquals(actual, expect);
 		logger.info("成功断言首页Tab-标志：问候名");
 	}
@@ -40,14 +39,14 @@ public class HomeSteps {
 	@Step("点击首页总览快捷功能的未读邮件") // allure的步骤显示
 	public static void overviewUnreadMailClick(SeleniumUtil seleniumUtil) {
 		logger.info("点击首页总览快捷功能的未读邮件");
-		seleniumUtil.click(homePage.getElementLocator("overviewUnreadMail"));
+		seleniumUtil.click(HomePage.overviewUnreadMail);
 	}
 
 	@Step("获取总览未读邮件Tab的标题") // allure的步骤显示
 	public static String getOverviewUnreadMailTab(SeleniumUtil seleniumUtil) {
 		String text = "";
 		logger.info("获取总览-未读邮件Tab-标题:未读邮件");
-		text = seleniumUtil.getAttributeText(homePage.getElementLocator("overviewUnreadMailTab"), "title");
+		text = seleniumUtil.getAttributeText(HomePage.overviewUnreadMailTab, "title");
 		return text;
 	}
 
@@ -61,14 +60,14 @@ public class HomeSteps {
 	@Step("点击首页总览快捷功能的待办邮件") // allure的步骤显示
 	public static void overviewTodoMailClick(SeleniumUtil seleniumUtil) {
 		logger.info("点击首页总览快捷功能的待办邮件");
-		seleniumUtil.click(homePage.getElementLocator("overviewTodoMail"));
+		seleniumUtil.click(HomePage.overviewTodoMail);
 	}
 
 	@Step("获取总览待办邮件Tab的标题") // allure的步骤显示
 	public static String getOverviewTodoMailTab(SeleniumUtil seleniumUtil) {
 		String text = "";
 		logger.info("获取总览-待办邮件Tab-标题:待办邮件");
-		text = seleniumUtil.getAttributeText(homePage.getElementLocator("overviewTodoMailTab"), "title");
+		text = seleniumUtil.getAttributeText(HomePage.overviewTodoMailTab, "title");
 		return text;
 	}
 
@@ -82,14 +81,14 @@ public class HomeSteps {
 	@Step("点击首页总览快捷功能的联系人邮件") // allure的步骤显示
 	public static void overviewContactMailClick(SeleniumUtil seleniumUtil) {
 		logger.info("点击首页总览快捷功能的联系人邮件");
-		seleniumUtil.click(homePage.getElementLocator("overviewContactMail"));
+		seleniumUtil.click(HomePage.overviewContactMail);
 	}
 
 	@Step("获取总览联系人Tab的标题") // allure的步骤显示
 	public static String getOverviewContactMailTab(SeleniumUtil seleniumUtil) {
 		String text = "";
 		logger.info("获取总览-联系人Tab-标题:联系人邮件");
-		text = seleniumUtil.getAttributeText(homePage.getElementLocator("overviewContactMailTab"), "title");
+		text = seleniumUtil.getAttributeText(HomePage.overviewContactMailTab, "title");
 		return text;
 	}
 
@@ -105,7 +104,7 @@ public class HomeSteps {
 		String currentHandle = "";
 		currentHandle = seleniumUtil.getCurrentHandle();
 		logger.info("点击首页总览快捷功能的积分");
-		seleniumUtil.click(homePage.getElementLocator("overviewJifen"));
+		seleniumUtil.click(HomePage.overviewJifen);
 		return currentHandle;
 	}
 
@@ -128,14 +127,14 @@ public class HomeSteps {
 	@Step("点击首页总览快捷功能的安全度") // allure的步骤显示
 	public static void overviewSafetyDegreeClick(SeleniumUtil seleniumUtil) {
 		logger.info("点击首页总览快捷功能的安全度");
-		seleniumUtil.click(homePage.getElementLocator("overviewSafetyDegree"));
+		seleniumUtil.click(HomePage.overviewSafetyDegree);
 	}
 
 	@Step("获取总览安全度的标志") // allure的步骤显示
 	public static String getOverviewSafetyDegreeSign(SeleniumUtil seleniumUtil) {
 		String text = "";
 		logger.info("获取总览-安全度-标志:邮箱健康指数");
-		text = seleniumUtil.getText(homePage.getElementLocator("overviewSafetyDegreeSign"));
+		text = seleniumUtil.getText(HomePage.overviewSafetyDegreeSign);
 		return text;
 	}
 
@@ -149,15 +148,15 @@ public class HomeSteps {
 	@Step("点击首页总览快捷功能的登录保护") // allure的步骤显示
 	public static void overviewLoginProtectClick(SeleniumUtil seleniumUtil) {
 		logger.info("点击首页总览快捷功能的登录保护");
-		seleniumUtil.click(homePage.getElementLocator("overviewLoginProtect"));
+		seleniumUtil.click(HomePage.overviewLoginProtect);
 	}
 
 	@Step("获取总览登录保护的标志") // allure的步骤显示
 	public static String getOverviewLoginProtectSign(SeleniumUtil seleniumUtil) {
 		String text = "";
-		seleniumUtil.inFrame(homePage.getElementLocator("overviewLoginProtectFrame"));
+		seleniumUtil.inFrame(FramePage.loginProtectFrame);
 		logger.info("获取总览-登录保护-标志:邮箱登录二次验证");
-		text = seleniumUtil.getText(homePage.getElementLocator("overviewLoginProtectSign"));
+		text = seleniumUtil.getText(HomePage.overviewLoginProtectSign);
 		return text;
 	}
 
@@ -171,14 +170,14 @@ public class HomeSteps {
 	@Step("点击首页总览快捷功能的每日生活") // allure的步骤显示
 	public static void overviewDailyLifeClick(SeleniumUtil seleniumUtil) {
 		logger.info("点击首页总览快捷功能的每日生活");
-		seleniumUtil.click(homePage.getElementLocator("overviewDailyLife"));
+		seleniumUtil.click(HomePage.overviewDailyLife);
 	}
 
 	@Step("获取总览每日生活Tab的标题") // allure的步骤显示
 	public static String getOverviewDailyLifeTab(SeleniumUtil seleniumUtil) {
 		String text = "";
 		logger.info("获取总览-每日生活Tab-标题:严选每日推荐");
-		text = seleniumUtil.getAttributeText(homePage.getElementLocator("overviewDailyLifeTab"), "title");
+		text = seleniumUtil.getAttributeText(HomePage.overviewDailyLifeTab, "title");
 		return text;
 	}
 
@@ -191,7 +190,7 @@ public class HomeSteps {
 
 	@Step("点击写信") // allure的步骤显示
 	public static void writeLetterClick(SeleniumUtil seleniumUtil) {
-		seleniumUtil.click(homePage.getElementLocator("writeLetters"));
+		seleniumUtil.click(HomePage.writeLetters);
 		logger.info("成功点击写信");
 	}
 }
