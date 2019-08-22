@@ -67,7 +67,7 @@ java -jar selenium-server-standalone-3.141.59.jar -role hub
 (4)建立node节点连接（node机执行），然后刷新访问http://localhost:4444/grid/console  
 java -Dwebdriver.chrome.driver="D:/snc/workspace2/autotestddt/src/main/resources/driver/chromedriver.exe" -Dwebdriver.gecko.driver="D:/snc/workspace2/autotestddt/src/main/resources/driver/geckodriver.exe" -jar selenium-server-standalone-3.141.59.jar -role node -host 192.168.1.101 -hub http://192.168.1.100:4444/grid/register -browser browserName=chrome,seleniumProtocol=WebDriver,maxInstances=5,platform=WINDOWS -browser browserName=firefox,seleniumProtocol=WebDriver,maxInstances=5,platform=WINDOWS  
 (5)testng.xml/debug.xml填写isRemote和huburl参数值  
-(6)使用分布式执行上传文件用例时注意每台机子都要存放相同路径的上传文件
+(6)使用分布式执行上传文件用例时注意每台机子都要存放相同路径的上传文件  
 (7)当hub节点同时也为node节点的时候，启动的浏览器会置底没显示，也就是会被其他已打开的应用遮挡，因此建议运行程序时先把所有应用关闭或最小化，除非浏览器被遮挡运行也不影响功能操作  
 (8)当开启selenium grid分布式时，不一定要开启sikuli vnc分布式，除非有使用图像识别的用例运行
 
