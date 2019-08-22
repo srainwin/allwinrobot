@@ -1,4 +1,4 @@
-# autotestddt
+# allwinrobot
 DDT数据驱动+类BBD行为驱动的自动化测试  
 java + maven + testng + selenium + sikuli + allure  
 
