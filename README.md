@@ -1,5 +1,5 @@
 # allwinrobot
-DDT数据驱动+类BBD行为驱动的自动化测试  
+混合驱动的自动化测试  
 java + maven + testng + selenium + sikuli + allure  
 
 ## 主要工具
@@ -33,7 +33,7 @@ DDT数据驱动测试
 * src/main/java  
   * com.demo.base:存放基类，每个用例都要继承  
   * com.demo.pages:页面对象层，存放每个功能页的元素定位或图像名称（新版使用json文件，旧版java文件样例已归档到backups文件夹中）  
-  * com.demo.pagesteps:页面对象操作层，存放每个功能页的操作步骤（每个步骤方法前添加@Step("业务逻辑描述")注解进行类似BDD行为驱动测试）  
+  * com.demo.pagesteps:页面对象操作层，存放每个功能页的操作步骤（每个步骤方法前添加@Step("操作逻辑描述")注解，使得产生步级的测试报告，且业务清晰）  
   * com.demo.utils:存放封装工具类、配置类、监听类，等等  
 * src/main/resources  
   * config:存放配置信息文件  
