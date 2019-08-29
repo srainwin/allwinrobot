@@ -84,3 +84,9 @@ java -Dwebdriver.chrome.driver="D:/snc/workspace2/autotestddt/src/main/resources
 (10)若vnc远程机是node节点而不是hub节点，则paste方法输入的是系统原来粘贴板的内容，已向作者提出问题，但作者回复表示无能为力（I have no idea and no experience with VNC, sorry.）  
 (11)鉴于8、9、10三点问题的严重性，建议测试数据输入需求均使用英文，否则sikuli vnc分布式无法处理  
 (12)建议需要使用图像识别功能的用例单独一个testng.xml测试套件在本地运行而不用远程vnc  
+
+## allure测试报告使用说明
+(1)测试脚本运行后，allure只会产生一个allure-result目录文件，该目录文件是不能直接查看报告的  
+(2)查看allure报告方法一，使用jenkins的allure report插件  
+(3)查看allure报告方法二，本地安装allure命令行工具allure-commandline，下载解压allure-commandline包后配置bin目录到系统path变量中，然后cmd运行命令生成html报告，例如：allure generate D:\allure-results -o D:\allure-results\html，最后用firefox打开index.html文件，记得用firefox，其他浏览器会存在跨域协议问题（跨域请求仅支持协议：http, data, chrome, chrome-extension, https, chrome-extension-resource），但是Filefox支持file协议下的AJAX请求  
+(4)同样安装allure命令行工具，cmd运行命令如下：allure serve D:\allure-results，然后会自动用默认浏览器打开这个网页http://192.168.175.1:49081/index.html，同样需要复制到firefox浏览器才可查看得当  
